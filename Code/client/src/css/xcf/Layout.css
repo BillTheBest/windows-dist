@@ -1,0 +1,35 @@
+.layoutMain {
+    -moz-box-sizing: border-box;
+    border: 0px solid #1E1E1E !important;
+    height: 100%;
+    min-height: 20em;
+    overflow: hidden;
+    width: 100%;
+}
+.layoutLeft,
+.layoutRight {
+    padding: 0px !important;
+}
+.layoutLeft {
+    width: 200px;
+    overflow: hidden;
+}
+.layoutBottom {
+    border: 0px solid #1E1E1E !important;
+}
+.layoutRight {
+    overflow: hidden;
+}
+.layoutTop {
+    padding: 0px !important;
+    min-height: 60px;
+    /*max-height: 30px;*/
+    overflow: hidden !important;
+}
+.layoutTop .dijitMenuBar {
+    border: 0px solid #1E1E1E !important;
+}
+.filePanelLayoutcontainer {
+    border: 0px solid #1E1E1E !important;
+    padding: 4px !important;
+}

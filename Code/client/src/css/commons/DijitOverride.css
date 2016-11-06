@@ -1,0 +1,100 @@
+/**
+  Dijit Generics
+*/
+.dijitTabContainerBottom-dijitContentPane {
+  /*background-color: transparent;*/
+}
+.bottomTab .dijitTabContainerBottom-dijitContentPane {
+  /*background-color: transparent;*/
+}
+.claro .dijitDialog {
+  border: 2px solid #000000;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.64);
+  /*background-color: #303030;*/
+  /*color: #000000;*/
+}
+.dijitBorderContainer-dijitContentPane {
+  /*background-color: transparent;*/
+  padding: 0px !important;
+}
+.claro .dijitAccordionContainer .dijitAccordionChildWrapper {
+  /*background-color: #303030;*/
+  /*border: 2px solid #759DC0;*/
+  /*margin: 0 0px 0px;*/
+}
+.claro h1 {
+  font-size: 1.545em;
+  margin-bottom: 0px !important;
+}
+.dijitTree {
+  padding-top: 5px;
+  padding-left: 5px;
+}
+.dijitPopup .dijitMenuItemIcon {
+  padding-left: 6px;
+}
+.dijitPopup .dijitMenuItemIcon {
+  padding-left: 6px;
+}
+.claro .dijitSplitContainer-dijitContentPane,
+.claro .dijitBorderContainer-dijitContentPane {
+  padding: 8px;
+}
+.claro .dijitAccordionContainer .dijitAccordionContainer-child {
+  padding: 0px !important;
+}
+.dijitReadOnly *,
+.dijitDisabled *,
+.dijitReadOnly,
+.dijitDisabled {
+  cursor: default;
+  opacity: 0.5;
+}
+.claro .dijitButtonDisabled,
+.claro .dijitDropDownButtonDisabled,
+.claro .dijitComboButtonDisabled,
+.claro .dijitToggleButtonDisabled {
+  opacity: 0.5;
+}
+.claro .dijitToolbar {
+  /*border-bottom: 0px solid #DDDDDD !important;*/
+  display: inline-block;
+  height: auto;
+  width: inherit;
+  padding: 2px !important;
+}
+.claro .dijitAccordionTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 134%;
+  /*text-shadow: 1px 1px black;*/
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -moz-binding: url('../fonts/truncate.xml#ellipsis');
+}
+.claro .dijitAccordionTitleSelected {
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5) inset;
+}
+.dijitTabContainerTopChildWrapper {
+  height: inherit;
+}
+.dijitTabPane,
+.dijitStackContainer-child,
+.dijitAccordionContainer-child {
+  border: inherit;
+}
+.dijitMenuItemAccelKey {
+  margin-left: 8px;
+  float: right;
+  padding-bottom: 5px;
+  padding-top: 5px;
+}
+.claro .dijitToolbarSeparator {
+  background: none;
+  border-left: 1px solid rgba(127, 127, 127, 0.5);
+}
+.claro .dijitMenuArrowCell {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+/*.claro .dijitToolbarSeparator{}*/

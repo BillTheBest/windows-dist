@@ -1,0 +1,72 @@
+@import "../mixins/functions";
+
+.dgrid-cell :focus{
+  outline: 1px solid #e9841d;
+}
+.dgrid-focus{
+  outline: 1px solid rgba(233, 132, 29, 0.61);
+  outline-offset: -2px;
+}
+
+
+.dgrid-focus:active {
+  outline: 1px dotted rgba(255, 82, 0, 0.65);
+  outline-offset: -1px;
+  background-color: rgba(0,0,0,0.2);
+  font-weight: bold;
+}
+
+
+.dgrid-focus:focus {
+  outline: 1px solid rgb(87, 96, 255);
+  outline-offset: -2px;
+  background-color: rgba(0, 50, 235, 0.16) !important;
+  font-weight: bold;
+}
+
+.dgrid .ui-state-selected{
+  /*outline-offset: 0px !important;*/
+
+
+}
+.dgrid-tree-container .dgrid-focus{
+  outline-offset: -2px !important;
+}
+
+a:hover, a:active, a:focus{
+  /*outline: 0 !important;*/
+}
+div:hover, div:active, div:focus{
+  /*outline: 0px;*/
+}
+span:hover, span:active, span:focus{
+  /*outline: 0px !important;*/
+
+}
+
+html.has-webkit .dgrid *:focus, html.has-mozilla .dgrid*:focus, html.has-opera .dgrid *:focus {
+
+  /* firefox's focus doesn't work by default for divs prior to actually tabbing into it. This fixes that
+  (we don't do any other browsers because we are trying to stay as close to native as possible) */
+  outline: 1px solid #e9841d !important;
+}
+
+
+html.has-webkit .dijitTreeNode *:focus, html.has-mozilla .dijitTreeNode *:focus, html.has-opera .dijitTreeNode *:focus {
+
+  /* firefox's focus doesn't work by default for divs prior to actually tabbing into it. This fixes that
+  (we don't do any other browsers because we are trying to stay as close to native as possible) */
+  outline: 1px solid #e9841d !important;
+}
+
+/*html.has-mozilla .dgrid *:focus, html.has-opera .dgrid *:focus {
+	outline: 1px dotted;
+}
+*/
+
+html.has-mozilla .dgrid-focus,
+html.has-webkit .dgrid-focus,
+html.has-opera .dgrid-focus{
+  outline-offset: -1px;
+
+}

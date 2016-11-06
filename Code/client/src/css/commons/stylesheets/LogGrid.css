@@ -1,0 +1,38 @@
+/* line 1, ../sass/LogGrid.scss */
+.logGridView .field-level {
+  width: 50px;
+  text-align: left;
+  text-transform: capitalize;
+  padding-left: 2px !important;
+}
+
+/* line 7, ../sass/LogGrid.scss */
+.logGridView .field-type {
+  width: 59px;
+  text-align: left;
+}
+
+/* line 11, ../sass/LogGrid.scss */
+.logGridView .field-host {
+  width: 15%;
+}
+
+/* line 14, ../sass/LogGrid.scss */
+.logGridView .field-details {
+  width: 40%;
+}
+
+/* line 17, ../sass/LogGrid.scss */
+.logGridView .field-timeStr {
+  width: 14%;
+}
+
+/* line 20, ../sass/LogGrid.scss */
+.logGridView .field-time {
+  width: 14%;
+}
+
+/* line 23, ../sass/LogGrid.scss */
+.logGridView .field-message {
+  width: 20%;
+}

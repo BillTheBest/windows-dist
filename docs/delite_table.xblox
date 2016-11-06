@@ -1,0 +1,69 @@
+{
+  "blocks": [
+    {
+      "_containsChildrenIds": [],
+      "group": "On Load",
+      "id": "e813a85f-7511-723f-bc1f-c13698456a5b",
+      "method": "console.log('script!!:',this);",
+      "name": "Run Script",
+      "args": "",
+      "deferred": false,
+      "declaredClass": "xblox.model.code.RunScript",
+      "enabled": true,
+      "serializeMe": true,
+      "shareTitle": "Log Me",
+      "description": "Runs an expression.<br/>\n\n<b>Behaviour</b>\n\n<pre>\n\n    //to abort execution (child blocks), return something negative as -1 or false.\n    return false;\n\n</pre>",
+      "canDelete": true,
+      "renderBlockIcon": true,
+      "order": 0,
+      "additionalProperties": true,
+      "_scenario": "update"
+    },
+    {
+      "_containsChildrenIds": [],
+      "group": "On Load",
+      "id": "9866497e-c737-06d5-a4f1-1f0a8a9c43ff",
+      "value": "background-gray:blue;font-family:'Comic Sans MS',cursive;color:#b39292",
+      "shareTitle": "MyFontAdjuster",
+      "name": "Set Style",
+      "reference": "",
+      "description": "Sets HTML Node Style Attribute",
+      "mode": 1,
+      "declaredClass": "xblox.model.html.SetStyle",
+      "enabled": true,
+      "serializeMe": true,
+      "canDelete": true,
+      "renderBlockIcon": true,
+      "order": 0,
+      "_didRegisterSubscribers": false,
+      "additionalProperties": true,
+      "_scenario": "update"
+    }
+  ],
+  "variables": [
+    {
+      "title": "No-Title-Yet",
+      "type": 13,
+      "value": "No Value",
+      "enumType": "VariableType",
+      "save": false,
+      "initialize": "",
+      "group": "Variables",
+      "id": "5b8b5bbf-15e0-81be-216c-f22d6f179717",
+      "register": true,
+      "readOnly": false,
+      "declaredClass": "xblox.model.variables.Variable",
+      "enabled": true,
+      "serializeMe": true,
+      "shareTitle": "",
+      "sharable": false,
+      "_currentIndex": 0,
+      "_onLoaded": false,
+      "beanType": "BLOCK",
+      "description": "No Description",
+      "canDelete": true,
+      "renderBlockIcon": true,
+      "order": 0
+    }
+  ]
+}

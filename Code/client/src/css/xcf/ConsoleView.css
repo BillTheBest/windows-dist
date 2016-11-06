@@ -1,0 +1,8 @@
+.consoleWidget {
+  position: absolute;
+  bottom: 0;
+  width: inherit;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.5) inset;
+  outline: medium none;
+  text-overflow: ellipsis;
+}

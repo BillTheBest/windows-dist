@@ -1,0 +1,245 @@
+/*
+A - Timer
+B - Step
+C - Variable
+D - Call
+E - If.. else
+F - For
+G - While
+
+H - Switch
+I - Case
+
+Unpack the ZIP file, open CodingFont-demo.html with your browser and you can see the font in different sizes... In Glyphs and Languages tab you can see the codes, but you can use capital letters above as well.
+In tab Installing Web fonts you'll see detailed instructions how to use the font (do not forget to use the real css code from stylesheet.css instead sample one!).
+Or in few steps:
+- copy the content of stylesheet.css on top of your other CSS.
+- then bellow you can use the font in any element like this:
+body{
+font-family: 'codingfontregular';
+}
+*/
+@import url(../../fonts/stylesheet.css);
+/* line 28, ../sass/blox.scss */
+.Driver .Accordion .widgetContainer {
+  background: initial;
+  margin: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 13px;
+}
+/* line 30, ../sass/blox.scss */
+.Driver .Accordion .widgetContainer .checkbox {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+/* line 34, ../sass/blox.scss */
+.Driver .Accordion .widgetContainer .form-control {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: initial;
+}
+/* line 49, ../sass/blox.scss */
+.Driver .tabbable .tab-content {
+  background-color: #333333;
+}
+/* line 54, ../sass/blox.scss */
+.Driver .bloxEditor .tab-content {
+  background-color: #333333;
+}
+
+/* line 60, ../sass/blox.scss */
+.xBloxIcon {
+  font-family: codingfontregular;
+  font-size: 18px;
+  margin-right: 4px;
+  color: #C0C0C0;
+  font-weight: normal;
+}
+
+/* line 68, ../sass/blox.scss */
+.xbloxPropertyView {
+  min-width: 380px !important;
+}
+
+/* line 71, ../sass/blox.scss */
+.blockGrid .field-order {
+  width: 40px;
+  background: rgba(173, 173, 173, 0.65);
+  text-align: left;
+}
+
+/* line 76, ../sass/blox.scss */
+.blockGrid .field-name {
+  width: 99%;
+}
+
+/* line 79, ../sass/blox.scss */
+.blockGrid .field-value {
+  width: 20%;
+}
+
+/* line 82, ../sass/blox.scss */
+.bloxGridView {
+  padding: 0px !important;
+  min-height: 400px;
+  width: inherit !important;
+}
+
+/* line 87, ../sass/blox.scss */
+.bloxEditor {
+  overflow: hidden;
+  height: inherit;
+}
+
+/* line 91, ../sass/blox.scss */
+.bloxEditor .dijitTitlePane {
+  height: inherit;
+}
+
+/* line 94, ../sass/blox.scss */
+.bloxEditor .dijitValidationTextBox {
+  width: inherit;
+  color: black;
+}
+
+/* line 98, ../sass/blox.scss */
+.bloxEditor .dijitTextBox {
+  width: inherit;
+}
+
+/* line 101, ../sass/blox.scss */
+.bloxEditor .dijitTitlePaneTitleFocus {
+  float: left;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+
+/* line 106, ../sass/blox.scss */
+.bloxEditor .actionTogglePaneHeader {
+  min-height: 26px;
+  padding: 0 7px 3px;
+}
+
+/* line 110, ../sass/blox.scss */
+.bloxGridView .dijitValidationTextBox {
+  width: inherit;
+  color: black;
+}
+
+/* line 114, ../sass/blox.scss */
+.bloxGridView .dijitTextBox {
+  width: 100%;
+}
+
+/* line 117, ../sass/blox.scss */
+.bloxGridView .dijitTitlePaneTitleFocus {
+  float: left;
+  margin-top: 8px;
+}
+
+/* line 121, ../sass/blox.scss */
+.bloxGridView .field-title {
+  width: 25%;
+  padding-left: 5px;
+}
+
+/* line 125, ../sass/blox.scss */
+.bloxGridView .field-order {
+  width: 30px;
+}
+
+/* line 128, ../sass/blox.scss */
+.bloxGridView .field-name {
+  width: 25%;
+  padding-left: 5px;
+}
+
+/* line 132, ../sass/blox.scss */
+.bloxGridView .field-value {
+  width: 50%;
+  padding-left: 5px;
+}
+
+/* line 136, ../sass/blox.scss */
+.bloxGridView .field-target {
+  width: 25%;
+  padding-left: 15px;
+}
+
+/* line 140, ../sass/blox.scss */
+.bloxGridView .dgrid-focus {
+  outline-offset: 0px;
+}
+
+/* line 143, ../sass/blox.scss */
+.activeBlock {
+  background-color: #a9a9a9 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+/* line 148, ../sass/blox.scss */
+.successBlock {
+  background-color: #006400 !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+/* line 153, ../sass/blox.scss */
+.disabledBlock {
+  opacity: 0.5;
+}
+
+/* line 157, ../sass/blox.scss */
+.failedBlock {
+  background-color: darkred !important;
+  background-image: none !important;
+  color: #ffffff !important;
+}
+
+/* line 162, ../sass/blox.scss */
+.blockExpressionSymbolButton {
+  border: 1px #a9a9a9 solid;
+  border-radius: 2px;
+  margin-right: 2px !important;
+}
+
+/* line 167, ../sass/blox.scss */
+.expressionGridView .dgrid {
+  min-height: inherit;
+}
+
+/* line 170, ../sass/blox.scss */
+.expressionEditor .layoutTop {
+  height: 120px;
+}
+
+/* line 173, ../sass/blox.scss */
+.blocksEditorPane {
+  overflow: hidden;
+}
+
+/* line 176, ../sass/blox.scss */
+.jsonEditorWidgetContainer {
+  padding: 0.0em;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /*background-color: white;*/
+  background-size: 100% 100%;
+  background-position: 0 -104px;
+  max-width: 1280px;
+}
+
+/* line 185, ../sass/blox.scss */
+.jsonEditorWidget {
+  vertical-align: middle;
+  /*background-color: white;*/
+  width: 100%;
+  overflow-y: visible;
+  overflow-x: hidden;
+}
+
+/* line 192, ../sass/blox.scss */
+div.jsoneditor-select {
+  z-index: 5000;
+}

@@ -1,0 +1,9 @@
+.dijitPopup {
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.dijitTooltipDialogPopup {
+/* exception popups: do not use a shadow on these because they aren't rectangular */
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}

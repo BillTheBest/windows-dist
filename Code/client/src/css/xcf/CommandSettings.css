@@ -1,0 +1,67 @@
+.commandSettings {
+  /*color: white;*/
+}
+.commandSettings .dijitValidationTextBox {
+  width: inherit;
+  color: black;
+}
+.commandSettings .dijitTextBox {
+  width: inherit;
+}
+.commandSettings .dgrid-input {
+  /*width: inherit !important;*/
+}
+.commandSettings .basicCommandsGridView {
+  padding: 0px;
+  min-height: 400px;
+}
+.commandSettings .basicCommandsGridView .dijitTextBox {
+  width: 80%;
+}
+.commandSettings .actionTogglePaneHeader {
+  min-height: 26px;
+  padding: 0 7px 3px;
+  /*height: auto;*/
+  /*display: inline-block;*/
+  /*width: 97%;*/
+}
+.commandSettings .basicCommandsGridView .field-auto {
+  width: 30px;
+}
+.commandSettings .basicCommandsGridView .field-startup {
+  width: 45px;
+  text-align: center;
+}
+.commandSettings .basicCommandsGridView .field-send {
+  width: 150px;
+}
+.commandSettings .basicCommandsGridView .field-name {
+  width: 100px;
+}
+.commandSettings .conditionalCommandsGridView {
+  padding: 0px;
+  min-height: 400px;
+}
+.commandSettings .conditionalCommandsGridView .field-auto {
+  width: 30px;
+}
+.commandSettings .conditionalCommandsGridView .field-startup {
+  width: 45px;
+  text-align: center;
+}
+.commandSettings .conditionalCommandsGridView .field-variable {
+  width: 50px;
+}
+/*
+.commandSettings .conditionalCommandsGridView .field-name{
+  width:120px
+}*/
+.commandSettings .conditionalCommandsGridView .field-comparator {
+  width: 40px;
+}
+.commandSettings .conditionalCommandsGridView .field-expression {
+  width: 40px;
+}
+.commandSettings .conditionalCommandsGridView .field-dummy {
+  width: 40px;
+}

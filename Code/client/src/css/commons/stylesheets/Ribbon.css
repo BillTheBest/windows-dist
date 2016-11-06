@@ -1,0 +1,134 @@
+/* line 1, ../sass/Ribbon.scss */
+.ribbon_block_base {
+  margin: 3px 0px 3px 3px;
+  float: left;
+  overflow: hidden;
+  position: relative;
+}
+
+/* line 8, ../sass/Ribbon.scss */
+.ribbon_block_base .ribbon_block_items {
+  float: left;
+  padding: 2px 0px;
+  overflow: hidden;
+}
+
+/* line 13, ../sass/Ribbon.scss */
+.ribbon_block_base > .ribbon_block_label {
+  height: 19px;
+  line-height: 18px;
+  *height: auto;
+  *line-height: 1em;
+}
+
+/* line 19, ../sass/Ribbon.scss */
+.ribbon_block_base .ribbon_block_label {
+  text-align: center;
+  clear: left;
+  background-color: #ebebeb;
+  *font-size: 12px;
+  *padding: 1px 3px 3px;
+  font-size: 14px;
+  color: #404040;
+}
+
+/* line 28, ../sass/Ribbon.scss */
+.ribbon_block_base .ribbon_block_label_fixed {
+  text-align: center;
+  clear: left;
+  background-color: #ebebeb;
+  *font-size: 12px;
+  *padding: 1px 3px 3px;
+  font-size: 14px;
+  color: #404040;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+/* line 40, ../sass/Ribbon.scss */
+.ribbon_tabbar {
+  /*background-color: #fafafa;*/
+}
+
+/* line 43, ../sass/Ribbon.scss */
+.ribbon_big_button {
+  margin: 1px 3px;
+  float: left;
+  text-align: center;
+  padding: 4px 10px;
+  height: 82px;
+  /*border: 1px solid #fafafa;
+  background-color: #fafafa;*/
+  font-size: 14px;
+  color: #404040;
+}
+
+/* line 54, ../sass/Ribbon.scss */
+.ribbon_3rows_block {
+  float: left;
+  margin: 0px 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* line 60, ../sass/Ribbon.scss */
+.ribbon_3rows_block .ribbon_invisible {
+  display: none;
+}
+
+/* line 63, ../sass/Ribbon.scss */
+.ribbon_3rows_button {
+  height: 25px;
+  margin: 1px 0px;
+  float: left;
+  clear: left;
+  padding: 1px 8px;
+  font-size: 14px;
+  color: #404040;
+  width: 100%;
+}
+
+/* line 74, ../sass/Ribbon.scss */
+.ribbon_3rows_button:hover {
+  background-color: #ebebeb;
+  border-color: #ebebeb;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* line 85, ../sass/Ribbon.scss */
+.ribbon_3rows_button.disabled > * {
+  opacity: 0.2;
+}
+
+/* line 88, ../sass/Ribbon.scss */
+.ribbon_dropdown {
+  padding-left: 6px;
+  padding-right: 15px;
+  margin: 1px 0px;
+}
+
+/* line 94, ../sass/Ribbon.scss */
+.xPopup.ActionToolbar .dropdown-menu > a:hover, .ActionRibbonToolbar .dropdown-menu > a:hover {
+  color: inherit;
+}
+
+/* line 98, ../sass/Ribbon.scss */
+.ribbonToolbar {
+  /*  Hide arrow */
+}
+/* line 100, ../sass/Ribbon.scss */
+.ribbonToolbar .dropdown-submenu > a:after {
+  /*display: none;*/
+}
+
+/* line 104, ../sass/Ribbon.scss */
+.ribbonToolbar .action-checkbox {
+  margin-left: 8px;
+}

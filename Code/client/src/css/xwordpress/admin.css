@@ -1,0 +1,24 @@
+@import "../commons/bootstrap.css";
+@import "../commons/grid.css";
+#wpcontent{
+    padding-left: 0px;
+}
+#wpbody-content {
+    padding-bottom: 0px;
+}
+BODY{
+    overflow: hidden !important;
+}
+#wpbody{
+    overflow: hidden;
+    height: inherit;
+}
+
+.xTheme-transparent.dijitPopup{
+    background-color: #4a5150!important;
+    background: none !important;
+}
+.dijitPopup{
+    position: absolute !important;
+}
+

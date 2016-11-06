@@ -1,0 +1,106 @@
+/***
+
+  Awesome LESS macros to generate cross browser CSS
+
+*/
+/***
+  Layout - Macros
+*/
+/***
+  Macros zum erstellen von Rahmen
+*/
+/***
+  Macros fuer geometrische Operationen
+*/
+/***
+  Effect Macros
+*/
+/***
+  Macros fuer Highlighting bei Feedbacks
+*/
+/***
+  Text - Macros
+*/
+/***
+  Text - Macros
+*/
+/***
+  Macros fuer Hintergrund-Sprites
+*/
+/***  Background-Sprite with different width & height*/
+/***
+  Background - Color - Transparent Overlay
+*/
+/***
+  Shadow - Macro
+*/
+/***
+    Image related
+*/
+/***
+  Pure Class Macros
+*/
+/***
+  LOW-LEVEL : Macros zum animieren von CSS Eigentschaften
+*/
+/***
+  LOW-LEVEL : Macros zum erstellen von Gradients
+*/
+/**
+  Text-Font-Size Macros
+**/
+.dgrid-cell :focus {
+  /*outline: 1px dotted #e9841d !important;*/
+}
+.dgrid-focus {
+  /*outline: 1px dotted #e9841d !important;*/
+}
+a:hover,
+a:active,
+a:focus {
+  outline: 0 !important;
+}
+div:hover,
+div:active,
+div:focus {
+  outline: 0 !important;
+}
+span:hover,
+span:active,
+span:focus {
+  outline: 0 !important;
+}
+html.has-webkit .dgrid *:focus,
+html.has-mozilla .dgrid *:focus,
+html.has-opera .dgrid *:focus {
+  /* firefox's focus doesn't work by default for divs prior to actually tabbing into it. This fixes that
+  (we don't do any other browsers because we are trying to stay as close to native as possible) */
+  outline: 1px solid #e9841d !important;
+  /*outline-offset: -2px;*/
+  /*background: #2a8eff;*/
+  /*color: #ffffff;*/
+}
+html.has-webkit .dijitTreeNode *:focus,
+html.has-mozilla .dijitTreeNode *:focus,
+html.has-opera .dijitTreeNode *:focus {
+  /* firefox's focus doesn't work by default for divs prior to actually tabbing into it. This fixes that
+  (we don't do any other browsers because we are trying to stay as close to native as possible) */
+  outline: 1px dotted #e9841d !important;
+  outline-offset: -1px;
+  /*background: #2a8eff;*/
+  /*color: #ffffff;*/
+}
+/*html.has-mozilla .dgrid *:focus, html.has-opera .dgrid *:focus {
+	outline: 1px dotted;
+}
+*/
+html.has-mozilla .dgrid-focus,
+html.has-webkit .dgrid-focus,
+html.has-opera .dgrid-focus {
+  outline-offset: -1px;
+}
+.clare .dijitTextBoxFocused {
+  border-color: rgba(82, 168, 236, 0.8);
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(82, 168, 236, 0.6);
+  outline: medium none;
+}

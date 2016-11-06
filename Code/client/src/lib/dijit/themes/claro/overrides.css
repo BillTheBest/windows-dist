@@ -1,0 +1,160 @@
+/**
+  Dijit Generics
+*/
+.dijitTabContainerBottom-dijitContentPane {
+  /*background-color: transparent;*/
+}
+.bottomTab .dijitTabContainerBottom-dijitContentPane {
+  /*background-color: transparent;*/
+}
+.claro .dijitDialog {
+  border: 2px solid #000000;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.64);
+  /*background-color: #303030;*/
+  /*color: #000000;*/
+}
+.dijitBorderContainer-dijitContentPane {
+  /*background-color: transparent;*/
+  padding: 0px !important;
+}
+.claro .dijitAccordionContainer .dijitAccordionChildWrapper {
+  /*background-color: #303030;*/
+  /*border: 2px solid #759DC0;*/
+  /*margin: 0 0px 0px;*/
+}
+.claro h1 {
+  font-size: 1.545em;
+  margin-bottom: 0px !important;
+}
+.dijitTree {
+  padding-top: 5px;
+  padding-left: 5px;
+}
+.dijitPopup .dijitMenuItemIcon {
+  padding-left: 6px;
+}
+.dijitPopup .dijitMenuItemIcon {
+  padding-left: 6px;
+}
+.claro .dijitSplitContainer-dijitContentPane,
+.claro .dijitBorderContainer-dijitContentPane {
+  padding: 8px;
+}
+.claro .dijitAccordionContainer .dijitAccordionContainer-child {
+  padding: 0px !important;
+}
+.dijitReadOnly *,
+.dijitDisabled *,
+.dijitReadOnly,
+.dijitDisabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.claro .dijitButtonDisabled,
+.claro .dijitDropDownButtonDisabled,
+.claro .dijitComboButtonDisabled,
+.claro .dijitToggleButtonDisabled {
+  opacity: 0.7;
+}
+.claro .dijitToolbar {
+  /*border-bottom: 0px solid #DDDDDD !important;*/
+  display: inline-block;
+  height: auto;
+  width: inherit;
+  padding: 2px !important;
+}
+.claro .dijitIcon {
+  margin-left: 3px;
+  margin-right: 3px;
+}
+.claro .dijitAccordionTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 134%;
+  /*text-shadow: 1px 1px black;*/
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -moz-binding: url('fonts/truncate.xml#ellipsis');
+}
+.claro .dijitAccordionTitleSelected {
+  box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.5) inset;
+}
+/*
+.dijitTabContainerTopChildWrapper{
+  height: inherit;
+}
+*/
+.dijitTabPane,
+.dijitStackContainer-child,
+.dijitAccordionContainer-child {
+  border: inherit;
+}
+.dijitMenuItemAccelKey {
+  text-align: right;
+  /*margin-left: 12px;
+  float:right;
+  padding-bottom: 5px !important;
+  padding-top: 5px !important;*/
+}
+.claro .dijitToolbarSeparator {
+  background: none;
+  border-left: 1px solid rgba(127, 127, 127, 0.5);
+}
+.claro .dijitMenuArrowCell {
+  padding-left: 4px;
+  padding-right: 4px;
+}
+/*.claro .dijitToolbarSeparator{}*/
+/*************************************    Tree  ***/
+.icon-folder-close:before,
+.dijitFolderClosed:before,
+.dijitIconFolderClosed:before {
+  content: "\f07b";
+  font-family: Fontawesome;
+}
+.icon-folder-open:before,
+.dijitFolderOpened:before,
+.dijitIconFolderOpen:before {
+  content: "\f07c";
+  font-family: Fontawesome;
+}
+.icon-plus-sign:before,
+.claro .dijitTreeExpandoClosed:before {
+  content: "\f055";
+  font-family: Fontawesome;
+}
+.icon-minus-sign:before,
+.claro .dijitTreeExpandoOpened:before {
+  content: "\f056";
+  font-family: Fontawesome;
+}
+.claro .dijitTreeRow {
+  padding: 2px 0;
+}
+.claro .dijitTreeRowSelected,
+.claro .dijitTreeRowSelected.dijitTreeRowHover {
+  /*background-color: #0088CC;
+  color: #FFFFFF;*/
+}
+.claro .dijitTreeRowHover {
+  /*background-color: rgba(100,100,100,0.4);*/
+  /*color: #333333;*/
+}
+.claro .dijitTreeExpando:before {
+  cursor: pointer;
+  opacity: 0.3;
+  padding-left: 4px;
+  padding-right: 2px;
+}
+.claro .dijitTreeExpandoLeaf:before {
+  cursor: none;
+  visibility: hidden;
+}
+.claro .dijitTreeIcon {
+  text-align: center;
+  width: 1em;
+  font-family: Fontawesome;
+}
+.claro .dijitArrowButtonInner {
+  vertical-align: top !important;
+}

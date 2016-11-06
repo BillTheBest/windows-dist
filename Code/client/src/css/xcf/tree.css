@@ -1,0 +1,99 @@
+.icon-folder-close:before,
+.dijitFolderClosed:before,
+.dijitIconFolderClosed:before {
+  content: "\f07b";
+}
+.icon-folder-open:before,
+.dijitFolderOpened:before,
+.dijitIconFolderOpen:before {
+  content: "\f07c";
+}
+.icon-plus-sign:before,
+.claro .dijitTreeExpandoClosed:before {
+  content: "\f055";
+}
+.icon-minus-sign:before,
+.claro .dijitTreeExpandoOpened:before {
+  content: "\f056";
+}
+.dijitIconFolderClosed,
+.dijitFolderOpened,
+.dijitIconFolderOpen {
+  background-image: none;
+}
+.dijitFolderClosed,
+.dijitIconFolderClosed,
+.dijitFolderOpened,
+.dijitIconFolderOpen {
+  background-image: none !important;
+}
+.claro .dijitTreeRow {
+  padding: 2px 0;
+}
+.claro .dijitTreeRowSelected,
+.claro .dijitTreeRowSelected.dijitTreeRowHover {
+  background-color: #0088CC;
+  color: #FFFFFF;
+}
+.claro .dijitTreeRowHover {
+  background-color: rgba(100, 100, 100, 0.4);
+  /*color: #333333;*/
+}
+.claro .dijitTreeExpando:before {
+  cursor: pointer;
+  opacity: 0.3;
+  padding-left: 4px;
+  padding-right: 2px;
+}
+.claro .dijitTreeExpandoLeaf:before {
+  cursor: none;
+  visibility: hidden;
+}
+.claro .dijitTreeIcon {
+  text-align: center;
+  width: 1em;
+}
+.claro .cbtreeCheckBox {
+  background-image: url("images/spriteCheckbox.gif");
+  background-repeat: no-repeat;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  width: 16px;
+}
+.claro .cbtreeCheckBox {
+  background-position: -16px center;
+}
+.claro .cbtreeCheckBoxChecked {
+  background-position: 0 center;
+}
+.claro .cbtreeCheckBoxMixed {
+  background-position: -32px center;
+}
+.claro .cbtreeCheckBoxDisabled {
+  background-position: -64px center;
+}
+.claro .cbtreeCheckBoxCheckedDisabled {
+  background-position: -48px center;
+}
+.claro .cbtreeCheckBoxMixedDisabled {
+  background-position: -80px center;
+}
+.claro .cbtreeCheckBoxReadOnly {
+  background-position: -64px center;
+}
+.claro .cbtreeCheckBoxCheckedReadOnly {
+  background-position: -48px center;
+}
+.claro .cbtreeCheckBoxMixedReadOnly {
+  background-position: -80px center;
+}
+.claro .cbtreeCheckBoxHover {
+  background-position: -112px center;
+}
+.claro .cbtreeCheckBoxCheckedHover {
+  background-position: -96px center;
+}
+.claro .cbtreeCheckBoxMixedHover {
+  background-position: -128px center;
+}

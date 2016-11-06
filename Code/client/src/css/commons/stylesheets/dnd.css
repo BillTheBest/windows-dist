@@ -1,0 +1,240 @@
+/* line 1, ../sass/dnd.scss */
+.dndImage {
+  display: block;
+  height: auto;
+  width: 100%;
+  max-height: 150px;
+  max-width: 150px;
+  overflow: hidden;
+}
+
+/* line 10, ../sass/dnd.scss */
+.dojoDndAvatar .dgrid-selected {
+  box-shadow: none !important;
+}
+/* line 13, ../sass/dnd.scss */
+.dojoDndAvatar .dgrid-focus {
+  outline: none;
+}
+
+/* line 18, ../sass/dnd.scss */
+.dojoDndContainerOver {
+  cursor: move !important;
+  /*border: 1px solid red !important;*/
+  /*border: 3px solid #aaa;*/
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* line 26, ../sass/dnd.scss */
+.dojoDndTargetDisabled {
+  background: #eee;
+}
+
+/* line 29, ../sass/dnd.scss */
+.dojoDndItemOver {
+  cursor: normal;
+}
+
+/* line 32, ../sass/dnd.scss */
+.dojoDndItem {
+  /*padding: 2px;*/
+  /* Prevent magnifying-glass text selection icon to appear on mobile webkit as it causes a touchout event */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  /* Disable selection/Copy of UIWebView */
+}
+
+/* line 40, ../sass/dnd.scss */
+.dj_ff2 .dojoDndItem {
+  -moz-user-select: none;
+  /* workaround FF2 dragging bug, see #6345, #4854, #6350 */
+}
+
+/* line 44, ../sass/dnd.scss */
+.dojoDndItemOver {
+  /*background: red !important;*/
+  cursor: pointer;
+}
+
+/* line 48, ../sass/dnd.scss */
+.dojoDndItemSelected {
+  /*background: #ccf;*/
+  color: #444;
+}
+
+/* line 53, ../sass/dnd.scss */
+.dojoDndItemAnchor {
+  /*background: #ccf;*/
+  /*color: black;*/
+}
+
+/* line 59, ../sass/dnd.scss */
+.dojoDndItemOver .dojoDndItemSelected {
+  /*background: #ededed !important;*/
+}
+
+/* line 62, ../sass/dnd.scss */
+.dojoDndItemOver .dojoDndItemAnchor {
+  /*background: #ededed !important;*/
+}
+
+/* line 65, ../sass/dnd.scss */
+.dojoDndItemBefore {
+  border-top: 2px solid rgba(74, 156, 230, 0.72) !important;
+  background-color: rgba(255, 0, 0, 0.54) !important;
+}
+
+/* line 69, ../sass/dnd.scss */
+.dojoDndItemHover {
+  /*border-top: 3px solid #9ae644 !important;
+  border-bottom: 3px solid #9ae644 !important;*/
+  color: rgba(0, 128, 0, 0.68) !important;
+  font-weight: bolder !important;
+}
+
+/* line 76, ../sass/dnd.scss */
+.dojoDndItemAfter {
+  border-bottom: 3px solid #369 !important;
+}
+
+/* line 79, ../sass/dnd.scss */
+.dojoDndAvatar {
+  /*border: 2px solid #ccc;*/
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  /*font-size: 75%;*/
+  -moz-border-radius: 8pt 8pt;
+  radius: 8pt;
+  max-width: 300px;
+  background: rgba(51, 51, 51, 0.1);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  /*color: $opaque-light;*/
+  /*color: white;*/
+  /*max-height: 150px;*/
+}
+
+/* line 93, ../sass/dnd.scss */
+.dojoDndAvatarHeader {
+  background: #aaa;
+}
+
+/* line 96, ../sass/dnd.scss */
+.dojoDndAvatarItem {
+  /*background: #fff;*/
+  border-bottom: 1px solid #666;
+}
+
+/**************************************************************************/
+/**   From Dijit/Commons                                                  */
+/* Drag and Drop */
+/*
+.dojoDndItem {
+  border: 1px solid transparent;
+  cursor: pointer;
+  -webkit-transition-duration: 0.25s;
+  -moz-transition-duration: 0.25s;
+  -o-transition-duration: 0.25s;
+  -ms-transition-duration: 0.25s;
+  transition-duration: 0.25s;
+  -webkit-transition-property: background-color, border-color, opacity;
+  -moz-transition-property: background-color, border-color, opacity;
+  -o-transition-property: background-color, border-color, opacity;
+  -ms-transition-property: background-color, border-color, opacity;
+  transition-property: background-color, border-color, opacity;
+}
+*/
+/* line 120, ../sass/dnd.scss */
+.dojoDndItemOver {
+  /*background: #f5f5f5;*/
+  /*-webkit-border-radius: 2px;
+  border-radius: 2px;*/
+}
+
+/* line 125, ../sass/dnd.scss */
+.dojoDndItemAnchor {
+  /*background: transparent;
+  /*border: 1px dashed #007ac2;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  */
+}
+
+/* line 132, ../sass/dnd.scss */
+.dojoDndItemBefore {
+  /*background: transparent;*/
+  padding-top: 2px;
+  border-top: 1px solid #007ac2;
+}
+
+/* line 137, ../sass/dnd.scss */
+.dojoDndItemAfter {
+  /*background: transparent;*/
+  padding-bottom: 2px;
+  border-bottom: 1px solid #007ac2;
+}
+
+/* Avatar */
+/* line 143, ../sass/dnd.scss */
+table.dojoDndAvatar {
+  display: block;
+}
+
+/* line 146, ../sass/dnd.scss */
+.dojoDndAvatarHeader td {
+  display: none;
+}
+
+/* line 149, ../sass/dnd.scss */
+.dojoDndAvatarHeader:before {
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  text-decoration: inherit;
+  vertical-align: bottom;
+  display: table-cell;
+}
+
+/* line 158, ../sass/dnd.scss */
+.dojoDndMove .dojoDndAvatarHeader:before {
+  color: #da4d1e;
+  content: "\f05e";
+}
+
+/* line 162, ../sass/dnd.scss */
+.dojoDndCopy .dojoDndAvatarHeader:before {
+  color: #da4d1e;
+  content: "\f05e";
+}
+
+/* line 166, ../sass/dnd.scss */
+.dojoDndMove .dojoDndAvatarCanDrop .dojoDndAvatarHeader:before {
+  color: #35ac46;
+  content: "\f060";
+}
+
+/* line 170, ../sass/dnd.scss */
+.dojoDndCopy .dojoDndAvatarCanDrop .dojoDndAvatarHeader:before {
+  color: #35ac46;
+  content: "\f060";
+}
+
+/* line 174, ../sass/dnd.scss */
+.dojoDndAvatarItem {
+  /*-webkit-border-radius: 2px;
+  border-radius: 2px;*/
+  outline: none !important;
+}
+
+/* line 179, ../sass/dnd.scss */
+.dojoDndAvatarItem td {
+  /*padding: 2px 4px;*/
+}
+
+/* line 182, ../sass/dnd.scss */
+.dojoDndAvatarItem td > * {
+  /*background: #fff;*/
+  /*-webkit-box-shadow: 0 3px 3px rgba(0,0,0,0.25);*/
+  /*box-shadow: 0 3px 3px rgba(0,0,0,0.25);*/
+}

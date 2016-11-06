@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg">
+<metadata>Copyright (C) 2014 by original authors @ fontello.com</metadata>
+<defs>
+<font id="steps" horiz-adv-x="1000" >
+<font-face font-family="steps" font-weight="400" font-stretch="normal" units-per-em="1000" ascent="850" descent="-150" />
+<missing-glyph horiz-adv-x="1000" />
+<glyph glyph-name="steps-up-tall" unicode="&#xe800;" d="m20-90l0 303 156 0 0-303-156 0z m468 0l0 303 157 0 0-303-157 0z m-312 323l0 303 156 0 0-303-156 0z m469 0l0 303 156 0 0-303-156 0z m-314 321l0 303 156 0 0-303-156 0z m470 0l0 303 156 0 0-303-156 0z" horiz-adv-x="1000" />
+<glyph glyph-name="steps-down-tall" unicode="&#xe801;" d="m957-90l0 303-156 0 0-303 156 0z m-469 0l0 303-156 0 0-303 156 0z m313 323l0 303-156 0 0-303 156 0z m-469 0l0 303-156 0 0-303 156 0z m314 321l0 303-157 0 0-303 157 0z m-470 0l0 303-156 0 0-303 156 0z" horiz-adv-x="1000" />
+<glyph glyph-name="steps-up-short" unicode="&#xe802;" d="m961 852l-302 0 0-156 302 0 0 156z m0-468l-302 0 0-157 302 0 0 157z m-322 312l-303 0 0-156 303 0 0 156z m0-469l-303 0 0-156 303 0 0 156z m-321 314l-303 0 0-156 303 0 0 156z m0-470l-303 0 0-156 303 0 0 156z" horiz-adv-x="1000" />
+<glyph glyph-name="steps-down-short" unicode="&#xe803;" d="m15 852l303 0 0-156-303 0 0 156z m0-468l303 0 0-157-303 0 0 157z m322 312l303 0 0-156-303 0 0 156z m0-469l303 0 0-156-303 0 0 156z m322 314l302 0 0-156-302 0 0 156z m0-470l302 0 0-156-302 0 0 156z" horiz-adv-x="1000" />
+</font>
+</defs>
+</svg>

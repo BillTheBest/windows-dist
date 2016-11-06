@@ -1,0 +1,199 @@
+/***
+
+  Awesome LESS macros to generate cross browser CSS
+
+*/
+/***
+  Layout - Macros
+*/
+/***
+  Macros zum erstellen von Rahmen
+*/
+/***
+  Macros fuer geometrische Operationen
+*/
+/***
+  Effect Macros
+*/
+/***
+  Macros fuer Highlighting bei Feedbacks
+*/
+/***
+  Text - Macros
+*/
+/***
+  Text - Macros
+*/
+/***
+  Macros fuer Hintergrund-Sprites
+*/
+/***  Background-Sprite with different width & height*/
+/***
+  Background - Color - Transparent Overlay
+*/
+/***
+  Shadow - Macro
+*/
+/***
+    Image related
+*/
+/***
+  Pure Class Macros
+*/
+/***
+  LOW-LEVEL : Macros zum animieren von CSS Eigentschaften
+*/
+/***
+  LOW-LEVEL : Macros zum erstellen von Gradients
+*/
+/**
+  Text-Font-Size Macros
+**/
+/***   Text - Colors   ***/
+/***   Colors   ***/
+/***
+  Default-Text Margins and Paddings
+*/
+/*** Border-Colors ***/
+/***
+  Highlight Colors
+*/
+/***
+  Shadows
+*/
+/***
+  Buttons
+*/
+/***
+  Standard-Background-Color for Toolbars
+*/
+/***
+  Dojo - Internals
+*/
+/****
+  File Property View only
+*/
+.filePropertyView {
+  width: 100%;
+  /*background-color: @default-container-background-color;*/
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
+.filePropertyView .propertyHeader {
+  height: 16px;
+}
+.filePropertyView .iconNode {
+  min-height: 25%;
+  height: 25%;
+  position: relative;
+}
+.filePropertyView .rootNode {
+  height: 100%;
+}
+.filePropertyView .propertyNode {
+  min-height: 20%;
+  margin-top: 16px;
+  overflow: hidden;
+}
+.filePropertyPanel {
+  width: 200px;
+  background-color: #c8c8c8;
+  padding: 8px !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+/****
+  File Property Widgets : File-Poperties
+*/
+.filePropertyView .filePropertyTable {
+  border: none !important;
+}
+.filePropertyView tr,
+td {
+  border: 0 solid #DDDDDD !important;
+}
+.filePropertyView .filePropertyRow {
+  border-bottom: 1px solid #d1d1d1;
+}
+.filePropertyView .filePropertyLabelColumn SPAN {
+  float: right;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 1.2em;
+  margin: 3px;
+  vertical-align: middle;
+}
+.filePropertyView .filePropertyValueColumn SPAN {
+  text-align: left;
+  color: #6F7983;
+  font-size: 1.2em;
+  margin: 3px;
+  vertical-align: middle;
+}
+/****
+  Image tweaks
+*/
+.filePropertyMimeIcon {
+  min-width: 150px;
+  text-align: center;
+  display: block;
+  height: 100%;
+}
+.filePropertyMimeIcon .mediaImage {
+  /*display: block;
+  height: auto;
+  max-height: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden;
+  width: 160px;
+  margin: 0 auto;
+  border: 1px solid #FFFFFF;
+  box-shadow: 0 0 5px #5C5C5C;
+  */
+  position: absolute;
+  max-width: 80%;
+  top: 10%;
+  left: 10%;
+  width: 70%;
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.9);
+}
+.filePropertyMimeIcon .mediaImage:empty {
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+/*
+img.ri
+{
+  position: absolute;
+  max-width: 80%;
+  top: 10%;
+  left: 10%;
+  border-radius: 3px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.9);
+}
+*/
+img.ri:empty {
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+@media screen and (orientation: portrait) {
+  .filePropertyMimeIcon .mediaImage {
+    max-width: 90%;
+  }
+}
+@media screen and (orientation: landscape) {
+  .filePropertyMimeIcon .mediaImage {
+    max-height: 90%;
+  }
+}

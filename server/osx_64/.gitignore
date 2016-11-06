@@ -1,0 +1,5 @@
+/xcf_client
+# Created by .gitignore support plugin (hsz.mobi)
+.idea
+/.project
+xcf_client

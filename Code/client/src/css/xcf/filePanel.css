@@ -1,0 +1,86 @@
+/***
+
+  Awesome LESS macros to generate cross browser CSS
+
+*/
+/***
+  Layout - Macros
+*/
+/***
+  Macros zum erstellen von Rahmen
+*/
+/***
+  Macros fuer geometrische Operationen
+*/
+/***
+  Effect Macros
+*/
+/***
+  Macros fuer Highlighting bei Feedbacks
+*/
+/***
+  Text - Macros
+*/
+/***
+  Text - Macros
+*/
+/***
+  Macros fuer Hintergrund-Sprites
+*/
+/***  Background-Sprite with different width & height*/
+/***
+  Background - Color - Transparent Overlay
+*/
+/***
+  Shadow - Macro
+*/
+/***
+    Image related
+*/
+/***
+  Pure Class Macros
+*/
+/***
+  LOW-LEVEL : Macros zum animieren von CSS Eigentschaften
+*/
+/***
+  LOW-LEVEL : Macros zum erstellen von Gradients
+*/
+/**
+  Text-Font-Size Macros
+**/
+/****
+    Layout-Selector
+*/
+.fileLayoutSelector {
+  float: right;
+}
+.fileViewToolbarTop {
+  height: 25px;
+  position: relative;
+}
+.fileLayoutGridIcon {
+  background-image: url("images/thumbs.png");
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  background-repeat: no-repeat !important;
+}
+.fileLayoutTreeIcon {
+  background-image: url("images/tree_structure.png");
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  background-repeat: no-repeat !important;
+}
+.fileLayoutListIcon {
+  background-image: url("images/399-list1.png");
+  width: 18px;
+  height: 18px;
+  background-size: 18px 18px;
+  background-repeat: no-repeat !important;
+}
+.fileTreeView {
+  height: 100%;
+  width: 100%;
+}

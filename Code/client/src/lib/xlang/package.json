@@ -1,0 +1,26 @@
+{
+    "author": "Günter Baumgart",
+    "name": "xlang",
+    "version": "0.1.3",
+    "dependencies": {},
+    "devDependencies": {},
+    "contributors": [
+        {
+            "name": "Günter Baumgart",
+            "email": "baumgart.guenter@gmail.com",
+            "url": "http://net-commander.com"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/gbaumgart/xlang.git"
+    },
+    "licenses": [
+        {
+            "type": "BSD",
+            "url": "https://github.com/ibm-js/delite/blob/master/LICENSE"
+        }
+    ],
+    "bugs": "https://github.com/gbaumgart/xlang/issues",
+    "homepage": "https://github.com/gbaumgart/xlang"
+}

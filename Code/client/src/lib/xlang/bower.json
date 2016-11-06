@@ -1,0 +1,28 @@
+{
+	"author": "Günter Baumgart",
+	"name": "xlang",
+	"version": "0.2.13",
+	"description": "Basic skeleton and framework to build IDE like web-applications with Dojo or any other AMD based modules",
+	"keywords": [
+		"xide",
+		"dojo",
+		"dojo2"
+	],
+	"authors": [
+	],
+	"main": "xlang.js",
+	"homepage": "http://dojotoolkit.org/",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/gbaumgart/xlang.git"
+	},
+	"dependencies": {
+	},
+	"ignore": [
+		"tests",
+		"out",
+		"node_modules"
+	],
+	"license": [ "BSD-3-Clause" ],
+	"moduleType": [ "amd" ]
+}

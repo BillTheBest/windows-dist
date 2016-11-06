@@ -1,0 +1,1296 @@
+@charset "UTF-8";
+/* Welcome to Compass.
+ * In this file you should write your main styles. (or centralize your imports)
+ * Import this file using the following HTML or equivalent:
+ * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+/*@import "compass/reset";*/
+/* line 9, ../sass/ellipsis.scss */
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  -moz-binding: url('/stylesheets/xml/ellipsis.xml#ellipsis');
+}
+
+/* jspanel.sass: 2016-02-27 18:01 */
+@font-face {
+  font-family: "jsglyph";
+  src: url("fonts/jsglyph.eot?wbr2mk");
+  src: url("fonts/jsglyph.eot?wbr2mk#iefix") format("embedded-opentype"), url("fonts/jsglyph.ttf?wbr2mk") format("truetype"), url("fonts/jsglyph.woff?wbr2mk") format("woff"), url("fonts/jsglyph.svg?wbr2mk#jsglyph") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+/* line 9, ../sass/jspanel.scss */
+.jsglyph {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "jsglyph" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* line 22, ../sass/jspanel.scss */
+.jsglyph-chevron-down:before {
+  content: "";
+}
+
+/* line 25, ../sass/jspanel.scss */
+.jsglyph-chevron-up:before {
+  content: "";
+}
+
+/* line 28, ../sass/jspanel.scss */
+.jsglyph-close:before {
+  content: "";
+}
+
+/* line 31, ../sass/jspanel.scss */
+.jsglyph-maximize:before {
+  content: "";
+}
+
+/* line 34, ../sass/jspanel.scss */
+.jsglyph-minimize:before {
+  content: "";
+}
+
+/* line 37, ../sass/jspanel.scss */
+.jsglyph-normalize:before {
+  content: "";
+}
+
+/* line 40, ../sass/jspanel.scss */
+.jsPanel {
+  border: 0;
+  box-sizing: border-box;
+  vertical-align: baseline;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  border-radius: 3px;
+  z-index: 200;
+}
+
+/* line 53, ../sass/jspanel.scss */
+.jsPanel .jsPanel-hdr {
+  border: 0;
+  box-sizing: border-box;
+  vertical-align: baseline;
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  font-size: 18px;
+  padding: 3px 0 0;
+  cursor: move;
+  /*min-height: 40px;*/
+}
+
+/* line 68, ../sass/jspanel.scss */
+.jsPanel .jsPanel-content {
+  border: 0;
+  box-sizing: border-box;
+  vertical-align: baseline;
+  /*
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;*/
+  /*background: $default-bg;
+  color: $opaque;
+  */
+  /*font-size: 12px;*/
+  position: relative;
+  overflow: hidden;
+}
+
+/* line 84, ../sass/jspanel.scss */
+.jsPanel .jsPanel-content.jsPanel-content-noheader {
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+}
+
+/* line 87, ../sass/jspanel.scss */
+.jsPanel .jsPanel-content.jsPanel-content-nofooter {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+/* line 90, ../sass/jspanel.scss */
+.jsPanel .jsPanel-ftr {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-top: 1px solid #e0e0e0;
+  cursor: move;
+  display: none;
+  box-sizing: border-box;
+  font-size: 12px;
+  height: auto;
+  padding: 7px;
+  background: #f5f5f5;
+  font-weight: normal;
+  color: black;
+}
+
+/* line 115, ../sass/jspanel.scss */
+.jsPanel .jsPanel-ftr.active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+/* line 121, ../sass/jspanel.scss */
+.jsPanel-headerbar, .jsPanel-hdr-toolbar {
+  font-size: 18px;
+  line-height: 1em;
+  padding: 0 5px 0 10px;
+}
+
+/* line 128, ../sass/jspanel.scss */
+.jsPanel-headerbar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 5px 4px 10px;
+  margin: -7px;
+  /*background-color: $opaque-light;*/
+}
+
+/* line 150, ../sass/jspanel.scss */
+.jsPanel-titlebar {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding-right: 6px;
+  overflow: hidden;
+  line-height: 2em;
+}
+
+/* line 158, ../sass/jspanel.scss */
+.jsPanel-titlebar h3 {
+  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-variant: small-caps;
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  line-height: 2em;
+}
+
+/* line 169, ../sass/jspanel.scss */
+.jsPanel-titlebar h3 small {
+  font-size: 75%;
+  color: inherit;
+}
+
+/* line 173, ../sass/jspanel.scss */
+.jsPanel-titlebar.jsPanel-rtl h3 {
+  flex: 1 0 auto;
+}
+
+/* line 176, ../sass/jspanel.scss */
+.jsPanel-controlbar {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+/* line 181, ../sass/jspanel.scss */
+.jsPanel-controlbar div span:hover {
+  opacity: 0.5;
+}
+
+/* line 183, ../sass/jspanel.scss */
+.jsPanel-controlbar .jsPanel-btn {
+  padding: 0 3px;
+  cursor: pointer;
+}
+
+/* line 186, ../sass/jspanel.scss */
+.jsPanel-controlbar .jsPanel-btn-normalize {
+  display: none;
+}
+
+/* line 188, ../sass/jspanel.scss */
+.jsPanel-controlbar .jsPanel-btn-smallifyrev {
+  display: none;
+}
+
+/* line 191, ../sass/jspanel.scss */
+.jsPanel-hdr-toolbar {
+  display: none;
+  width: auto;
+  height: auto;
+  font-size: 16px;
+}
+
+/* line 196, ../sass/jspanel.scss */
+.jsPanel-hdr-toolbar * {
+  margin: 0 5px 0 0;
+}
+
+/* line 199, ../sass/jspanel.scss */
+.jsPanel-hdr-toolbar.active {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 7px 10px 10px 10px;
+}
+
+/* styles for panels using option.rtl */
+/* line 219, ../sass/jspanel.scss */
+.jsPanel-headerbar.jsPanel-rtl, .jsPanel-controlbar.jsPanel-rtl, .jsPanel-hdr-toolbar.jsPanel-rtl {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+  -webkit-flex-direction: row-reverse;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+/* line 226, ../sass/jspanel.scss */
+.jsPanel-headerbar.jsPanel-rtl {
+  padding: 0 5px;
+}
+
+/* line 229, ../sass/jspanel.scss */
+.jsPanel-hdr-toolbar.active.jsPanel-rtl {
+  padding: 7px 0 10px 0;
+}
+
+/* line 232, ../sass/jspanel.scss */
+.jsPanel-ftr.jsPanel-rtl {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+/* css for tooltip connectors */
+/* line 240, ../sass/jspanel.scss */
+.jsPanel-connector {
+  pointer-events: none;
+}
+
+/* naming of connectors reflects position of tooltip and not pos of connector */
+/* line 244, ../sass/jspanel.scss */
+.jsPanel-connector-top {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-top-width: 10px;
+  left: calc(50% - 12px);
+  bottom: -22px;
+}
+
+/* line 253, ../sass/jspanel.scss */
+.jsPanel-connector-topleft {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-top-width: 10px;
+  left: 2px;
+  bottom: -22px;
+}
+
+/* line 262, ../sass/jspanel.scss */
+.jsPanel-connector-topright {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-top-width: 10px;
+  left: calc(100% - 26px);
+  bottom: -22px;
+}
+
+/* line 271, ../sass/jspanel.scss */
+.jsPanel-connector-right {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-right-width: 10px;
+  left: -22px;
+  top: calc(50% - 12px);
+}
+
+/* line 280, ../sass/jspanel.scss */
+.jsPanel-connector-righttop {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-right-width: 10px;
+  left: -22px;
+  top: 2px;
+}
+
+/* line 289, ../sass/jspanel.scss */
+.jsPanel-connector-rightbottom {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-right-width: 10px;
+  left: -22px;
+  top: calc(100% - 26px);
+}
+
+/* line 298, ../sass/jspanel.scss */
+.jsPanel-connector-bottom {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-bottom-width: 10px;
+  left: calc(50% - 12px);
+  top: -22px;
+}
+
+/* line 307, ../sass/jspanel.scss */
+.jsPanel-connector-bottomleft {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-bottom-width: 10px;
+  left: 2px;
+  top: -22px;
+}
+
+/* line 316, ../sass/jspanel.scss */
+.jsPanel-connector-bottomright {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-bottom-width: 10px;
+  left: calc(100% - 26px);
+  top: -22px;
+}
+
+/* line 325, ../sass/jspanel.scss */
+.jsPanel-connector-left {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-left-width: 10px;
+  left: 100%;
+  top: calc(50% - 12px);
+}
+
+/* line 334, ../sass/jspanel.scss */
+.jsPanel-connector-lefttop {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-left-width: 10px;
+  left: 100%;
+  top: 2px;
+}
+
+/* line 343, ../sass/jspanel.scss */
+.jsPanel-connector-leftbottom {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent;
+  position: absolute;
+  border-left-width: 10px;
+  left: 100%;
+  top: calc(100% - 26px);
+}
+
+/* naming of connectors reflects position of tooltip and not pos of connector */
+/* line 353, ../sass/jspanel.scss */
+.jsPanel-connector-lefttopcorner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  left: calc(100% - 6px);
+  top: calc(100% - 6px);
+}
+
+/* line 362, ../sass/jspanel.scss */
+.jsPanel-connector-righttopcorner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  left: -6px;
+  top: calc(100% - 6px);
+}
+
+/* line 371, ../sass/jspanel.scss */
+.jsPanel-connector-rightbottomcorner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  left: -6px;
+  top: -6px;
+}
+
+/* line 380, ../sass/jspanel.scss */
+.jsPanel-connector-leftbottomcorner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  left: calc(100% - 6px);
+  top: -6px;
+}
+
+/* container that takes the minified jsPanels */
+/* line 390, ../sass/jspanel.scss */
+#jsPanel-replacement-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap-reverse;
+  -ms-flex-flow: row wrap-reverse;
+  flex-flow: row wrap-reverse;
+  background: transparent none repeat scroll 0 0;
+  bottom: 0;
+  height: auto;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 9998;
+}
+
+/* line 405, ../sass/jspanel.scss */
+#jsPanel-replacement-container .jsPanel-replacement {
+  width: 180px;
+  height: 40px;
+  margin: 1px 1px 0 0;
+  z-index: 9999;
+}
+
+/* line 410, ../sass/jspanel.scss */
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-hdr {
+  padding: 5px 5px 5px 10px;
+}
+
+/* line 412, ../sass/jspanel.scss */
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-titlebar {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1 1 0;
+  -ms-flex: 1 1 0;
+  flex: 1 1 0;
+}
+
+/* line 417, ../sass/jspanel.scss */
+#jsPanel-replacement-container .jsPanel-replacement .jsPanel-btn.jsPanel-btn-normalize {
+  display: block;
+}
+
+/* css for the modal backdrop ------------------------------- */
+/* line 421, ../sass/jspanel.scss */
+.jsPanel-modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* helper classes to make .jsPanel-content a flex box */
+/* line 430, ../sass/jspanel.scss */
+.flexOne {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row wrap;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
+/* bootstrap adjustments */
+/* line 440, ../sass/jspanel.scss */
+.jsPanel.panel-default, .jsPanel.panel-primary, .jsPanel.panel-info, .jsPanel.panel-success, .jsPanel.panel-warning, .jsPanel.panel-danger, .jsPanel.card.card-inverse {
+  box-shadow: 0 0 6px rgba(0, 33, 50, 0.1), 0 7px 25px rgba(17, 38, 60, 0.4);
+}
+
+/* line 443, ../sass/jspanel.scss */
+.jsPanel-hdr.panel-heading {
+  border-bottom: none;
+}
+
+/* line 446, ../sass/jspanel.scss */
+.jsPanel-title.panel-title .small, .jsPanel-title.panel-title small {
+  font-size: 75%;
+}
+
+/* bootstrap 4 adjustments */
+/* line 450, ../sass/jspanel.scss */
+.jsPanel.card.card-inverse {
+  box-shadow: 0 0 6px rgba(0, 33, 50, 0.1), 0 7px 25px rgba(17, 38, 60, 0.4);
+}
+
+/* line 453, ../sass/jspanel.scss */
+.card-default {
+  /*background: $opaque-medium;*/
+}
+
+/* line 457, ../sass/jspanel.scss */
+.card-primary > .jsPanel-content.jsPanel-content-filled,
+.card-success > .jsPanel-content.jsPanel-content-filled,
+.card-info > .jsPanel-content.jsPanel-content-filled,
+.card-warning > .jsPanel-content.jsPanel-content-filled,
+.card-danger > .jsPanel-content.jsPanel-content-filled {
+  background: transparent;
+  color: #f5f5f5;
+}
+
+/* line 465, ../sass/jspanel.scss */
+.card-default > .jsPanel-content.jsPanel-content-filled {
+  background: transparent;
+  color: #000000;
+}
+
+/* jQuery-UI adjustments */
+/* line 470, ../sass/jspanel.scss */
+.ui-icon-gripsmall-diagonal-se {
+  background: none repeat scroll 0 0 transparent;
+  color: #fff;
+}
+
+/* line 474, ../sass/jspanel.scss */
+.ui-icon-gripsmall-diagonal-se:before {
+  content: "";
+}
+
+/* _themes_mdl.sass: 2015-12-23 18:56 */
+/* default ---------------------------------------------------------------------------------------------------------- */
+/* line 479, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-default,
+.jsPanel-replacement.jsPanel-theme-default {
+  background: #f5f5f5;
+}
+
+/* line 483, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-default * {
+  color: #000000;
+}
+
+/* line 485, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-default .jsPanel-hdr-toolbar {
+  border-top: 1px solid #e0e0e0;
+}
+
+/* line 487, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-default .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #e0e0e0;
+}
+
+/* line 490, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-default {
+  border-top: 1px solid #e0e0e0;
+}
+
+/* line 493, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-default.jsPanel-content-filled {
+  background: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* line 497, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-default.jsPanel-content-filledlight {
+  background: #fafafa;
+}
+
+/* primary ---------------------------------------------------------------------------------------------------------- */
+/* line 501, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-primary,
+.jsPanel-replacement.jsPanel-theme-primary {
+  background: #3f51b5;
+}
+
+/* line 505, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-primary * {
+  color: #ffffff;
+}
+
+/* line 507, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-primary .jsPanel-hdr-toolbar {
+  border-top: 1px solid #5c6bc0;
+}
+
+/* line 509, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-primary .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #5c6bc0;
+}
+
+/* line 512, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-primary {
+  border-top: 1px solid #5c6bc0;
+}
+
+/* line 515, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-primary.jsPanel-content-filled {
+  background: #3f51b5;
+  border-top: 1px solid #5c6bc0;
+  color: #ffffff;
+}
+
+/* line 520, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-primary.jsPanel-content-filledlight {
+  background: #c5cae9;
+  color: #000000;
+}
+
+/* info ------------------------------------------------------------------------------------------------------------- */
+/* line 525, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-info,
+.jsPanel-replacement.jsPanel-theme-info {
+  background: #03a9f4;
+}
+
+/* line 529, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-info * {
+  color: #ffffff;
+}
+
+/* line 531, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-info .jsPanel-hdr-toolbar {
+  border-top: 1px solid #29b6f6;
+}
+
+/* line 533, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-info .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #29b6f6;
+}
+
+/* line 536, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-info {
+  border-top: 1px solid #29b6f6;
+}
+
+/* line 539, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-info.jsPanel-content-filled {
+  background: #03a9f4;
+  border-top: 1px solid #29b6f6;
+  color: #ffffff;
+}
+
+/* line 544, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-info.jsPanel-content-filledlight {
+  background: #b3e5fc;
+  color: #000000;
+}
+
+/* success ---------------------------------------------------------------------------------------------------------- */
+/* line 549, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-success,
+.jsPanel-replacement.jsPanel-theme-success {
+  background: #43a047;
+}
+
+/* line 553, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-success * {
+  color: #ffffff;
+}
+
+/* line 555, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-success .jsPanel-hdr-toolbar {
+  border-top: 1px solid #66bb6a;
+}
+
+/* line 557, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-success .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #a5d6a7;
+}
+
+/* line 560, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-success.jsPanel-content-filled {
+  background: #43a047;
+  border-top: 1px solid #66bb6a;
+  color: #ffffff;
+}
+
+/* line 565, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-success.jsPanel-content-filledlight {
+  background: #c8e6c9;
+  color: #000000;
+}
+
+/* warning ---------------------------------------------------------------------------------------------------------- */
+/* line 570, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-warning,
+.jsPanel-replacement.jsPanel-theme-warning {
+  background: #fb8c00;
+}
+
+/* line 574, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-warning * {
+  color: #000000;
+}
+
+/* line 576, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-warning .jsPanel-hdr-toolbar {
+  border-top: 1px solid #ffb74d;
+}
+
+/* line 578, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-warning .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #ffcc80;
+}
+
+/* line 581, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-warning.jsPanel-content-filled {
+  background: #fb8c00;
+  border-top: 1px solid #ffb74d;
+  color: #000000;
+}
+
+/* line 586, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-warning.jsPanel-content-filledlight {
+  background: #ffe0b2;
+  color: #000000;
+}
+
+/* danger ----------------------------------------------------------------------------------------------------------- */
+/* line 591, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-danger,
+.jsPanel-replacement.jsPanel-theme-danger {
+  background: #f4511e;
+}
+
+/* line 595, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-danger * {
+  color: #ffffff;
+}
+
+/* line 597, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-danger .jsPanel-hdr-toolbar {
+  border-top: 1px solid #ff7043;
+}
+
+/* line 599, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-danger .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #ffab91;
+}
+
+/* line 602, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-danger.jsPanel-content-filled {
+  background: #f4511e;
+  border-top: 1px solid #ff7043;
+  color: #ffffff;
+}
+
+/* line 607, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-danger.jsPanel-content-filledlight {
+  background: #ffccbc;
+  color: #000000;
+}
+
+/* custom theme example myblue -------------------------------------------------------------------------------------- */
+/* line 612, ../sass/jspanel.scss */
+.jsPanel.jsPanel-theme-myblue,
+.jsPanel-replacement.jsPanel-theme-myblue {
+  background: #1565c0;
+}
+
+/* line 616, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-myblue * {
+  color: #ffff00;
+}
+
+/* line 618, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-myblue .jsPanel-hdr-toolbar {
+  border-top: 1px solid #ffff00;
+}
+
+/* line 620, ../sass/jspanel.scss */
+.jsPanel-hdr.jsPanel-theme-myblue .jsPanel-headerbar .jsPanel-controlbar div span:hover {
+  color: #ffff00;
+}
+
+/* line 623, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-myblue {
+  background: #eceff1;
+  border-top: 1px solid #ffff00;
+  color: #000000;
+}
+
+/* line 628, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-myblue.jsPanel-content-filled {
+  background: #42a5f5;
+  border-top: 1px solid #ffff00;
+  color: #ffff00;
+}
+
+/* line 633, ../sass/jspanel.scss */
+.jsPanel-content.jsPanel-theme-myblue.jsPanel-content-filledlight {
+  background: #bbdefb;
+  border-top: 1px solid #ffff00;
+  color: #e65100;
+}
+
+/*# sourceMappingURL=jquery.jspanel.css.map */
+/* line 37, ../sass/bootstrap-override-white.scss */
+.xTheme-white .metro .bg-dark {
+  background-color: #dadada !important;
+}
+/* line 45, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbonToolbar .nav-tabs > .active {
+  border: none;
+}
+/* line 49, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbonToolbar .nav-tabs > li.active > a, .xTheme-white .ribbonToolbar .nav-tabs > li.active > a:hover, .xTheme-white .ribbonToolbar .nav-tabs > li.active > a:focus {
+  border: 0px solid gray;
+}
+/* line 52, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbonToolbar .nav-tabs > .active {
+  /*border: initial;*/
+}
+/* line 56, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbonToolbar .nav-tabs > .active {
+  border-bottom: 1px solid #4ab0ce;
+}
+/* line 59, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbonToolbar A {
+  text-decoration: none;
+}
+/* line 65, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_block_base {
+  /*background-color: $default-bg;*/
+  border: 1px solid #dfdfdf;
+  background-color: #fafafa;
+}
+/* line 70, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_3rows_button {
+  border: none;
+  color: #4a5150;
+}
+/* line 74, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_block_base .ribbon_block_label_fixed {
+  background-color: #ebebeb;
+  color: #404040;
+  padding-bottom: 3px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+/* line 82, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_block_items {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+/* line 86, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_dropdown {
+  margin: 0px;
+}
+/* line 90, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_3rows_button:hover {
+  background-color: #618fb0;
+}
+/* line 93, ../sass/bootstrap-override-white.scss */
+.xTheme-white .ribbon_tabbar {
+  background-color: transparent;
+  padding-bottom: 3px;
+}
+/* line 99, ../sass/bootstrap-override-white.scss */
+.xTheme-white .xPopup.ActionRibbonToolbar .dropdown-menu, .xTheme-white .xPopup.ActionRibbonToolbar .dropdown-submenu, .xTheme-white .xPopup.ActionRibbonToolbar .ribbon_dropdown, .xTheme-white .xPopup.ActionRibbonToolbar .dropdown-context-sub {
+  /*border: 1px solid #101010;*/
+}
+/* line 106, ../sass/bootstrap-override-white.scss */
+.xTheme-white .Thumb a {
+  color: #4a5150;
+}
+/* line 110, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dijitSelectMenu, .xTheme-white .dijitComboBoxMenu {
+  background-color: #e8e8e8;
+  color: #4a5150;
+}
+/* line 114, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dijitTextBox {
+  color: #4a5150;
+  background: inherit;
+}
+/* line 119, ../sass/bootstrap-override-white.scss */
+.xTheme-white .selectize-dropdown {
+  background-color: #e8e8e8;
+}
+/* line 123, ../sass/bootstrap-override-white.scss */
+.xTheme-white .text-warning {
+  color: #AF8810;
+}
+/* line 128, ../sass/bootstrap-override-white.scss */
+.xTheme-white .wcLayoutPane {
+  padding: 0px;
+}
+/* line 131, ../sass/bootstrap-override-white.scss */
+.xTheme-white .border-bottom {
+  border-bottom-color: transparent;
+}
+/* line 134, ../sass/bootstrap-override-white.scss */
+.xTheme-white .mainMenu {
+  border-bottom-color: rgba(0, 0, 0, 0.15);
+}
+/* line 138, ../sass/bootstrap-override-white.scss */
+.xTheme-white .jsPanel.panel {
+  border: 2px solid #4a5150;
+}
+/* line 141, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-header-scroll, .xTheme-white .xTheme-default .dgrid-header .dgrid-cell {
+  background-color: #e8e8e8;
+}
+/* line 144, ../sass/bootstrap-override-white.scss */
+.xTheme-white a {
+  color: #5d5c66;
+  text-decoration: none;
+}
+/* line 148, ../sass/bootstrap-override-white.scss */
+.xTheme-white .wcSplitterBar {
+  /*box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);*/
+}
+/* line 151, ../sass/bootstrap-override-white.scss */
+.xTheme-white .actionToolbar {
+  /*background-color: $opaque-light;*/
+  box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
+}
+/* line 155, ../sass/bootstrap-override-white.scss */
+.xTheme-white .btn-default {
+  background-color: #cacaca;
+  color: #4a5150;
+}
+/* line 160, ../sass/bootstrap-override-white.scss */
+.xTheme-white .form-control::-webkit-input-placeholder {
+  color: #d2d2d2;
+}
+/* line 161, ../sass/bootstrap-override-white.scss */
+.xTheme-white .form-control:-moz-placeholder {
+  color: #d2d2d2;
+}
+/* line 162, ../sass/bootstrap-override-white.scss */
+.xTheme-white .form-control::-moz-placeholder {
+  color: #d2d2d2;
+}
+/* line 163, ../sass/bootstrap-override-white.scss */
+.xTheme-white .form-control:-ms-input-placeholder {
+  color: #d2d2d2;
+}
+/* line 165, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dropdown-menu {
+  background-color: #f8f8f8;
+}
+/* line 169, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dropdown-menu > li > a:hover .text-muted, .xTheme-white .dropdown-menu > li > a:focus .text-muted {
+  color: #e8e8e8;
+}
+/* line 174, ../sass/bootstrap-override-white.scss */
+.xTheme-white .metro .tile .brand.opacity, .xTheme-white .metro .tile .tile-status.opacity {
+  /*opacity: 1.0;*/
+}
+/* line 181, ../sass/bootstrap-override-white.scss */
+.xTheme-white .metro .bg-dark {
+  /*background-color: rgba(104, 104, 104, 0.69) !important;*/
+}
+/* line 186, ../sass/bootstrap-override-white.scss */
+.xTheme-white .blockGrid [class*="fa-"] {
+  font-size: 120%;
+}
+/* line 189, ../sass/bootstrap-override-white.scss */
+.xTheme-white .blockGrid .xBloxIcon {
+  font-size: 120%;
+}
+@-webkit-keyframes flash {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.5;
+  }
+}
+@keyframes flash {
+  0%, 50%, 100% {
+    opacity: 1;
+  }
+  25%, 75% {
+    opacity: 0.5;
+  }
+}
+/* line 205, ../sass/bootstrap-override-white.scss */
+.xTheme-white .activeBlock {
+  background-color: rgba(169, 169, 169, 0.2) !important;
+  background-image: none;
+  color: #4a5150;
+  outline: 1px solid rgba(29, 255, 70, 0.69) !important;
+  outline-offset: -3px;
+  /*
+      -webkit-animation-duration: 1s;
+      animation-duration: 1s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both;
+      -webkit-animation-timing-function: linear;
+      animation-timing-function: linear;
+      animation-iteration-count:infinite;
+      -webkit-animation-iteration-count:infinite;
+      -webkit-animation-name: flash;
+      animation-name: flash;*/
+}
+/* line 227, ../sass/bootstrap-override-white.scss */
+.xTheme-white .successBlock {
+  background-color: rgba(33, 58, 34, 0.73) !important;
+  background-image: none !important;
+  color: #e8e8e8;
+  outline: 2px solid #49ff70 !important;
+  outline-offset: -3px;
+}
+/* line 233, ../sass/bootstrap-override-white.scss */
+.xTheme-white .successBlock .text-info {
+  color: #e8e8e8;
+}
+/* line 236, ../sass/bootstrap-override-white.scss */
+.xTheme-white .successBlock A, .xTheme-white .successBlock .text-primary {
+  color: #e8e8e8 !important;
+}
+/* line 241, ../sass/bootstrap-override-white.scss */
+.xTheme-white .failedBlock {
+  background-color: darkred !important;
+  background-image: none !important;
+  color: #4a5150;
+  border: 2px solid yellow;
+  /*
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  animation-iteration-count:infinite;
+  -webkit-animation-iteration-count:infinite;
+  -webkit-animation-name: flash;
+  animation-name: flash;*/
+}
+/* line 261, ../sass/bootstrap-override-white.scss */
+.xTheme-white .form-control.input-transparent {
+  box-shadow: inset 1px 2px 2px rgba(0, 0, 0, 0.2);
+}
+/* line 264, ../sass/bootstrap-override-white.scss */
+.xTheme-white .panel-heading {
+  border-bottom: 1px solid #e8e8e8;
+}
+/* line 267, ../sass/bootstrap-override-white.scss */
+.xTheme-white .modal-content, .xTheme-white .modal-footer {
+  background-color: #ffffff;
+}
+/* line 271, ../sass/bootstrap-override-white.scss */
+.xTheme-white .jsoneditor-contextmenu .btn {
+  color: #4a5150;
+}
+/* line 275, ../sass/bootstrap-override-white.scss */
+.xTheme-white .wcSplitterBar {
+  /*background-color: $opaque-light !important;*/
+}
+/* line 279, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-header-scroll, .xTheme-white .dgrid-header .dgrid-cell {
+  background-color: #e8e8e8;
+  border-bottom: 1px solid #cacaca;
+}
+/* line 283, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-row.dgrid-row-odd {
+  background-color: rgba(16, 16, 16, 0.09);
+}
+/* line 288, ../sass/bootstrap-override-white.scss */
+.xTheme-white .statusbar.widget {
+  border-top: 1px solid #cacaca;
+  background-color: #e8e8e8 !important;
+  color: #555 !important;
+  border-radius: 0px !important;
+}
+/* line 296, ../sass/bootstrap-override-white.scss */
+.xTheme-white .breadcrumb > .active {
+  color: #555;
+}
+/* line 299, ../sass/bootstrap-override-white.scss */
+.xTheme-white .thumbText {
+  margin-right: 2px !important;
+}
+/* line 304, ../sass/bootstrap-override-white.scss */
+.xTheme-white .body {
+  /*@include scrollbars(.5em, slategray);*/
+}
+/* line 310, ../sass/bootstrap-override-white.scss */
+.xTheme-white .widget {
+  /*font-weight: 400 !important;*/
+}
+/* line 315, ../sass/bootstrap-override-white.scss */
+.xTheme-white .widgetContainer {
+  margin: 0px;
+}
+/* line 319, ../sass/bootstrap-override-white.scss */
+.xTheme-white .toolbar-button {
+  color: #666;
+}
+/* line 322, ../sass/bootstrap-override-white.scss */
+.xTheme-white .bg-opaque {
+  background-color: #f8f8f8 !important;
+}
+/* line 326, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dijitMenuSeparatorTop {
+  border-bottom: none !important;
+  border-top: none !important;
+}
+/* line 330, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dijitMenuSeparatorBottom {
+  border-bottom: 1px solid rgba(51, 51, 51, 0.35);
+  border-top: none !important;
+}
+/* line 336, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dijitPopup {
+  position: absolute !important;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  /*color: $gray-darker !important;*/
+  border-radius: 3px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+/* line 349, ../sass/bootstrap-override-white.scss */
+.xTheme-white .metro .tile .tile-content.icon [class*="fa-"],
+.xTheme-white .metro .tile .tile-content.icon img {
+  color: #222222;
+}
+/* line 354, ../sass/bootstrap-override-white.scss */
+.xTheme-white .breadcrumb a {
+  color: inherit;
+}
+/* line 358, ../sass/bootstrap-override-white.scss */
+.xTheme-white .breadcrumb > li + li:before {
+  color: inherit;
+}
+/* line 366, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-focus:active {
+  /*outline: 1px dotted rgba(255, 82, 0, 0.65)  !important;*/
+  outline-offset: -1px;
+  /*background-color: rgba(0,0,0,0.5);*/
+  font-weight: bold;
+}
+/* line 372, ../sass/bootstrap-override-white.scss */
+.xTheme-white .wcFrameButton {
+  /*font-size:inherit;*/
+}
+/* line 376, ../sass/bootstrap-override-white.scss */
+.xTheme-white KBD {
+  background-color: initial;
+  box-shadow: none;
+  font-weight: bold;
+  /*color: $gray-semi-light;*/
+  /*font-family: inherit;*/
+  margin: 4px;
+}
+/* line 387, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-selected {
+  /*background-color: rgba(44, 39, 36, 0.52) !important;*/
+  /*@include box-shadow(inset 0 1px 5px rgba(0, 0, 0, 0.8));*/
+  /*font-weight: $font-weight-bold;*/
+  border-radius: 4px;
+  /* #1 */
+  /* #2 */
+  /*padding: 5px;*/
+  outline: none;
+  /* #3
+  outline: 5px solid hsl(0, 0%, 60%); */
+  /* #4 AND INFINITY!!! (CSS3 only) */
+  box-shadow: inset 0 0 0 1px orange;
+}
+/* line 409, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-focus:focus {
+  /*outline: 1px solid rgba(87, 96, 255,0.5);*/
+  outline-offset: -1px;
+  background-color: rgba(254, 0, 64, 0.02);
+  /*border-style: 2px solid $red-dark !important;*/
+  box-shadow: inset 0 0 0 2px rgba(101, 0, 30, 0.5);
+  /*font-weight: bold;*/
+  /*border-color: rgba(255, 82, 0, 1) !important;
+  border-style: groove inset;
+  @include box-sizing(content-box);*/
+}
+/* line 422, ../sass/bootstrap-override-white.scss */
+.xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder,
+.xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:hover,
+.xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:focus,
+.xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:active {
+  color: #fff;
+}
+/* line 429, ../sass/bootstrap-override-white.scss */
+.xTheme-white .dgrid-selected .metro .tile .tile-content.icon [class*="fa-"] {
+  color: #f8f8f8 !important;
+}
+/* line 434, ../sass/bootstrap-override-white.scss */
+.xTheme-white .nav-tabs > .active {
+  border: 1px solid rgba(255, 0, 0, 0.35);
+  box-shadow: inset -1px -1px 1px 0px rgba(71, 237, 0, 0.1);
+}
+/* line 443, ../sass/bootstrap-override-white.scss */
+.xTheme-white .metro .tile .tile-content.icon img {
+  color: #f8f8f8 !important;
+}

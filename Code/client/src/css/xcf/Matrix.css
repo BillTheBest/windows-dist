@@ -1,0 +1,208 @@
+/***
+
+  Awesome LESS macros to generate cross browser CSS
+
+*/
+/***
+  Layout - Macros
+*/
+/***
+  Macros zum erstellen von Rahmen
+*/
+/***
+  Macros fuer geometrische Operationen
+*/
+/***
+  Effect Macros
+*/
+/***
+  Macros fuer Highlighting bei Feedbacks
+*/
+/***
+  Text - Macros
+*/
+/***
+  Text - Macros
+*/
+/***
+  Macros fuer Hintergrund-Sprites
+*/
+/***  Background-Sprite with different width & height*/
+/***
+  Background - Color - Transparent Overlay
+*/
+/***
+  Shadow - Macro
+*/
+/***
+    Image related
+*/
+/***
+  Pure Class Macros
+*/
+/***
+  LOW-LEVEL : Macros zum animieren von CSS Eigentschaften
+*/
+/***
+  LOW-LEVEL : Macros zum erstellen von Gradients
+*/
+/**
+  Text-Font-Size Macros
+**/
+/***   Text - Colors   ***/
+/***   Colors   ***/
+/***
+  Default-Text Margins and Paddings
+*/
+/*** Border-Colors ***/
+/***
+  Highlight Colors
+*/
+/***
+  Shadows
+*/
+/***
+  Buttons
+*/
+/***
+  Standard-Background-Color for Toolbars
+*/
+/***
+  Dojo - Internals
+*/
+/*****************************************************************************/
+/*        Variables                                                          */
+/***
+  Column/Row - Text - Formatting
+*/
+/***
+  Button - Commons
+*/
+/***
+    Starting from the root node
+*/
+.matrixTable {
+  width: 100%;
+  height: 100%;
+}
+.matrixHeaderTextLeft,
+.matrixHeaderText {
+  color: #ffffff;
+  font-size: 18px;
+  font-family: Arial;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  text-align: center;
+}
+/* The container holding the Toggle button  */
+.matrixAnswerContainer {
+  pointer-events: none;
+}
+.matrixAnswerColumn {
+  cursor: pointer;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  /*.button-colorize(@default-container-background-color);*/
+  /*.active-gradient();*/
+  /*.horizontal-gradient-and-filter(@default-container-background-color,0,100);*/
+  background-color: #c8c8c8;
+  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2));
+  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2));
+  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2));
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2));
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr= #d5d5d5 , endColorstr= #fbfbfb );
+  box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+/*** Media Overrides ***/
+.matrixHeaderColumnLeft .mediaImage {
+  height: inherit;
+  width: 100%;
+}
+.matrixHeaderColumn .mediaContainer {
+  display: inline-block;
+}
+.matrixHeaderColumn .mediaImage {
+  width: 100%;
+}
+.matrixHeaderColumn .text {
+  color: #ffffff;
+  font-size: 18px;
+  font-family: Arial;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  text-align: center;
+}
+.matrixHeaderColumnLeft .text {
+  color: #ffffff;
+  font-size: 18px;
+  font-family: Arial;
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: normal;
+  text-align: center;
+}
+/***
+    Buttons
+*/
+.matrixToggleButton {
+  background-image: url('assets//hookEmpty.png');
+  background-size: 100% 100%;
+  width: 45px;
+  height: 38px;
+}
+.matrixToggleButtonChecked {
+  background-image: url('assets//hookNormal.png');
+  background-size: 100% 100%;
+  width: 45px;
+  height: 38px;
+}
+/***
+    Answer-Feedback-States
+*/
+.MatrixFeedbackAnswerRight {
+  background-color: #008000 !important;
+  opacity: 0.7;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.MatrixFeedbackAnswerRightUnselected {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.MatrixFeedbackAnswerMissing {
+  border: 3px solid #008000 !important;
+  opacity: 0.7;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+.MatrixFeedbackAnswerWrong {
+  border: 3px solid #800000 !important;
+  background-color: #800000 !important;
+  opacity: 0.7;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+/***
+  Dojo-Adjustments : Don't Touch
+*/
+.matrix .matrixToggleButton .dijitButtonNode {
+  border: none;
+  height: inherit;
+  width: inherit;
+  outline: none;
+}
+.matrix .matrixToggleButton .dijitButtonNode:focus {
+  outline: none;
+}
+.matrix .matrixToggleButton .dijitButtonContents {
+  display: none;
+}

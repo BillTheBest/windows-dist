@@ -1,0 +1,33 @@
+@import "../commons/Widgets.css";
+@import "../commons/Loading.css";
+@import "../commons/XBlox.css";
+@import "../commons/XFILE.css";
+@import "../commons/bootstrap.css";
+@import "fileGridView.css";
+@import "Layout.css";
+@import "quicklook.css";
+@import "SplitView.css";
+
+@import "../commons/docker_transparent.css";
+
+@import "../../theme/html-white/dist/css/application.css";
+@import "../commons/stylesheets/bootstrap-override.css";
+@import "../font-awesome/css/font-awesome.css";
+
+@import "../commons/docker.css";
+
+.metro .tile .tile-content.icon [class*="fa-"],
+.metro .tile .tile-content.icon img {
+    color: inherit;
+}
+.dgrid-selected {
+    border-radius: 4px;
+    outline: none;
+    box-shadow: inset 0 0 0 1px orange;
+}
+/* line 336, ../sass/bootstrap-override-white.scss */
+.dgrid-focus:focus {
+    outline-offset: -1px;
+    background-color: rgba(254, 0, 64, 0.02);
+    box-shadow: inset 0 0 0 2px rgba(101, 0, 30, 0.5);
+}

@@ -1,0 +1,59 @@
+.CIDialogRoot .dijitDialogPaneContent,
+.CIView {
+  padding: 0px !important;
+}
+/***
+  Reset standard CI Widget Containers
+*/
+.CIDialog .widgetContainer {
+  width: 99%;
+  min-width: inherit;
+}
+/***
+  Hide empty standard CI extension slots
+*/
+.CIDialog .extension:empty {
+  display: none;
+  width: 0px;
+}
+/***
+  Stretch form fields to the parents full width
+*/
+.CIDialog .dijitTextBox {
+  width: 90%;
+  margin-bottom: 4px;
+}
+.CIView .dijitTextBox {
+  margin-bottom: 4px;
+}
+.CIDialog .dijitSelect {
+  margin-bottom: 4px;
+}
+.CIDialog .dijitCheckBox {
+  margin-bottom: 4px;
+}
+.CIView .dijitCheckBox {
+  margin-bottom: 4px;
+}
+.CIView .dijitSelect {
+  margin-bottom: 4px;
+}
+.CIDialog .widgetTitle {
+  /*min-width: 75px !important;*/
+}
+.widgetTitle {
+  /*color: #FFFFFF;
+  font-weight: normal;
+  min-width: 130px;*/
+}
+.CIDialog .widgetTable {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.CIDialog .widgetValue {
+  max-width: inherit;
+  min-width: 50px !important;
+}
+/***
+  CIView adjustments
+*/

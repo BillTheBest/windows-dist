@@ -1,0 +1,101 @@
+/***
+
+  Awesome LESS macros to generate cross browser CSS
+
+*/
+/***
+  Layout - Macros
+*/
+/***
+  Macros zum erstellen von Rahmen
+*/
+/***
+  Macros fuer geometrische Operationen
+*/
+/***
+  Effect Macros
+*/
+/***
+  Macros fuer Highlighting bei Feedbacks
+*/
+/***
+  Text - Macros
+*/
+/***
+  Text - Macros
+*/
+/***
+  Macros fuer Hintergrund-Sprites
+*/
+/***  Background-Sprite with different width & height*/
+/***
+  Background - Color - Transparent Overlay
+*/
+/***
+  Shadow - Macro
+*/
+/***
+    Image related
+*/
+/***
+  Pure Class Macros
+*/
+/***
+  LOW-LEVEL : Macros zum animieren von CSS Eigentschaften
+*/
+/***
+  LOW-LEVEL : Macros zum erstellen von Gradients
+*/
+/**
+  Text-Font-Size Macros
+**/
+/***
+  Generics
+*/
+.gallery .fileGridCell {
+  /*background-color: #FAFAFA;*/
+  /*border-radius: 2px;*/
+  /*color: #6F7983;*/
+  height: 100px;
+  margin: 4px;
+  padding: 2px;
+  text-align: center;
+  width: 110px;
+  word-wrap: break-word;
+}
+.gallery .dgrid-selected .name {
+  /*color: #f5f5f5;*/
+  padding-left: 4px;
+  padding-right: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -moz-binding: url('../fonts/truncate.xml#ellipsis');
+}
+.gallery .itemFolder {
+  margin: 4px;
+}
+.gallery .name {
+  padding-left: 4px;
+  padding-right: 4px;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -moz-binding: url('../fonts/truncate.xml#ellipsis');
+}
+.fileGridViewCompact .gallery .dgrid-row {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -o-text-overflow: ellipsis;
+  -moz-binding: url('../fonts/truncate.xml#ellipsis');
+}
+.dummyClass {
+  padding: 0px;
+}
+.gallery .fileGridCell .itemIcon {
+  width: 80px;
+}

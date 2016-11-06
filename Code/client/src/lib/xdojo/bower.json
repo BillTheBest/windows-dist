@@ -1,0 +1,28 @@
+{
+	"author": "Günter Baumgart",
+	"name": "xdojo",
+	"version": "0.2.13",
+	"keywords": [
+		"xdojo",
+		"xide",
+		"dojo",
+		"dojo2"
+	],
+
+	"authors": [
+	],
+	"homepage": "http://dojotoolkit.org/",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/mc007/xdojo.git"
+	},
+	"dependencies": {
+	},
+	"ignore": [
+		"tests",
+		"out",
+		"node_modules"
+	],
+	"license": [ "BSD-3-Clause" ],
+	"moduleType": [ "amd" ]
+}

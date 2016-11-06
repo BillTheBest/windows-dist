@@ -1,0 +1,182 @@
+/***
+
+  Awesome LESS macros to generate cross browser CSS
+
+*/
+/***
+  Layout - Macros
+*/
+/***
+  Macros zum erstellen von Rahmen
+*/
+/***
+  Macros fuer geometrische Operationen
+*/
+/***
+  Effect Macros
+*/
+/***
+  Macros fuer Highlighting bei Feedbacks
+*/
+/***
+  Text - Macros
+*/
+/***
+  Text - Macros
+*/
+/***
+  Macros fuer Hintergrund-Sprites
+*/
+/***  Background-Sprite with different width & height*/
+/***
+  Background - Color - Transparent Overlay
+*/
+/***
+  Shadow - Macro
+*/
+/***
+    Image related
+*/
+/***
+  Pure Class Macros
+*/
+/***
+  LOW-LEVEL : Macros zum animieren von CSS Eigentschaften
+*/
+/***
+  LOW-LEVEL : Macros zum erstellen von Gradients
+*/
+/**
+  Text-Font-Size Macros
+**/
+/***   Text - Colors   ***/
+/***   Colors   ***/
+/***
+  Default-Text Margins and Paddings
+*/
+/*** Border-Colors ***/
+/***
+  Highlight Colors
+*/
+/***
+  Shadows
+*/
+/***
+  Buttons
+*/
+/***
+  Standard-Background-Color for Toolbars
+*/
+/***
+  Dojo - Internals
+*/
+.icon-32-download {
+  background-image: url("images/downloadButton.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+icon-32-remove {
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+.icon-32-rename {
+  background-image: url("images/Rename-2562.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+.icon-32-preview-content {
+  background-image: url("images/preview.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  float: left;
+}
+.icon-32-info {
+  background-image: url("images/notice-info.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+.icon-32-compress {
+  background-image: url("images/zip.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+}
+.icon-32-reload {
+  background-image: url("images/sync3.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+}
+.icon-32-insert-image {
+  background-image: url("images/insertImage.png");
+  background-size: 100% 100%;
+  cursor: pointer;
+  height: 32px;
+  width: 32px;
+  float: left;
+}
+.fileReloadButton {
+  float: right;
+  width: 27px;
+}
+.xfileToolbarButtonDisabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.fileViewToolbarTop .icon-32-reload {
+  display: inline-block;
+  height: 18px;
+  width: 18px;
+}
+/***
+  File Picker extensions
+*/
+.actionToolbarContentPane {
+  padding: 0px !important;
+  border: 0px solid none !important;
+  margin: 0px !important;
+  background-color: transparent !important;
+}
+.actionToolbarEmbedded {
+  padding: 0px !important;
+  border: 0px solid none !important;
+  margin: 0px !important;
+  border-bottom: none !important;
+  display: inline-block;
+  height: auto;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+.actionToolbarButton {
+  float: right;
+}
+.actionToolbarButtonLeft {
+  float: left;
+}
+/****
+  Context Menu - Adjustments
+*/
+.dijitPopup .dijitMenuItemIcon {
+  height: 16px;
+  width: 16px;
+  /*  background-size: 16px;*/
+}
+.actionToolbarButtonElusive {
+  font-size: 15px;
+  width: 12px;
+  margin-left: 3px;
+  line-height: 1.4em;
+}
+.newItemSelector {
+  /*margin-top: 4px !important;*/
+}

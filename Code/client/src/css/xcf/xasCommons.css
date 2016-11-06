@@ -1,0 +1,298 @@
+/***
+    Shared CSS amongst various CM applications (QuickXApp,XAS)
+*/
+/*
+.claro .dijitTitlePane .dijitArrowNode {
+  background-image: none;
+  font-family: 'Elusive-Icons';
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  text-transform: none;
+  line-height: 1.4em;
+  margin-left: 3px;
+  width: 12px;
+  color: #ffffff;
+}
+.claro .dijitTitlePane .dijitArrowNode :before{
+  color: #ffffff;
+}
+*/
+.xasWidget {
+  display: inline-block;
+  width: auto;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+.dijitTab .dijitIcon {
+  font-size: 13px;
+  margin-top: -4px;
+}
+.dj_gecko .claro .dijitTextBox .dijitInputInner,
+.dj_webkit .claro .dijitTextBox .dijitInputInner {
+  font-weight: normal;
+  width: 100% ;
+}
+.claro .dijitTitlePaneTitleFocus {
+  float: left;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+.elusiveButton .dijitIcon {
+  font-size: 18px;
+}
+.wizardPane {
+  width: 98%;
+  overflow: hidden;
+}
+.dijitTooltip * {
+  font-size: 12px;
+}
+.editorRoot * {
+  -moz-user-select: all !important;
+  -khtml-user-select: all !important;
+  user-select: all !important;
+}
+#cke_editor TR {
+  -moz-user-select: all !important;
+  -khtml-user-select: all !important;
+  user-select: all !important;
+}
+.DataWizardDlg {
+  height: 90%;
+  width: 800px;
+  max-width: 800px;
+  max-height: 735px;
+  min-height: 635px;
+}
+.ContentEditWizardDlg {
+  height: 90%;
+  width: 700px;
+}
+.wizardContainerAlternate {
+  /*margin-left:10px;*/
+  border-radius: 3px 3px 3px 3px;
+  max-width: 440px;
+  border: 1px solid #888888;
+  background-color: #E7E7E7;
+  background-image: url("images/tab-bkgInnerAlternate.jpg");
+  background-size: 100% 100%;
+  box-shadow: 0 0px 0px #888888 ;
+  padding: 0.3em 0.3em;
+}
+.wizardContainer {
+  border: 0px solid #888888;
+  background-color: #E7E7E7;
+  height: 100%;
+  width: 100%;
+  background-size: 100% 100%;
+  box-shadow: 0 0px 0px #888888 ;
+  overflow-y: visible !important;
+}
+.dataSourceTabContainer {
+  height: 620px !important;
+  max-height: 620px !important;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.dataSourceTab {
+  height: 570px !important;
+  max-height: 570px !important;
+}
+.dojoxWizardContainer .widgetTitle {
+  color: black;
+}
+.dataSourceTabTreeView {
+  height: 540px !important;
+  max-height: 540px !important;
+  overflow: auto;
+  min-height: 200px;
+}
+.DataSelectorOtherView {
+  padding-top: 13px;
+  color: #000000;
+}
+.DataSelectorOtherView .widgetTitle {
+  color: #000000 !important;
+}
+.dataSourceTree {
+  /*height:480px !important;*/
+  overflow: auto !important;
+}
+.dataSourceTreeLiferay {
+  height: 500px !important;
+  overflow: auto !important;
+  width: 100%;
+}
+.dataSourceTabTreeViewLiferay {
+  height: 570px !important;
+  max-height: 570px !important;
+}
+.dojoxWizardContainer {
+  overflow: visible !important;
+}
+.widgetDeleteButton {
+  background-image: url("images/delete.png");
+  background-size: 100% 100%;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.widgetMinusButton {
+  background-image: url("images/minus.png");
+  background-size: 100% 100%;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+.loadingWrapper {
+  height: 100%;
+  position: absolute;
+  z-index: 999999;
+  width: 100%;
+  top: 36%;
+  display: inline-block;
+}
+.loading {
+  position: relative;
+  width: 72px;
+  /* diameter */
+  height: 72px;
+  /* diameter */
+  margin: 0 auto;
+}
+.outer,
+.inner,
+.loading:after {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+/* Mask */
+.loading:after {
+  margin: 10%;
+  /* stroke width */
+  border-radius: 100%;
+  background: #888;
+  /* container background */
+  color: #FFFFFF;
+  content: "Loading";
+  font-size: 10px;
+  padding-top: 21px;
+  text-align: center;
+}
+/* Spinning gradients */
+.outer,
+.inner {
+  animation-duration: 5s;
+  /* speed */
+  -webkit-animation-duration: 5s;
+  /* speed */
+  animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  -webkit-animation-timing-function: linear;
+}
+.outer {
+  animation-name: rotate-outer;
+  -webkit-animation-name: rotate-outer;
+}
+.inner {
+  animation-name: rotate-inner;
+  -webkit-animation-name: rotate-inner;
+}
+/* Halfs */
+.outer:before,
+.inner:before,
+.outer:after,
+.inner:after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  content: " ";
+}
+/* Left half */
+.outer:before,
+.inner:before {
+  left: 0;
+  right: 50%;
+  border-radius: 72px 0 0 72px;
+  /* diameter */
+}
+/* Right half */
+.outer:after,
+.inner:after {
+  left: 50%;
+  right: 0;
+  border-radius: 0 72px 72px 0;
+  /* diameter */
+}
+/* Half gradients */
+.outer:before {
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5));
+}
+.outer:after {
+  background-image: -webkit-linear-gradient(top, #ffffff, rgba(255, 255, 255, 0.5));
+  background-image: -moz-linear-gradient(top, #ffffff, rgba(255, 255, 255, 0.5));
+  background-image: linear-gradient(to bottom, #ffffff, rgba(255, 255, 255, 0.5));
+}
+.inner:before {
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(191, 191, 191, 0.5));
+  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.5), rgba(191, 191, 191, 0.5));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(191, 191, 191, 0.5));
+}
+.inner:after {
+  background-image: -webkit-linear-gradient(top, rgba(128, 128, 128, 0.5), rgba(191, 191, 191, 0.5));
+  background-image: -moz-linear-gradient(top, rgba(128, 128, 128, 0.5), rgba(191, 191, 191, 0.5));
+  background-image: linear-gradient(to bottom, rgba(128, 128, 128, 0.5), rgba(191, 191, 191, 0.5));
+}
+/* Spinning animations */
+@keyframes rotate-outer {
+  0% {
+    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1080deg);
+    -moz-transform: rotate(1080deg);
+    -webkit-transform: rotate(1080deg);
+  }
+}
+@-webkit-keyframes rotate-outer {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(1080deg);
+  }
+}
+@keyframes rotate-inner {
+  0% {
+    transform: rotate(720deg);
+    -moz-transform: rotate(720deg);
+    -webkit-transform: rotate(720deg);
+  }
+  100% {
+    transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+  }
+}
+@-webkit-keyframes rotate-inner {
+  0% {
+    -webkit-transform: rotate(720deg);
+  }
+  100% {
+    -webkit-transform: rotate(0deg);
+  }
+}
+body {
+  margin: 0px;
+}
