@@ -208,9 +208,8 @@ var Media = module.exports = function (parent, reinit, opts) {
         results.push(tmp);
       }
 
-      libc.free(info);
+      //libc.free(info);
       info = undefined;
-
       return results;
     }
   });

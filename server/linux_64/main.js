@@ -9,13 +9,11 @@ var ansi_up= require('ansi_up');
 var progress= require('progress');
 var request_progress= require('request-progress');
 var walk= require('walk');
-var watchr= require('watchr');
 var readline= require('readline');
 var deferred= require('deferred');
 var safe= require('colors/safe');
 var unzip= require('unzip');
 var strip_ansi= require('strip-ansi');
-
 
 var cwd = _path.resolve('./'),
     clientRoot =_path.resolve(cwd + '/../../Code/client/src/'),
@@ -24,7 +22,6 @@ var cwd = _path.resolve('./'),
 
 global.moduleCache={
     "deferred":deferred,
-    "watchr":watchr,
     "strip-ansi":strip_ansi,
     "ansi-to-html":ansi_to_html,
     "ansi_up":ansi_up,

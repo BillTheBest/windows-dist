@@ -38361,7 +38361,6 @@ define('xgrid/KeyboardNavigation',[
 		},
 
 		_onContainerKeypress: function(evt){
-
 			if(this.editing){
 				return;
 			}

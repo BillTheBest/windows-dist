@@ -15387,39 +15387,43 @@ body {
   }
   */
 }
-/* line 114, ../sass/bootstrap-override.scss */
+/* line 113, ../sass/bootstrap-override.scss */
+.xTheme-default .shortcutKey {
+  text-decoration: underline;
+}
+/* line 118, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonToolbar .tab-content {
   padding-top: 5px;
   padding-right: 4px;
   padding-left: 4px;
   padding-bottom: 2px;
 }
-/* line 120, ../sass/bootstrap-override.scss */
+/* line 124, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonToolbar .nav-tabs > li.active > a, .xTheme-default .ribbonToolbar .nav-tabs > li.active > a:hover, .xTheme-default .ribbonToolbar .nav-tabs > li.active > a:focus {
   box-shadow: none;
 }
-/* line 123, ../sass/bootstrap-override.scss */
+/* line 127, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonToolbar .nav-tabs > .active {
   /*border: initial;*/
 }
-/* line 130, ../sass/bootstrap-override.scss */
+/* line 134, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .dropdown-menu {
   margin: 0;
   border-radius: 0;
   border-top: none;
   padding-top: 0 !important;
 }
-/* line 138, ../sass/bootstrap-override.scss */
+/* line 142, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .dropdown-menu, .xTheme-default .ActionRibbonToolbar .dropdown-menu {
   margin: 0;
   border-radius: 0;
   padding-top: 0 !important;
 }
-/* line 146, ../sass/bootstrap-override.scss */
+/* line 150, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionRibbonToolbar .dropdown-menu {
   padding: 0;
 }
-/* line 153, ../sass/bootstrap-override.scss */
+/* line 157, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionRibbonToolbar .dropdown-submenu:hover, .xTheme-default .xPopup.ActionRibbonToolbar .ribbon_3rows_button:hover {
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
@@ -15429,11 +15433,11 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 162, ../sass/bootstrap-override.scss */
+/* line 166, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionRibbonToolbar .dropdown-menu, .xTheme-default .xPopup.ActionRibbonToolbar .dropdown-submenu, .xTheme-default .xPopup.ActionRibbonToolbar .ribbon_dropdown, .xTheme-default .xPopup.ActionRibbonToolbar .dropdown-context-sub {
   /*border: 1px solid #101010;*/
 }
-/* line 168, ../sass/bootstrap-override.scss */
+/* line 172, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .dropdown-submenu:hover, .xTheme-default .xPopup.ActionToolbar .ribbon_3rows_button:hover {
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
@@ -15443,11 +15447,11 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 177, ../sass/bootstrap-override.scss */
+/* line 181, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .dropdown-menu, .xTheme-default .xPopup.ActionToolbar .dropdown-submenu, .xTheme-default .xPopup.ActionToolbar .ribbon_dropdown, .xTheme-default .xPopup.ActionToolbar .dropdown-context-sub {
   /*border: 1px solid #101010;*/
 }
-/* line 183, ../sass/bootstrap-override.scss */
+/* line 187, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .dropdown-context-sub > li:hover {
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
@@ -15457,11 +15461,11 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 192, ../sass/bootstrap-override.scss */
+/* line 196, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .dropdown-menu, .xTheme-default .xPopup.ActionToolbar .dropdown-submenu, .xTheme-default .xPopup.ActionToolbar .ribbon_dropdown, .xTheme-default .xPopup.ActionToolbar .dropdown-context-sub {
   /*border: 1px solid #101010;*/
 }
-/* line 198, ../sass/bootstrap-override.scss */
+/* line 202, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup.ActionToolbar .focus {
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
@@ -15471,7 +15475,17 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 210, ../sass/bootstrap-override.scss */
+/* line 213, ../sass/bootstrap-override.scss */
+.xTheme-default .mainMenu .focus {
+  background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+  background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+  background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
+/* line 225, ../sass/bootstrap-override.scss */
 .xTheme-default .ActionRibbonToolbar .ribbon_3rows_button:hover {
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
@@ -15481,39 +15495,39 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 221, ../sass/bootstrap-override.scss */
+/* line 236, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbon_3rows_button:hover {
   cursor: pointer;
 }
-/* line 224, ../sass/bootstrap-override.scss */
+/* line 239, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup {
   position: absolute;
   background-clip: padding-box;
 }
-/* line 229, ../sass/bootstrap-override.scss */
+/* line 244, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu UL {
   padding-left: 10px;
 }
-/* line 233, ../sass/bootstrap-override.scss */
+/* line 248, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu > li > a {
   display: inline-block;
 }
-/* line 236, ../sass/bootstrap-override.scss */
+/* line 251, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu > li > a:hover {
   background-color: unset !important;
   background-image: none !important;
   filter: none;
 }
-/* line 241, ../sass/bootstrap-override.scss */
+/* line 256, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu > li > .icon {
   /*float: left;*/
 }
-/* line 249, ../sass/bootstrap-override.scss */
+/* line 264, ../sass/bootstrap-override.scss */
 .xTheme-default .disabled .action-checkbox {
   opacity: 0.2;
   cursor: not-allowed;
 }
-/* line 255, ../sass/bootstrap-override.scss */
+/* line 270, ../sass/bootstrap-override.scss */
 .xTheme-default .quickToolbar .action-checkbox {
   /*
   padding: 0;
@@ -15521,80 +15535,80 @@ body {
   margin-left: 20px;
   */
 }
-/* line 264, ../sass/bootstrap-override.scss */
+/* line 279, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid-extra {
   width: 100%;
   height: 80px;
 }
-/* line 269, ../sass/bootstrap-override.scss */
+/* line 284, ../sass/bootstrap-override.scss */
 .xTheme-default .nav-tabs > .changed {
   border: 1px solid rgba(255, 0, 0, 0.5);
   border-radius: 4px;
 }
-/* line 273, ../sass/bootstrap-override.scss */
+/* line 288, ../sass/bootstrap-override.scss */
 .xTheme-default .nav-tabs > .active.changed {
   border: 1px solid red;
   border-radius: 4px;
 }
-/* line 279, ../sass/bootstrap-override.scss */
+/* line 294, ../sass/bootstrap-override.scss */
 .xTheme-default .nav-tabs > li.active > a, .xTheme-default .nav-tabs > li.active > a:hover, .xTheme-default .nav-tabs > li.active > a:focus {
   background-color: inherit;
   border: none;
   box-shadow: inset 2px 3px 9px -4px black;
 }
-/* line 286, ../sass/bootstrap-override.scss */
+/* line 301, ../sass/bootstrap-override.scss */
 .xTheme-default .divider-vertical {
   height: 33px;
   margin: 0 9px;
   border-right: 1px solid #222222;
   border-left: 1px solid #222222;
 }
-/* line 293, ../sass/bootstrap-override.scss */
+/* line 308, ../sass/bootstrap-override.scss */
 .xTheme-default .navbar-inverse .divider-vertical {
   border-right-color: #222222;
   border-left-color: #111111;
 }
 @media (max-width: 767px) {
-  /* line 299, ../sass/bootstrap-override.scss */
+  /* line 314, ../sass/bootstrap-override.scss */
   .xTheme-default .navbar-collapse .nav > .divider-vertical {
     display: none;
   }
 }
-/* line 304, ../sass/bootstrap-override.scss */
+/* line 319, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitCheckBox {
   background-color: inherit;
 }
-/* line 308, ../sass/bootstrap-override.scss */
+/* line 323, ../sass/bootstrap-override.scss */
 .xTheme-default .quickToolbar {
   font-size: 120%;
 }
-/* line 312, ../sass/bootstrap-override.scss */
+/* line 327, ../sass/bootstrap-override.scss */
 .xTheme-default .selectize-dropdown {
   /*background: $opaque;*/
 }
-/* line 315, ../sass/bootstrap-override.scss */
+/* line 330, ../sass/bootstrap-override.scss */
 .xTheme-default .selectize-dropdown .active {
   /*background-color: #f5f5f5;*/
   /*color: $dark-transparent;*/
 }
-/* line 319, ../sass/bootstrap-override.scss */
+/* line 334, ../sass/bootstrap-override.scss */
 .xTheme-default .selectize-dropdown .active.create {
   color: #262626;
 }
-/* line 322, ../sass/bootstrap-override.scss */
+/* line 337, ../sass/bootstrap-override.scss */
 .xTheme-default .xbloxHelp {
   padding: 8px;
   overflow: auto;
 }
-/* line 326, ../sass/bootstrap-override.scss */
+/* line 341, ../sass/bootstrap-override.scss */
 .xTheme-default .xbloxHelp PRE {
   font-size: 110%;
 }
-/* line 332, ../sass/bootstrap-override.scss */
+/* line 347, ../sass/bootstrap-override.scss */
 .xTheme-default .border-bottom {
   border-bottom-color: #e6e6e6;
 }
-/* line 336, ../sass/bootstrap-override.scss */
+/* line 351, ../sass/bootstrap-override.scss */
 .xTheme-default .jsoneditor .search input,
 .xTheme-default .jsoneditor .search .results {
   font-family: arial, sans-serif;
@@ -15603,106 +15617,106 @@ body {
   background: transparent;
   /* For Firefox */
 }
-/* line 345, ../sass/bootstrap-override.scss */
+/* line 360, ../sass/bootstrap-override.scss */
 .xTheme-default .jsoneditor .search .frame {
   border: 1px solid #4a5150;
   background-color: transparent;
   padding: 1px;
   margin: 0;
 }
-/* line 353, ../sass/bootstrap-override.scss */
+/* line 368, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu.navbar {
   border: none;
 }
-/* line 356, ../sass/bootstrap-override.scss */
+/* line 371, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu {
   font-size: 100%;
 }
-/* line 358, ../sass/bootstrap-override.scss */
+/* line 373, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu A {
   font-size: 110%;
 }
-/* line 361, ../sass/bootstrap-override.scss */
+/* line 376, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu .dropdown-context.scrollable-menu {
   border-top: none;
 }
-/* line 366, ../sass/bootstrap-override.scss */
+/* line 381, ../sass/bootstrap-override.scss */
 .xTheme-default .actionToolbar A {
   cursor: pointer;
 }
-/* line 371, ../sass/bootstrap-override.scss */
+/* line 386, ../sass/bootstrap-override.scss */
 .xTheme-default .actionToolbar .disabled .icon {
   opacity: 0.5;
 }
-/* line 376, ../sass/bootstrap-override.scss */
+/* line 391, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-menu A {
   cursor: pointer;
 }
-/* line 379, ../sass/bootstrap-override.scss */
+/* line 394, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-menu > li > a {
   white-space: initial;
 }
-/* line 383, ../sass/bootstrap-override.scss */
+/* line 398, ../sass/bootstrap-override.scss */
 .xTheme-default .VariablesGrid .field-name {
   padding-left: 10px;
 }
-/* line 391, ../sass/bootstrap-override.scss */
+/* line 406, ../sass/bootstrap-override.scss */
 .xTheme-default #staticTopContainer .actionToolbar {
   /*box-shadow: none;*/
 }
-/* line 396, ../sass/bootstrap-override.scss */
+/* line 411, ../sass/bootstrap-override.scss */
 .xTheme-default .accordion-body.in {
   overflow: visible;
 }
-/* line 397, ../sass/bootstrap-override.scss */
+/* line 412, ../sass/bootstrap-override.scss */
 .xTheme-default .panel-group {
   margin-bottom: 0;
 }
-/* line 405, ../sass/bootstrap-override.scss */
+/* line 420, ../sass/bootstrap-override.scss */
 .xTheme-default .panel-scroll {
   max-height: 400px;
   overflow: hidden;
   overflow-y: auto;
 }
-/* line 411, ../sass/bootstrap-override.scss */
+/* line 426, ../sass/bootstrap-override.scss */
 .xTheme-default .fullWidth {
   /*width: 100%;*/
 }
-/* line 415, ../sass/bootstrap-override.scss */
+/* line 430, ../sass/bootstrap-override.scss */
 .xTheme-default .inline-icon {
   padding-right: 4px;
   line-height: inherit;
 }
-/* line 421, ../sass/bootstrap-override.scss */
+/* line 436, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-body .dgrid-cell {
   border: none;
 }
-/* line 426, ../sass/bootstrap-override.scss */
+/* line 441, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid KBD {
   font-size: 100%;
 }
-/* line 430, ../sass/bootstrap-override.scss */
+/* line 445, ../sass/bootstrap-override.scss */
 .xTheme-default .blockGrid.Tree .dgrid-row {
   line-height: 1.8em;
 }
-/* line 434, ../sass/bootstrap-override.scss */
+/* line 449, ../sass/bootstrap-override.scss */
 .xTheme-default .blockGrid.Tree .dgrid-content {
   padding: 0px;
 }
-/* line 440, ../sass/bootstrap-override.scss */
+/* line 455, ../sass/bootstrap-override.scss */
 .xTheme-default .blockGrid .Thumb .dgrid-row {
   margin: 3px;
 }
-/* line 446, ../sass/bootstrap-override.scss */
+/* line 461, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid-scroller {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.89);
 }
-/* line 451, ../sass/bootstrap-override.scss */
+/* line 466, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid-header-scroll, .xTheme-default .dgrid-header .dgrid-cell {
   background-color: rgba(22, 22, 22, 0.28);
   /*border-bottom: 1px solid $opaque;*/
 }
-/* line 492, ../sass/bootstrap-override.scss */
+/* line 507, ../sass/bootstrap-override.scss */
 .xTheme-default .container-fluid {
   height: 100%;
   display: table;
@@ -15710,20 +15724,20 @@ body {
   padding-right: 0;
   padding-left: 0;
 }
-/* line 500, ../sass/bootstrap-override.scss */
+/* line 515, ../sass/bootstrap-override.scss */
 .xTheme-default .row-fluid {
   height: 100%;
   display: table-cell;
   vertical-align: middle;
   width: 100%;
 }
-/* line 507, ../sass/bootstrap-override.scss */
+/* line 522, ../sass/bootstrap-override.scss */
 .xTheme-default .centering {
   float: none;
   margin: 0 auto;
   text-align: center;
 }
-/* line 514, ../sass/bootstrap-override.scss */
+/* line 529, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-context {
   /*
       max-height: 500px;
@@ -15731,93 +15745,93 @@ body {
   /*position:fixed;*/
   /*overflow-x: hidden;*/
 }
-/* line 521, ../sass/bootstrap-override.scss */
+/* line 536, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-menu > li > .checkbox {
   margin-left: 10px;
 }
-/* line 531, ../sass/bootstrap-override.scss */
+/* line 546, ../sass/bootstrap-override.scss */
 .xTheme-default .CIDialog .widget .widgetTitle {
   padding-left: 4px !important;
 }
-/* line 539, ../sass/bootstrap-override.scss */
+/* line 554, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .panel-body {
   overflow: auto;
 }
-/* line 544, ../sass/bootstrap-override.scss */
+/* line 559, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .vertical .widgetValue {
   float: right;
 }
-/* line 549, ../sass/bootstrap-override.scss */
+/* line 564, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .widgetValue {
   border: none;
 }
-/* line 553, ../sass/bootstrap-override.scss */
+/* line 568, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .EditBox {
   width: 100%;
 }
-/* line 556, ../sass/bootstrap-override.scss */
+/* line 571, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .widgetValue {
   border: none;
 }
-/* line 561, ../sass/bootstrap-override.scss */
+/* line 576, ../sass/bootstrap-override.scss */
 .xTheme-default .widgetTitle {
   padding-left: 8px;
 }
-/* line 565, ../sass/bootstrap-override.scss */
+/* line 580, ../sass/bootstrap-override.scss */
 .xTheme-default .widgetContainer {
   margin-top: 8px;
 }
-/* line 569, ../sass/bootstrap-override.scss */
+/* line 584, ../sass/bootstrap-override.scss */
 .xTheme-default .bootstrap-select.btn-group .dropdown-menu {
   min-width: 200px !important;
 }
-/* line 579, ../sass/bootstrap-override.scss */
+/* line 594, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .vertical .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
   width: auto;
 }
-/* line 583, ../sass/bootstrap-override.scss */
+/* line 598, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .vertical .widgetTitle {
   min-width: 40px;
   padding-left: 8px;
 }
-/* line 591, ../sass/bootstrap-override.scss */
+/* line 606, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonOpen {
   min-height: 12em;
   max-height: 13em;
 }
-/* line 595, ../sass/bootstrap-override.scss */
+/* line 610, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonClose {
   max-height: inherit;
   min-height: inherit;
 }
-/* line 602, ../sass/bootstrap-override.scss */
+/* line 617, ../sass/bootstrap-override.scss */
 .xTheme-default .modal {
   /*z-index: inherit;*/
 }
-/* line 605, ../sass/bootstrap-override.scss */
+/* line 620, ../sass/bootstrap-override.scss */
 .xTheme-default .modal .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
   width: auto;
 }
-/* line 612, ../sass/bootstrap-override.scss */
+/* line 627, ../sass/bootstrap-override.scss */
 .xTheme-default .FilePicker .wcSplitterBar {
   opacity: 0.5;
 }
-/* line 617, ../sass/bootstrap-override.scss */
+/* line 632, ../sass/bootstrap-override.scss */
 .xTheme-default .toolbar-button {
   background: transparent none;
   border: none;
 }
-/* line 622, ../sass/bootstrap-override.scss */
+/* line 637, ../sass/bootstrap-override.scss */
 .xTheme-default .statusbar.widget {
   background-color: #4a5150;
   color: #666;
 }
-/* line 626, ../sass/bootstrap-override.scss */
+/* line 641, ../sass/bootstrap-override.scss */
 .xTheme-default .status-bar-text {
   width: 100%;
   padding-right: 20px;
 }
-/* line 630, ../sass/bootstrap-override.scss */
+/* line 645, ../sass/bootstrap-override.scss */
 .xTheme-default .status-bar-collapser {
   position: absolute;
   width: auto;
@@ -15827,38 +15841,38 @@ body {
   margin-right: 10px;
   right: 0;
 }
-/* line 638, ../sass/bootstrap-override.scss */
+/* line 653, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLoadingIconContainer {
   width: 50%;
 }
-/* line 641, ../sass/bootstrap-override.scss */
+/* line 656, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLoadingBackground {
   background-color: transparent;
 }
-/* line 644, ../sass/bootstrap-override.scss */
+/* line 659, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLoadingIcon {
   font-size: 30px;
   height: 30px;
   color: #4ab0ce;
 }
-/* line 650, ../sass/bootstrap-override.scss */
+/* line 665, ../sass/bootstrap-override.scss */
 .xTheme-default .bg-opaque {
   background-color: #2c3130;
 }
-/* line 656, ../sass/bootstrap-override.scss */
+/* line 671, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-footer {
   border-top: none;
 }
-/* line 659, ../sass/bootstrap-override.scss */
+/* line 674, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-header {
   border-bottom: none;
 }
-/* line 663, ../sass/bootstrap-override.scss */
+/* line 678, ../sass/bootstrap-override.scss */
 .xTheme-default .modal {
   text-align: center;
   padding: 0 !important;
 }
-/* line 668, ../sass/bootstrap-override.scss */
+/* line 683, ../sass/bootstrap-override.scss */
 .xTheme-default .modal:before {
   content: '';
   display: inline-block;
@@ -15867,13 +15881,13 @@ body {
   margin-right: -4px;
   /* Adjusts for spacing */
 }
-/* line 676, ../sass/bootstrap-override.scss */
+/* line 691, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-dialog {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
 }
-/* line 683, ../sass/bootstrap-override.scss */
+/* line 698, ../sass/bootstrap-override.scss */
 .xTheme-default .messenger-message-inner {
   white-space: pre-wrap;
   /*
@@ -15882,101 +15896,101 @@ body {
   -o-text-overflow: ellipsis;
   -moz-binding: url('../fonts/truncate.xml#ellipsis');*/
 }
-/* line 694, ../sass/bootstrap-override.scss */
+/* line 709, ../sass/bootstrap-override.scss */
 .xTheme-default .commandSettings .widget {
   font-size: 105%;
 }
-/* line 703, ../sass/bootstrap-override.scss */
+/* line 718, ../sass/bootstrap-override.scss */
 .xTheme-default .bootstrap3-dialog .modal-content {
   /*background-color: @opaque;*/
 }
-/* line 707, ../sass/bootstrap-override.scss */
+/* line 722, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-body, .xTheme-default .modal-header {
   padding: 8px;
 }
-/* line 711, ../sass/bootstrap-override.scss */
+/* line 726, ../sass/bootstrap-override.scss */
 .xTheme-default .wcPanelTabContent {
   overflow-y: auto !important;
 }
-/* line 719, ../sass/bootstrap-override.scss */
+/* line 734, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .containerNode {
   padding: 8px;
 }
-/* line 723, ../sass/bootstrap-override.scss */
+/* line 738, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .widgetContainer {
   margin: 0px;
 }
-/* line 734, ../sass/bootstrap-override.scss */
+/* line 749, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView.Accordion .containerNode {
   padding: 4px;
 }
-/* line 738, ../sass/bootstrap-override.scss */
+/* line 753, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView.Accordion .widgetContainer {
   margin-top: 4px;
 }
-/* line 741, ../sass/bootstrap-override.scss */
+/* line 756, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView.Accordion .panel-heading > .accordion-toggle {
   display: block;
   padding: 4px 8px;
 }
-/* line 750, ../sass/bootstrap-override.scss */
+/* line 765, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .modal-footer {
   border: none;
 }
-/* line 753, ../sass/bootstrap-override.scss */
+/* line 768, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-info {
   background-color: #5bc0de;
 }
-/* line 756, ../sass/bootstrap-override.scss */
+/* line 771, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-primary {
   background-color: #428bca;
 }
-/* line 759, ../sass/bootstrap-override.scss */
+/* line 774, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-success {
   background-color: #5cb85c;
 }
-/* line 762, ../sass/bootstrap-override.scss */
+/* line 777, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-warning {
   background-color: #f0ad4e;
 }
-/* line 765, ../sass/bootstrap-override.scss */
+/* line 780, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-danger {
   background-color: #d9534f;
 }
-/* line 769, ../sass/bootstrap-override.scss */
+/* line 784, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .panel-body {
   /*padding: 8px;*/
 }
-/* line 776, ../sass/bootstrap-override.scss */
+/* line 791, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .tabbable {
   /*padding: 10px;*/
 }
-/* line 780, ../sass/bootstrap-override.scss */
+/* line 795, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .tab-content {
   /*padding: 0px !important;*/
 }
-/* line 786, ../sass/bootstrap-override.scss */
+/* line 801, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .wcLayoutPane {
   /*padding: 0px !important;*/
 }
-/* line 790, ../sass/bootstrap-override.scss */
+/* line 805, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .radio label, .xTheme-default .CIView .checkbox label {
   min-width: 150px;
 }
-/* line 796, ../sass/bootstrap-override.scss */
+/* line 811, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLayoutPane {
   padding: 4px;
 }
-/* line 800, ../sass/bootstrap-override.scss */
+/* line 815, ../sass/bootstrap-override.scss */
 .xTheme-default .panel-body {
   padding: 0px;
 }
-/* line 804, ../sass/bootstrap-override.scss */
+/* line 819, ../sass/bootstrap-override.scss */
 .xTheme-default .panel .dijitContentPane {
   width: inherit;
   height: inherit;
 }
-/* line 810, ../sass/bootstrap-override.scss */
+/* line 825, ../sass/bootstrap-override.scss */
 .xTheme-default .actionToolbar .navbar-nav > li > a {
   padding-left: 12px;
   padding-right: 12px;
@@ -15984,23 +15998,23 @@ body {
   padding-bottom: 8px;
   line-height: 18px;
 }
-/* line 819, ../sass/bootstrap-override.scss */
+/* line 834, ../sass/bootstrap-override.scss */
 .xTheme-default .wcPanelTab, .xTheme-default .dijitTab, .xTheme-default .dijitTabButton, .xTheme-default .wcFrameTitleBar, .xTheme-default .wcFrameTitle, .xTheme-default .dijitAccordionTitle, .xTheme-default .dijitButtonText, .xTheme-default .actionToolbarButtonElusive {
   /*color: rgba(220, 220, 220, 1);*/
 }
-/* line 822, ../sass/bootstrap-override.scss */
+/* line 837, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitTab, .xTheme-default .wcPanelTab {
   background-color: inherit;
 }
-/* line 826, ../sass/bootstrap-override.scss */
+/* line 841, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitDialog {
   background-color: #565656;
 }
-/* line 829, ../sass/bootstrap-override.scss */
+/* line 844, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitDialogUnderlayWrapper {
   background-color: rgba(10, 0, 0, 0.68) !important;
 }
-/* line 832, ../sass/bootstrap-override.scss */
+/* line 847, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitPopup {
   position: absolute !important;
   border: 1px solid rgba(0, 0, 0, 0.5);
@@ -16009,46 +16023,46 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
 }
-/* line 841, ../sass/bootstrap-override.scss */
+/* line 856, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitMenuItemLabel {
   margin-top: 2px;
   margin-bottom: 2px;
 }
-/* line 846, ../sass/bootstrap-override.scss */
+/* line 861, ../sass/bootstrap-override.scss */
 .xTheme-default .btn.btn-default {
   font-size: 14px;
 }
-/* line 850, ../sass/bootstrap-override.scss */
+/* line 865, ../sass/bootstrap-override.scss */
 .xTheme-default .btn.transparent {
   background-color: transparent;
   border: none !important;
 }
-/* line 854, ../sass/bootstrap-override.scss */
+/* line 869, ../sass/bootstrap-override.scss */
 .xTheme-default .btn.transparent:disabled {
   background-color: transparent !important;
 }
-/* line 858, ../sass/bootstrap-override.scss */
+/* line 873, ../sass/bootstrap-override.scss */
 .xTheme-default .wcScrollableY {
   overflow: hidden;
 }
-/* line 862, ../sass/bootstrap-override.scss */
+/* line 877, ../sass/bootstrap-override.scss */
 .xTheme-default .wcScrollableX {
   overflow: hidden;
 }
-/* line 866, ../sass/bootstrap-override.scss */
+/* line 881, ../sass/bootstrap-override.scss */
 .xTheme-default .radio label, .xTheme-default .checkbox label {
   /*min-height: initial;*/
   margin-top: -3px;
 }
-/* line 873, ../sass/bootstrap-override.scss */
+/* line 888, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu .navigation {
   height: 30px;
 }
-/* line 876, ../sass/bootstrap-override.scss */
+/* line 891, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu .nav > li > a {
   /*padding-bottom: 0px;*/
 }
-/* line 880, ../sass/bootstrap-override.scss */
+/* line 895, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-context:after,
 .xTheme-default .dropdown-context-up:after,
 .xTheme-default .dropdown-context-left:after {
@@ -16058,7 +16072,7 @@ body {
   width: 0;
   border: none;
 }
-/* line 890, ../sass/bootstrap-override.scss */
+/* line 905, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-context:before, .xTheme-default .dropdown-context-up:before, .xTheme-default .dropdown-context-left:before {
   display: none;
   content: '';
