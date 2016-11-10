@@ -326,13 +326,14 @@ define([
 
                             if(data.scripts){
                                 _.each(data.scripts,function(url){
-                                    console.log('add script ' +url);
                                     thiz.addJavaScriptSrc(url,false,null,true);
-                                })
+                                });
                             }
+                            /*
                             win.require("dojo/_base/lang").isArray = win.dojo.isArray = function (it) {
                                 return it && Object.prototype.toString.call(it) == "[object Array]";
                             };
+                            */
 
                             // Add module paths for all folders in lib/custom (or wherever custom widgets are stored)
                             /*

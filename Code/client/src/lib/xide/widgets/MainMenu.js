@@ -7,23 +7,35 @@ define([
     "xide/mixins/ActionMixin",
     'xaction/ActionContext',
     "xide/widgets/_MenuMixin4",
-    "xide/model/Path"
-
-], function (dcl, types, _XWidget, i18, ActionMixin, ActionContext, MenuMixinClass, Path) {
+    "xide/model/Path",
+    "xide/$",
+    "xide/lodash",
+    "xide/widgets/_MenuKeyboard"
+], function (dcl, types, _XWidget, i18, ActionMixin, ActionContext, MenuMixinClass, Path,$,_,_MenuKeyboard) {
     var _debug = false;
     var ContainerClass = dcl([_XWidget, ActionContext.dcl, ActionMixin.dcl], {
         templateString: '<div class="navbar navbar-default mainMenu bg-opaque">' +
         '<nav attachTo="navigation" class="" role="navigation">' +
-        '<ul attachTo="navBar" class="nav navbar-nav"/>' +
+        '<ul tabindex="-1" attachTo="navBar" class="nav navbar-nav"/>' +
         '</nav>' +
         '</div>'
     });
-
     var ActionRendererClass = dcl(null, {
         renderTopLevel: function (name, where) {
+            var val  = i18.localize(name);
+            var shortcutKey = "";
+            var text;
+            var ndx =0;
+            if(ndx >= 0){
+                shortcutKey = val.charAt(ndx);
+                var prefix = val.substr(0, ndx);
+                var suffix = val.substr(ndx + 1);
+                val = prefix + '<span class="shortcutKey">' + shortcutKey + '</span>' + suffix;
+                this.shortcuts[shortcutKey]=name;
+            }
             where = where || $(this.getRootContainer());
-            var item = $('<li class="dropdown">' +
-                '<a href="#" data-delay="1500" class="dropdown-toggle" data-toggle="dropdown">' + i18.localize(name) + '<b class="caret"></b></a>' +
+            var item = $('<li tabindex="-1" class="dropdown">' +
+                '<a href="#" data-delay="1500" class="dropdown-toggle" data-toggle="dropdown">' + val + '<b class="caret"></b></a>' +
                 '</li>');
             where.append(item);
             var trigger = item.find('A');
@@ -34,12 +46,16 @@ define([
             return this.navBar;
         }
     });
-
+    var KeyboardControl = _MenuKeyboard;
     var MainMenu = dcl([ContainerClass, ActionRendererClass, MenuMixinClass, _XWidget.StoreMixin], {
         target: null,
         visibility: types.ACTION_VISIBILITY.MAIN_MENU,
         attachToGlobal: true,
         declaredClass: 'xide.widgets.MainMenu',
+        shortcuts:null,
+        _topLevelMenu:null,
+        _altDown:false,
+        _shiftDown:false,
         addContext: function (selector, data) {
             var id,
                 $menu,
@@ -65,6 +81,8 @@ define([
         setActionStore: function (store, owner) {
             this._clear();
             this._tmpActions = [];
+            delete this._topLevelMenu;
+            this._topLevelMenu={};
             this.store = store;
             if (!store) {
                 return;
@@ -76,10 +94,25 @@ define([
                 tree = self.buildActionTree(store, owner),
                 allActions = tree.allActions,
                 rootActions = tree.rootActions,
-                allActionPaths = tree.allActionPaths;
+                allActionPaths = tree.allActionPaths,
+                delegate = this.delegate;
+
+            /*
+             var mapping = Keyboard.defaultMapping(keyCombo, handler, keyProfile || types.KEYBOARD_PROFILE.DEFAULT, keyTarget, keyScope, [action]);
+             mapping = this.registerKeyboardMapping(mapping);
+             keyboardMappings.push(mapping);
+             */
+
+            function registerRootKeyboardHandler(name){
+
+                var keyboardCombo = 'alt ' + name[0];
+
+            }
 
             _.each(tree.root, function (menuActions, level) {
+
                 var root = self.onRootAction(level, rootContainer);
+                self._topLevelMenu[level]=root;
                 var lastHeader = {
                     header: ''
                 };
@@ -159,6 +192,69 @@ define([
                 }
                 node.append($(this.domNode));
             }
+        },
+        lastFocused:null,
+        setupKeyboard:function(node){
+            function keyhandler(e){
+                e.keyCode === 16 && (this._shiftDown = e.type==='keydown');
+                if(e.keyCode==27){
+                    var navData = this.keyboardController.toNavigationData($(e.target),this.getRootContainer());
+                    navData && navData.element && this.keyboardController.close(navData.element);
+                    $(this.lastFocused).focus();
+                }
+                if(this._shiftDown && e.key in this.shortcuts){
+                    this.lastFocused = document.activeElement;
+                    //open root
+                    this.keyboardController.openRoot(null,this._topLevelMenu[this.shortcuts[e.key]]);
+                }
+            }
+            $(node).on('keydown',keyhandler.bind(this));
+        },
+        init: function (opts) {
+            if (this._didInit) {
+                return;
+            }
+            this._didInit = true;
+            this.shortcuts = {};
+
+            this.setupKeyboard(this.delegate._domNode || typeof document !=='undefined' ? document : null);
+
+            var options = this.getDefaultOptions();
+            this.keyboardController = new KeyboardControl();
+            this.keyboardController.setup(this);
+            options = $.extend({}, options, opts);
+            var self = this;
+            var root = $(document);
+
+
+            this.__on(root, 'click', null, function (e) {
+                if (!self.isOpen) {
+                    return;
+                }
+                self.isOpen = false;
+                self.onClose(e);
+                $('.dropdown-context').css({
+                    display: ''
+                }).find('.drop-left').removeClass('drop-left');
+            });
+
+            if (options.preventDoubleContext) {
+                this.__on(root, 'contextmenu', '.dropdown-context', function (e) {
+                    e.preventDefault();
+                });
+            }
+            function mouseEnterHandlerSubs(e){
+                var navigationData = this.keyboardController.toNavigationData($(e.target),self.getRootContainer());
+                if(!navigationData) {
+                    return;
+                }
+                var _parent = navigationData.parent;
+                _parent.focus();
+                navigationData.element.focus();
+                _parent.data('currentTarget',navigationData.element);
+                this.keyboardController.initContainer(_parent);
+            }
+            this.__on(this.getRootContainer(), 'mouseenter', '.dropdown-menu >LI', mouseEnterHandlerSubs.bind(this));
         }
     });
     return MainMenu;

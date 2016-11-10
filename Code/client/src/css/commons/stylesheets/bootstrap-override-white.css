@@ -1154,56 +1154,56 @@
   background-color: #e8e8e8;
   border-bottom: 1px solid #cacaca;
 }
-/* line 283, ../sass/bootstrap-override-white.scss */
+/* line 285, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-row.dgrid-row-odd {
-  background-color: rgba(16, 16, 16, 0.09);
+  background-color: #f0f0f0;
 }
-/* line 288, ../sass/bootstrap-override-white.scss */
+/* line 292, ../sass/bootstrap-override-white.scss */
 .xTheme-white .statusbar.widget {
   border-top: 1px solid #cacaca;
   background-color: #e8e8e8 !important;
   color: #555 !important;
   border-radius: 0px !important;
 }
-/* line 296, ../sass/bootstrap-override-white.scss */
+/* line 300, ../sass/bootstrap-override-white.scss */
 .xTheme-white .breadcrumb > .active {
   color: #555;
 }
-/* line 299, ../sass/bootstrap-override-white.scss */
+/* line 303, ../sass/bootstrap-override-white.scss */
 .xTheme-white .thumbText {
   margin-right: 2px !important;
 }
-/* line 304, ../sass/bootstrap-override-white.scss */
+/* line 308, ../sass/bootstrap-override-white.scss */
 .xTheme-white .body {
   /*@include scrollbars(.5em, slategray);*/
 }
-/* line 310, ../sass/bootstrap-override-white.scss */
+/* line 314, ../sass/bootstrap-override-white.scss */
 .xTheme-white .widget {
   /*font-weight: 400 !important;*/
 }
-/* line 315, ../sass/bootstrap-override-white.scss */
+/* line 319, ../sass/bootstrap-override-white.scss */
 .xTheme-white .widgetContainer {
   margin: 0px;
 }
-/* line 319, ../sass/bootstrap-override-white.scss */
+/* line 323, ../sass/bootstrap-override-white.scss */
 .xTheme-white .toolbar-button {
   color: #666;
 }
-/* line 322, ../sass/bootstrap-override-white.scss */
+/* line 326, ../sass/bootstrap-override-white.scss */
 .xTheme-white .bg-opaque {
   background-color: #f8f8f8 !important;
 }
-/* line 326, ../sass/bootstrap-override-white.scss */
+/* line 330, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dijitMenuSeparatorTop {
   border-bottom: none !important;
   border-top: none !important;
 }
-/* line 330, ../sass/bootstrap-override-white.scss */
+/* line 334, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dijitMenuSeparatorBottom {
   border-bottom: 1px solid rgba(51, 51, 51, 0.35);
   border-top: none !important;
 }
-/* line 336, ../sass/bootstrap-override-white.scss */
+/* line 340, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dijitPopup {
   position: absolute !important;
   border: 1px solid #ccc;
@@ -1214,31 +1214,31 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
 }
-/* line 349, ../sass/bootstrap-override-white.scss */
+/* line 353, ../sass/bootstrap-override-white.scss */
 .xTheme-white .metro .tile .tile-content.icon [class*="fa-"],
 .xTheme-white .metro .tile .tile-content.icon img {
   color: #222222;
 }
-/* line 354, ../sass/bootstrap-override-white.scss */
+/* line 358, ../sass/bootstrap-override-white.scss */
 .xTheme-white .breadcrumb a {
   color: inherit;
 }
-/* line 358, ../sass/bootstrap-override-white.scss */
+/* line 362, ../sass/bootstrap-override-white.scss */
 .xTheme-white .breadcrumb > li + li:before {
   color: inherit;
 }
-/* line 366, ../sass/bootstrap-override-white.scss */
+/* line 370, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-focus:active {
   /*outline: 1px dotted rgba(255, 82, 0, 0.65)  !important;*/
   outline-offset: -1px;
   /*background-color: rgba(0,0,0,0.5);*/
   font-weight: bold;
 }
-/* line 372, ../sass/bootstrap-override-white.scss */
+/* line 376, ../sass/bootstrap-override-white.scss */
 .xTheme-white .wcFrameButton {
   /*font-size:inherit;*/
 }
-/* line 376, ../sass/bootstrap-override-white.scss */
+/* line 380, ../sass/bootstrap-override-white.scss */
 .xTheme-white KBD {
   background-color: initial;
   box-shadow: none;
@@ -1247,7 +1247,7 @@
   /*font-family: inherit;*/
   margin: 4px;
 }
-/* line 387, ../sass/bootstrap-override-white.scss */
+/* line 391, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-selected {
   /*background-color: rgba(44, 39, 36, 0.52) !important;*/
   /*@include box-shadow(inset 0 1px 5px rgba(0, 0, 0, 0.8));*/
@@ -1262,7 +1262,7 @@
   /* #4 AND INFINITY!!! (CSS3 only) */
   box-shadow: inset 0 0 0 1px orange;
 }
-/* line 409, ../sass/bootstrap-override-white.scss */
+/* line 413, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-focus:focus {
   /*outline: 1px solid rgba(87, 96, 255,0.5);*/
   outline-offset: -1px;
@@ -1274,23 +1274,23 @@
   border-style: groove inset;
   @include box-sizing(content-box);*/
 }
-/* line 422, ../sass/bootstrap-override-white.scss */
+/* line 426, ../sass/bootstrap-override-white.scss */
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder,
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:hover,
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:focus,
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:active {
   color: #fff;
 }
-/* line 429, ../sass/bootstrap-override-white.scss */
+/* line 433, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-selected .metro .tile .tile-content.icon [class*="fa-"] {
   color: #f8f8f8 !important;
 }
-/* line 434, ../sass/bootstrap-override-white.scss */
+/* line 438, ../sass/bootstrap-override-white.scss */
 .xTheme-white .nav-tabs > .active {
   border: 1px solid rgba(255, 0, 0, 0.35);
   box-shadow: inset -1px -1px 1px 0px rgba(71, 237, 0, 0.1);
 }
-/* line 443, ../sass/bootstrap-override-white.scss */
+/* line 447, ../sass/bootstrap-override-white.scss */
 .xTheme-white .metro .tile .tile-content.icon img {
   color: #f8f8f8 !important;
 }

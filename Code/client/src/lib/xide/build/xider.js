@@ -198,7 +198,7 @@ define('xide/types/Types',[
          * @type int
          */
         END: 0x00000080
-    }
+    };
     /**
      * A 'Configurable Information's ("CI") type flags for post and pre-processing a value.
      * @enum {string} module:xide/types/CIFlag
@@ -322,14 +322,14 @@ define('xide/types/Types',[
          * @type int
          */
         END: 0x000020000
-    }
+    };
     /**
      * A CI's default post-pre processing order.
      *
      * @enum {string} module:xide/types/CI_STATE
      * @memberOf module:xide/types
      */
-    types.CI_CORDER = {}
+    types.CI_CORDER = {};
     /**
      * A 'Configurable Information's ("CI") type information. Every CI has this information. You can
      * re-composite new types with ECIType.STRUCTURE. However all 'beans' (rich objects) in the system all displayed through a set of CIs,
@@ -528,7 +528,7 @@ define('xide/types/Types',[
          * @type { int}
          */
         UNKNOWN: -1
-    }
+    };
     /**
      * Stub for registered bean types. This value is needed to let the UI switch between configurations per such type.
      * At the very root is the bean action context which may include more contexts.
@@ -561,7 +561,7 @@ define('xide/types/Types',[
          * @constant
          */
         EXPRESSION: 'EXPRESSION'       //xexpression
-    }
+    };
 
     /**
      * Expression Parser is a map of currently existing parsers
@@ -572,7 +572,7 @@ define('xide/types/Types',[
      * @memberOf module:xide/types
      */
     if (!types.EXPRESSION_PARSER) {
-        types.EXPRESSION_PARSER = {}
+        types.EXPRESSION_PARSER = {};
     }
     /**
      * Component names stub, might be extended by sub-classing applications
@@ -586,7 +586,7 @@ define('xide/types/Types',[
         XACE: 'xace',
         XEXPRESSION: 'xexpression',
         XCONSOLE: 'xconsole'
-    }
+    };
 
     /**
      * WIDGET_REFERENCE_MODE enumerates possible modes to resolve a string expression
@@ -601,7 +601,7 @@ define('xide/types/Types',[
         BY_CLASS: 'byclass',
         BY_CSS: 'bycss',
         BY_EXPRESSION: 'expression'
-    }
+    };
     /**
      * Possible split modes for rich editors with preview or live coding views.
      *
@@ -613,7 +613,7 @@ define('xide/types/Types',[
         SOURCE: 2,
         SPLIT_VERTICAL: 6,
         SPLIT_HORIZONTAL: 7
-    }
+    };
 
     /**
      * All client resources are through variables on the server side. Here the minimum variables for an xjs application.
@@ -625,7 +625,7 @@ define('xide/types/Types',[
         ACE: 'ACE',
         APP_URL: 'APP_URL',
         SITE_URL: 'SITE_URL'
-    }
+    };
     /**
      * Events of xide.*
      * @enum {string} module:xide/types/EVENTS
@@ -753,7 +753,7 @@ define('xide/types/Types',[
         ON_REMOVE_CONTAINER: 'onRemoveContainer',
         ON_CONTAINER_REPLACED: 'onContainerReplaced',
         ON_CONTAINER_SPLIT: 'onContainerSplit'
-    }
+    };
     /**
      * To be moved
      * @type {{SIZE_NORMAL: string, SIZE_SMALL: string, SIZE_WIDE: string, SIZE_LARGE: string}}
@@ -763,7 +763,7 @@ define('xide/types/Types',[
         SIZE_SMALL: 'size-small',
         SIZE_WIDE: 'size-wide',    // size-wide is equal to modal-lg
         SIZE_LARGE: 'size-large'
-    }
+    };
 
     /**
      * To be moved
@@ -776,7 +776,7 @@ define('xide/types/Types',[
         SUCCESS: 'type-success',
         WARNING: 'type-warning',
         DANGER: 'type-danger'
-    }
+    };
     /**
      * @TODO: remove, defined in xideve
      */
@@ -786,7 +786,7 @@ define('xide/types/Types',[
         LAYOUT_CENTER_RIGHT: 'LAYOUT_CENTER_RIGHT',
         LAYOUT_LEFT_CENTER_RIGHT: 'LAYOUT_LEFT_CENTER_RIGHT',
         LAYOUT_LEFT_CENTER_RIGHT_BOTTOM: 'LAYOUT_LEFT_CENTER_RIGHT_BOTTOM'
-    })
+    });
 
     /**
      * Hard Dojo override to catch malformed JSON.
@@ -821,7 +821,7 @@ define('xide/types/Types',[
                     return {
                         error: '1',
                         message: js
-                    }
+                    };
                 }
                 throw new Error(js);
             }
@@ -3943,221 +3943,23 @@ define('xide/utils/StringUtils',[
     return utils;
 });
 
-(function () {
-
-    var __isAMD = !!(typeof define === 'function' && define.amd),
-        __isNode = (typeof exports === 'object'),
-        __isWeb = !__isNode,
-    //is that enough at some point?
-        __isDojoRequire = !!(typeof require === 'function' && require.packs),
-        __isRequireJS = !__isDojoRequire,
-        __deliteHas = !!(typeof has === 'function' && has.addModule);
-
-    define('xdojo/has',[
-        //needed?
-        'require',
-        'exports',
-        //should be extended for the missing .config() method when in delite
-        'module',
-        __isDojoRequire ? 'dojo/has' : 'requirejs-dplugins/has'
-    ], function (require, exports, module, dHas) {
-
-        if (dHas) {
-            if (typeof exports !== "undefined") {
-                exports.has = dHas;
-            }
-            if (__isNode) {
-                return module.exports;
-            } else if (__isWeb && __isAMD) {
-                return dHas;
-            }
-        } else {
-            //@TODO, add simple version?
-            //we shouldn't be here
-            debugger;
-        }
-    });
-}).call(this);
-/** module:xide/registry **/
-define('xide/registry',[
-	"dojo/_base/array", // array.forEach array.map
-	"dojo/_base/window", // win.body
-    "xdojo/has"
-], function(array, win, has){
-	/**
-	 * @TODOS:
-	 * - add namespaces
-	 * - remove window
-	 * - augment consumer API
-	 * - use std array
-	 * - add framework constraint
-	 * - move dom api out of here
-	 * - define widget.id better
-	 * - add search by class
-     */
-	var _widgetTypeCtr = {}, hash = {};
-	var registry =  {
-		// summary:
-		//		Registry of existing widget on page, plus some utility methods.
-
-		// length: Number
-		//		Number of registered widgets
-		length: 0,
-		add: function(widget){
-			// summary:
-			//		Add a widget to the registry. If a duplicate ID is detected, a error is thrown.
-			// widget: dijit/_WidgetBase
-			//		Any dijit/_WidgetBase subclass.
-			if(this._hash[widget.id]){
-                if(has('xblox')) {
-                    this.remove(widget.id);
-                    this.add(widget);
-                }else{
-                    throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
-                }
-			}
-			hash[widget.id] = widget;
-			this.length++;
-		},
-		/**
-		 * Remove a widget from the registry. Does not destroy the widget; simply
-		 * removes the reference.
-		 * @param id
-         */
-		remove: function(id){
-			if(hash[id]){
-				delete hash[id];
-				this.length--;
-			}
-		},
-		/**
-		 *
-		 * @param id {String|Widget}
-		 * @returns {String|Widget}
-         */
-		byId: function( id){
-			// summary:
-			//		Find a widget by it's id.
-			//		If passed a widget then just returns the widget.
-			return typeof id == "string" ? hash[id] : id;	// dijit/_WidgetBase
-		},
-		byNode: function(/*DOMNode*/ node){
-			// summary:
-			//		Returns the widget corresponding to the given DOMNode
-			return hash[node.getAttribute("widgetId")]; // dijit/_WidgetBase
-		},
-
-		/**
-		 * Convert registry into a true Array
-		 * @example:
-		 *	Work with the widget .domNodes in a real Array
-		 *	array.map(registry.toArray(), function(w){ return w.domNode; });
-		 * @returns {obj[]}
-         */
-		toArray: function(){
-			return _.values(_.mapKeys(hash, function(value, key) { value.id = key; return value; }));
-		},
-		/**
-		 * Generates a unique id for a given widgetType
-		 * @param widgetType {string}
-		 * @returns {string}
-         */
-		getUniqueId: function(widgetType){
-			var id;
-			do{
-				id = widgetType + "_" +
-					(widgetType in _widgetTypeCtr ?
-						++_widgetTypeCtr[widgetType] : _widgetTypeCtr[widgetType] = 0);
-			}while(hash[id]);
-			return id;
-		},
-		/**
-		 * Search subtree under root returning widgets found.
-		 * Doesn't search for nested widgets (ie, widgets inside other widgets).
-		 * @param root {HTMLElement} Node to search under.
-		 * @param skipNode {HTMLElement} If specified, don't search beneath this node (usually containerNode).
-         * @returns {Array}
-         */
-		findWidgets: function(root, skipNode){
-			var outAry = [];
-			function getChildrenHelper(root){
-				for(var node = root.firstChild; node; node = node.nextSibling){
-					if(node.nodeType == 1){
-						var widgetId = node.getAttribute("widgetId");
-						if(widgetId){
-							var widget = hash[widgetId];
-							if(widget){	// may be null on page w/multiple dojo's loaded
-								outAry.push(widget);
-							}
-						}else if(node !== skipNode){
-							getChildrenHelper(node);
-						}
-					}
-				}
-			}
-			getChildrenHelper(root);
-			return outAry;
-		},
-		_destroyAll: function(){
-			// summary:
-			//		Code to destroy all widgets and do other cleanup on page unload
-
-			// Clean up focus manager lingering references to widgets and nodes
-			// Destroy all the widgets, top down
-			_.each(registry.findWidgets(win.body()),function(widget){
-				// Avoid double destroy of widgets like Menu that are attached to <body>
-				// even though they are logically children of other widgets.
-				if(!widget._destroyed){
-					if(widget.destroyRecursive){
-						widget.destroyRecursive();
-					}else if(widget.destroy){
-						widget.destroy();
-					}
-				}
-			});
-		},
-		getEnclosingWidget: function(/*DOMNode*/ node){
-			// summary:
-			//		Returns the widget whose DOM tree contains the specified DOMNode, or null if
-			//		the node is not contained within the DOM tree of any widget
-			while(node){
-				var id = node.nodeType == 1 && node.getAttribute("widgetId");
-				if(id){
-					return hash[id];
-				}
-				node = node.parentNode;
-			}
-			return null;
-		},
-
-		// In case someone needs to access hash.
-		// Actually, this is accessed from WidgetSet back-compatibility code
-		_hash: hash
-	};
-	return registry;
-});
-
 /** @module xide/utils/HTMLUtils **/
 define('xide/utils/HTMLUtils',[
     'xide/utils',
     'xide/types',
-    'xide/registry',
     'dojo/_base/declare',
-    "dojo/dom-geometry",
     "dojo/dom-construct",
-    "dojo/dom-style",
     'dojo/has',
     'dojo/dom-class',
     "dojo/_base/window",
     'xide/lodash'
-], function (utils, types, registry, declare, domGeometry, domConstruct, 
-             domStyle, has, domClass,win,_) {
+], function (utils, types, declare, domConstruct, has, domClass, win, _) {
     /**
      * @TODO: remove
      * #Maqetta back compat tool
      * @returns {*}
      */
-    utils.getDoc=function(){
+    utils.getDoc = function () {
         return win.doc;
     };
     /**
@@ -4168,13 +3970,13 @@ define('xide/utils/HTMLUtils',[
      * @memberOf module:xide/utils
      * @returns {*}
      */
-    utils.create=function(tag,options,where){
+    utils.create = function (tag, options, where) {
         var doc = win.doc;
-        if(where){
+        if (where) {
             doc = where.ownerDocument;
         }
 
-        if(typeof tag == "string"){
+        if (typeof tag == "string") {
             tag = doc.createElement(tag);
         }
         options && $(tag).attr(options);
@@ -4190,7 +3992,7 @@ define('xide/utils/HTMLUtils',[
      */
     utils.isDescendant = function (parent, child) {
         var node = child.parentNode;
-        while (node != null) {
+        while (node !== null) {
             if (node == parent) {
                 return true;
             }
@@ -4206,8 +4008,8 @@ define('xide/utils/HTMLUtils',[
      */
     utils.hasChild = function (name, container) {
         if (!!name || !container && container.getChildren) {
-            return _.find(container.getChildren(),{
-                title:name
+            return _.find(container.getChildren(), {
+                title: name
             });
         }
     };
@@ -4223,7 +4025,7 @@ define('xide/utils/HTMLUtils',[
             return null;
         }
         var children = startNode.children;
-        if (mustHaveClass != null) {
+        if (mustHaveClass !== null) {
             children = utils.find(mustHaveClass, startNode, false);
         }
         for (var i in children) {
@@ -4243,20 +4045,20 @@ define('xide/utils/HTMLUtils',[
      * @param classExtension
      * @returns {Object}
      */
-    utils.createInstanceSync = function(proto,args,node,extraBaseClasses,classExtension){
+    utils.createInstanceSync = function (proto, args, node, extraBaseClasses, classExtension) {
         //extra bases and/or class extension, create a dynamic class and fill extra-bases
-        if(extraBaseClasses || classExtension){
+        if (extraBaseClasses || classExtension) {
             extraBaseClasses = extraBaseClasses || [];
-            if(classExtension){
-                extraBaseClasses.push(declare(proto,classExtension));
+            if (classExtension) {
+                extraBaseClasses.push(declare(proto, classExtension));
             }
         }
         if (extraBaseClasses) {
             extraBaseClasses.push(proto);
             extraBaseClasses.reverse();
-            proto = declare(extraBaseClasses,{});
+            proto = declare(extraBaseClasses, {});
         }
-        return new proto(args || {} , node || win.doc.createElement('div'));
+        return new proto(args || {}, node || win.doc.createElement('div'));
 
     };
     /***
@@ -4272,7 +4074,7 @@ define('xide/utils/HTMLUtils',[
      * @param classExtension
      * @returns {widgetProto}
      */
-    utils.addWidget = function (widgetProto, ctrArgsIn, delegate, parent, startup, cssClass,baseClasses,select,classExtension) {
+    utils.addWidget = function (widgetProto, ctrArgsIn, delegate, parent, startup, cssClass, baseClasses, select, classExtension) {
         var ctrArgs = {
             delegate: delegate
         };
@@ -4280,44 +4082,44 @@ define('xide/utils/HTMLUtils',[
         utils.mixin(ctrArgs, ctrArgsIn);
 
         //deal with class name
-        if(_.isString(widgetProto)){
+        if (_.isString(widgetProto)) {
             var _widgetProto = utils.getObject(widgetProto);
-            if(_widgetProto){
+            if (_widgetProto) {
                 widgetProto = _widgetProto;
             }
         }
 
         parent = _.isString(parent) ? domConstruct.create(parent) : parent == null ? win.doc.createElement('div') : parent;
-        var isDirect = ctrArgsIn.attachDirect !=null ? ctrArgsIn.attachDirect : (widgetProto && widgetProto.prototype ? widgetProto.prototype.attachDirect : false);
+        var isDirect = ctrArgsIn.attachDirect ? ctrArgsIn.attachDirect : (widgetProto && widgetProto.prototype ? widgetProto.prototype.attachDirect : false);
         ctrArgs._parent = parent;
 
         var _target = utils.getNode(parent);
         //@TODO: remove
-        if(parent && parent.finishLoading){
+        if (parent && parent.finishLoading) {
             parent.finishLoading();
         }
         //@TODO: remove
-        if(ctrArgs.attachChild && parent.addChild){
+        if (ctrArgs.attachChild && parent.addChild) {
             delete ctrArgs.attachChild;
-            return parent.addChild(widgetProto,ctrArgs,startup);
+            return parent.addChild(widgetProto, ctrArgs, startup);
         }
 
 
         //@TODO: replace
-        if(parent.addWidget && ctrArgs.ignoreAddChild!==true){
-            return parent.addWidget(widgetProto,ctrArgsIn,delegate, parent, startup, cssClass,baseClasses,select,classExtension);
+        if (parent.addWidget && ctrArgs.ignoreAddChild !== true) {
+            return parent.addWidget(widgetProto, ctrArgsIn, delegate, parent, startup, cssClass, baseClasses, select, classExtension);
         }
 
-        var widget = utils.createInstanceSync(widgetProto,ctrArgs,isDirect ? _target : null ,baseClasses,classExtension);// new widgetProto(ctrArgs, dojo.doc.createElement('div'));
+        var widget = utils.createInstanceSync(widgetProto, ctrArgs, isDirect ? _target : null, baseClasses, classExtension);// new widgetProto(ctrArgs, dojo.doc.createElement('div'));
         if (!widget) {
             console.error('widget creation failed! ', arguments);
             return null;
         }
 
         if (parent) {
-            if(!isDirect) {
+            if (!isDirect) {
                 utils.addChild(parent, widget, startup, select);
-            }else{
+            } else {
                 startup && widget.startup();
             }
         } else {
@@ -4328,7 +4130,7 @@ define('xide/utils/HTMLUtils',[
             domClass.add(widget.domNode, cssClass);
         }
 
-        if(parent.resize || parent.startup){
+        if (parent.resize || parent.startup) {
             widget._parent = parent;
         }
 
@@ -4340,26 +4142,28 @@ define('xide/utils/HTMLUtils',[
 
     /***
      * addChild is a Dojo abstraction. It tries to call addChild on the parent when the client is fitted for this case.
-     * @param parent {HTMLElement|dijit/_WidgetBase}
-     * @param child {HTMLElement|dijit/_WidgetBase}
+     * @param parent {HTMLElement|module:xide/widgets/_Widget}
+     * @param child {HTMLElement|module:xide/widgets/_Widget}
      * @param startup {boolean} call startup() on the child
+     * @param select {boolean} select the widget if parent has such method
      */
-    utils.addChild = function (parent, child, startup,select) {
+    utils.addChild = function (parent, child, startup, select) {
         if (!parent || !child) {
             console.error('error! parent or child is invalid!');
             return;
         }
         try {
-            var _parentNode = parent.addChild != null ? parent : utils.getNode(parent);
-            var _childNode = parent.addChild != null ? child : child.domNode || child;
+            var parentIsWidget = typeof parent.addChild === 'function';
+            var _parentNode = parentIsWidget ? parent : utils.getNode(parent);
+            var _childNode = parentIsWidget ? child : child.domNode || child;
             if (_parentNode && _childNode) {
                 if (!parent.addChild) {
-                    if(_childNode.nodeType) {
+                    if (_childNode.nodeType) {
                         _parentNode.appendChild(_childNode);
                         if (startup === true && child.startup) {
                             child.startup();
                         }
-                    }else{
+                    } else {
                         logError('child is not html');
                     }
                 } else {
@@ -4369,16 +4173,16 @@ define('xide/utils/HTMLUtils',[
                     }
                     try {
                         //@TODO: this has wrong signature in beta3
-                        parent.addChild(_childNode, insertIndex, select!=null ? select : startup);
+                        parent.addChild(_childNode, insertIndex, select !== null ? select : startup);
                     } catch (e) {
-                        logError(e,'add child failed for some reason!'+e);
+                        logError(e, 'add child failed for some reason!' + e);
                     }
                 }
             } else if (has('debug')) {
                 console.error("utils.addChild : invalid parameters :: parent or child domNode is null");
             }
         } catch (e) {
-            logError(e,'addWidget : crashed : ');
+            logError(e, 'addWidget : crashed : ');
         }
     };
     /***
@@ -4468,22 +4272,22 @@ define('xide/utils/HTMLUtils',[
             if (view) {
                 if (view.parentContainer &&
                     view.parentContainer.removeChild &&
-                    view.domNode){
+                    view.domNode) {
                     if (view.destroy && callDestroy !== false) {
                         try {
                             view.destroy();
-                        }catch(e){
+                        } catch (e) {
                             console.error('error destroying view');
                         }
                     }
                     view.parentContainer.removeChild(view);
-                    if(owner) {
+                    if (owner) {
                         utils._clearProperty(view, owner);
                     }
                     return;
                 }
                 view.destroyRecursive && view.destroyRecursive();
-                view.destroy && view._destroyed!==true && view.destroy();
+                view.destroy && view._destroyed !== true && view.destroy();
                 view._destroyed = true;
                 if (view.domNode || view["domNode"]) {
                     if (view.domNode) {
@@ -4500,18 +4304,17 @@ define('xide/utils/HTMLUtils',[
             }
 
         } catch (e) {
-            logError(e,'error in destroying widget ' + e);
+            logError(e, 'error in destroying widget ' + e);
         }
     };
     /**
-     * Destroys a widget or HTMLElement savly. When an owner
+     * Destroys a widget or HTMLElement safely. When an owner
      * is specified, 'widget' will be nulled in owner
-     * @param widget {Widget|HTMLElement}
+     * @param widget {Widget|HTMLElement|object}
      * @param callDestroy instruct to call 'destroy'
      * @param owner {Object=}
-     * @deprecated use utils.destroy
      */
-    utils.destroyWidget = function (widget, callDestroy, owner) {
+    utils.destroy = function (widget, callDestroy, owner) {
         if (widget) {
             if (_.isArray(widget)) {
                 for (var i = 0; i < widget.length; i++) {
@@ -4533,22 +4336,11 @@ define('xide/utils/HTMLUtils',[
 
     /**
      *
-     * @param widget
-     * @param calldestroy
-     * @param owner
-     * @returns {*}
-     */
-    utils.destroy=function(widget,calldestroy,owner){
-        return utils.destroyWidget(widget,calldestroy,owner);
-    };
-
-    /**
-     *
      * @param target
      * @returns {*}
      */
-    utils.getNode = function(target){
-        if(target) {
+    utils.getNode = function (target) {
+        if (target) {
             return target.containerNode || target.domNode || target;
         }
         return target;
@@ -4559,13 +4351,13 @@ define('xide/utils/HTMLUtils',[
      * @param widgets
      * @returns {number}
      */
-    utils.getHeight = function(widgets){
-        if(!_.isArray(widgets)){
+    utils.getHeight = function (widgets) {
+        if (!_.isArray(widgets)) {
             widgets = [widgets];
         }
         var total = 0;
-        _.each(widgets,function(w){
-            total+=$(utils.getNode(w)).outerHeight();
+        _.each(widgets, function (w) {
+            total += $(utils.getNode(w)).outerHeight();
         });
         return total;
 
@@ -4577,24 +4369,21 @@ define('xide/utils/HTMLUtils',[
      * @param height
      * @param width
      * @param force
+     * @param offset
      */
-    utils.resizeTo = function (source, target,height,width,force,offset) {
+    utils.resizeTo = function (source, target, height, width, force, offset) {
         target = utils.getNode(target);
         source = utils.getNode(source);
-        if(height===true) {
+        if (height === true) {
             var targetHeight = $(target).height();
-            if(offset && offset.h!=null){
-                targetHeight+=offset.h;
+            if (offset && offset.h !== null) {
+                targetHeight += offset.h;
             }
-            $(source).css('height', targetHeight + 'px' + (force==true ? '!important' : ''));
+            $(source).css('height', targetHeight + 'px' + (force === true ? '!important' : ''));
         }
-        if(width===true){
+        if (width === true) {
             var targetWidth = $(target).width();
-            $(source).css('width', targetWidth + 'px' + (force==true ? '!important' : ''));
-            if(width==100){
-                console.log('- resize to 100' +targetWidth);
-            }
-
+            $(source).css('width', targetWidth + 'px' + (force === true ? '!important' : ''));
         }
     };
 
@@ -4619,1514 +4408,6 @@ define('xide/utils/HTMLUtils',[
         }
 
     };
-    return utils;
-});
-
-define('xide/utils/StoreUtils',[
-    'xide/utils',
-    'dojo/store/Memory'
-], function (utils,Memory)
-{
-    "use strict";
-    /**
-     *
-     * @param store
-     * @param item
-     * @param recursive
-     * @param idAttribute
-     * @param parentAttr
-     */
-    utils.removeFromStore=function(store,item,recursive,idAttribute,parentAttr){
-
-        var _item = store.getSync(item[idAttribute]);
-        if(_item){
-            console.error('no such item !! ', store);
-        }
-        //remove the item:
-        store.removeSync(item[idAttribute]);
-
-
-        //get children
-
-        var query = {};
-        query[parentAttr]=item[idAttribute];
-        var items = store.query(query);
-
-        if(items && items.length){
-            for (var i = 0; i < items.length; i++) {
-                var obj = items[i];
-                utils.removeFromStore(store,obj,recursive,idAttribute,parentAttr);
-            }
-        }
-    };
-    /**
-     * CI related tools.
-     * @param d
-     * @returns {*}
-     */
-    utils.toString = function (d){
-        if (d != null) {
-            if(!dojo.isArray(d))
-            {
-                return ''+ d;
-            }
-            if(d && d.length==1 && d[0]==null)
-            {
-                return null;
-            }
-            return '' + (d[0] !=null ? d[0] : d);
-        }
-        return null;
-    };
-    utils.toBoolean = function (data)
-    {
-        var resInt = false;
-        if (data != null) {
-            var _dataStr =data[0] ? data[0] : data;
-            if(_dataStr!=null)
-            {
-                resInt= !!(( _dataStr === true || _dataStr === 'true' || _dataStr === '1'));
-            }
-        }
-        return resInt ;
-    };
-    utils.toObject = function (data)
-    {
-        if (data != null) {
-            var _obj =data[0] ? data[0] : data;
-            return _obj;
-        }
-
-        return null;
-    };
-    utils.toInt= function (data)
-    {
-        var resInt = -1;
-        if (data != null) {
-            var _dataStr = data.length>1 ? data :  data[0] ? data[0] : data;
-            if(_dataStr!=null)
-            {
-                try{
-                    resInt = parseInt(_dataStr);
-                }catch(e)
-                {
-
-                }
-            }
-        }
-        return resInt;
-    };
-   /**
-     * @param store
-     * @param itemIdAsString
-     * @return {Boolean}
-     */
-    utils.deleteStoreItemById = function (store, itemIdAsString) {
-        var found = false;
-        store.fetch(
-            {query:{id:itemIdAsString }, queryOptions:{'deep':true},
-                onComplete:function (items) {
-                    for (var i = 0; i < items.length; i++)
-                    {
-                        var item = items[i];
-                        store.deleteItem(item);
-                        store.save();
-                        found = true;
-                        break;
-                    }
-                }
-            });
-        return found;
-    };
-    /***
-     *
-     * @param store
-     * @param id
-     * @return {null}
-     */
-    utils.getStoreItemByName = function (store, id){
-        var res = null;
-        store.fetch(
-            {query:{name:id }, queryOptions:{'deep':true},
-                onComplete:function (items) {
-                    res = items.length > 0 ? items[0] : null;
-                }
-            });
-        return res;
-    };
-    /***
-     *
-     * @param store
-     * @param id
-     * @return {null}
-     */
-    utils.getStoreItemById = function (store, id)
-    {
-        return utils.queryStoreEx(store,{id:id});
-    };
-    /***
-     *
-     * @param store
-     * @param id
-     * @param type
-     * @return {null}
-     */
-    utils.getAppDataElementByIdAndType = function (store, id, type) {
-        return utils.queryStore(store,{uid:id,type:type});
-    };
-    /***
-     *
-     * @param store
-     * @param type
-     * @return {null}
-     */
-    utils.getElementsByType = function (store,type) {
-        return utils.queryStoreEx(store,{type:type});
-    };
-
-
-    /***
-     *
-     * @param store
-     * @param query
-     * @param nullEmpty
-     * @returns {*}
-     */
-    utils.queryStoreEx=function(store,query,nullEmpty,single){
-
-        if(!store){
-            console.error('utils.queryStoreEx: store = null');
-            console.trace();
-            return null;
-        }
-        if((dojo.store!=null && store instanceof dojo.store.Memory) || store instanceof xide.data.Memory){
-            var result = utils.queryMemoryStoreEx(store,query);
-            if(single && result && result[0]){
-                return result[0];
-            }
-            return result;
-        }
-        var res = null;
-        if(store.fetch) {
-            store.fetch({
-                query: query,
-                queryOptions: {
-                    'deep': true
-                },
-                onComplete: function (items) {
-                    res = items;
-                }
-            });
-        }else if(store.query){
-            res = store.query(query);
-        }
-
-        if(nullEmpty!=null && nullEmpty===true){
-            if(res && res.length==0){
-                return null;
-            }
-        }
-
-        if(single===true){
-            if(res && res.length==1){
-                return res[0];
-            }
-        }
-
-        return res;
-    };
-
-    utils.queryStore=function(store,query,nullEmpty)
-    {
-
-        if(dojo.store!=null && store instanceof dojo.store.Memory){
-            return utils.queryMemoryStoreSingle(store,query);
-        }
-        var res = utils.queryStoreEx(store,query);
-
-        if(res && res.length==1){
-            return res[0];
-        }
-        if(nullEmpty!=null && nullEmpty===true){
-            if(res && res.length==0){
-                return null;
-            }
-        }
-        return res;
-    };
-    utils.queryMemoryStoreEx=function(store,query)
-    {
-        var result = [];
-        store.query(query).forEach(function(entry){
-            result.push(entry);
-        });
-        return result;
-    };
-    utils.queryMemoryStoreSingle=function(store,query)
-    {
-        var result = utils.queryMemoryStoreEx(store,query);
-        if (result.length == 1) {
-            return result[0];
-        }
-        return result;
-    };
-
-    return utils;
-});
-define('xide/utils/WidgetUtils',[
-    'xide/utils',
-    'xide/types',
-    'xide/registry'
-], function (utils,types,registry) {
-    "use strict";
-    utils.getParentWidget=function(start,declaredClass,max){
-        //sanitize start
-        start = start.containerNode || start.domNode || start;
-        var i = 0,
-            element = start,
-            widget = null,
-            _max = max || 10,
-            _lastWidget = null;
-
-        while (i < _max && !widget) {
-            if (element) {
-                element = element.parentNode;
-                var _widgetById = registry.byId(element.id);
-                var _widget = _widgetById || registry.getEnclosingWidget(element);
-                _widget && (_lastWidget = _widget);
-                if(_widget && declaredClass &&  _widget.declaredClass && _widget.declaredClass.indexOf(declaredClass)!=-1){
-                    widget = _widget;
-                }
-            }
-            i++;
-        }
-        return widget;
-    };
-    /**
-     *
-     * @param type
-     * @returns {string}
-     */
-    utils.getWidgetType = function (type) {
-        var res = "";
-        var root = 'xide.widgets.';
-        if (type == types.ECIType.ENUMERATION) {
-            res = root  + "Select";
-        }
-        if (type == types.ECIType.STRING) {
-            res = root  + "TextBox";
-        }
-
-        if (type == types.ECIType.ICON) {
-            res = root  + "TextBox";
-        }
-
-        if (type == types.ECIType.REFERENCE) {
-            res = root  + "Button";
-        }
-
-        if (type == types.ECIType.EXPRESSION) {
-            res = root  + "Expression";
-        }
-
-        if (type == types.ECIType.EXPRESSION_EDITOR) {
-            res = root  + "ExpressionEditor";
-        }
-
-        if (type == types.ECIType.ARGUMENT) {
-            res = root  + "ArgumentsWidget";
-        }
-
-        if (type == types.ECIType.WIDGET_REFERENCE) {
-            res = root  + "WidgetReference";
-        }
-
-        if (type == types.ECIType.BLOCK_REFERENCE) {
-            res =root  +  "BlockPickerWidget";
-        }
-
-        if (type == types.ECIType.BLOCK_SETTINGS) {
-            res = root  + "BlockSettingsWidget";
-        }
-
-
-        if (type == types.ECIType.DOM_PROPERTIES) {
-            res = root  + "DomStyleProperties";
-        }
-
-        if (type == types.ECIType.FILE_EDITOR) {
-            res = root  + "FileEditor";
-        }
-
-        return res;
-    };
-    return utils;
-});
-define('xide/factory',[
-],function(){
-    return {
-
-    }
-});
-define('xide/utils/CIUtils',[
-    'xide/utils',
-    'xide/types',
-    'xide/factory',
-    'dojo/has',
-    'xide/lodash'
-],function(utils,types,factory,has,_){
-    "use strict";
-    /**
-     *
-     * @param cis
-     * @returns {Array}
-     */
-    utils.toOptions  = function(cis){
-        cis = utils.flattenCIS(cis);
-        var result = [];
-        for (var i = 0; i < cis.length; i++) {
-            var ci = cis[i];
-            result.push({
-                name:utils.toString(ci['name']),
-                value:utils.getCIValue(ci),
-                type: utils.toInt(ci['type']),
-                enumType:utils.toString(ci['enumType']),
-                visible:utils.toBoolean(ci['visible']),
-                active:utils.toBoolean(ci['active']),
-                changed:utils.toBoolean(ci['changed']),
-                group:utils.toString(ci['group']),
-                user:utils.toObject(ci['user']),
-                dst:utils.toString(ci['dst']),
-                params:utils.toString(ci['params'])
-            })
-        }
-        return result;
-    };
-
-    if(has('xideve') || has('xblox-ui')) {
-        utils.getEventsAsOptions = function (selected) {
-            var result = [
-                {label: "Select Event", value: ""}
-            ];
-            for (var e in types.EVENTS) {
-                var label = types.EVENTS[e];
-
-                var item = {
-                    label: label,
-                    value: types.EVENTS[e]
-                };
-                result.push(item);
-            }
-            result = result.concat(
-                [{label: "onclick", value: "onclick"},
-                    {label: "ondblclick", value: "dblclick"},
-                    {label: "onmousedown", value: "mousedown"},
-                    {label: "onmouseup", value: "mouseup"},
-                    {label: "onmouseover", value: "mouseover"},
-                    {label: "onmousemove", value: "mousemove"},
-                    {label: "onmouseout", value: "mouseout"},
-                    {label: "onkeypress", value: "keypress"},
-                    {label: "onkeydown", value: "keydown"},
-                    {label: "onkeyup", value: "keyup"},
-                    {label: "onfocus", value: "focus"},
-                    {label: "onblur", value: "blur"},
-                    {label: "On Load", value: "Load"}
-                ]);
-            //select the event we are listening to
-            for (var i = 0; i < result.length; i++) {
-                var obj = result[i];
-                if (obj.value === selected) {
-                    obj.selected = true;
-                    break;
-                }
-            }
-            return result;
-        };
-    }
-
-    utils.flattenCIS  = function(cis){
-        var addedCIS = [];
-        var removedCIs = [];
-        for (var i = 0; i < cis.length; i++) {
-            var ci = cis[i];
-
-            var ciType = utils.toInt(ci.type);
-
-            if(ciType > types.ECIType.END){//type is higher than core types, try to resolve it
-                var resolved = types.resolveType(ciType);
-                if(resolved){
-                    utils.mixin(addedCIS,resolved);
-                    removedCIs.push(ci);
-                }
-            }
-        }
-        if(addedCIS.length>0){
-            cis = cis.concat(addedCIS);
-        }
-        if(removedCIs){
-            for(var i in removedCIs){
-                cis.remove(removedCIs[i]);
-            }
-        }
-        return cis;
-    };
-
-    utils.arrayContains=function(array,element){
-        for (var i = 0; i < array.length; i++){
-            var _e = array[i];
-            if(_e===element){
-                return true;
-            }
-        }
-        return false;
-    };
-
-    utils.setStoreCIValueByField = function (d, field, value) {
-        if (d[field] == null) {
-            d[field] = [];
-        }
-        d[field][0] = utils.getStringValue(value);
-        return d;
-    };
-    /**
-     *
-     * @param label
-     * @param value
-     * @param extra
-     * @returns {Object}
-     */
-    utils.createOption=function(label,value,extra){
-        return utils.mixin({
-            label:label,
-            value:value !=null ? value : label
-        },extra);
-    };
-    /**
-     *
-     * @param name
-     * @param type
-     * @param value
-     * @param args
-     * @param settings
-     * @returns {{dataRef: null, dataSource: null, name: *, group: number, id: *, title: *, type: *, uid: number, value: *, visible: boolean, enumType: number, class: string}}
-     */
-    utils.createCI = function (name, type, value,args,settings) {
-        var res = {
-            dataRef:null,
-            dataSource:null,
-            name:name,
-            group:-1,
-            id:name,
-            title:name,
-            type:type,
-            uid:-1,
-            value: value!=null ? value : -1,
-            visible:true,
-            enumType:-1,
-            "class":"cmx.types.ConfigurableInformation"
-        };
-        utils.mixin(res,args);
-        if(settings){
-            if(settings.publish){
-                factory.publish(settings.publish,{
-                    CI:res,
-                    owner:settings.owner
-                },settings.owner);
-            }
-        }
-        return res;
-    };
-
-    utils.createCIAsArray = function (name, type, chain,value) {
-        return {
-            chainType:[chain ? chain : 0],
-            dataRef:[null],
-            dataSource:[null],
-            params:[],
-            name:[name],
-            group:[-1],
-            id:[name],
-            title:[name],
-            type:[type],
-            uid:[-1],
-            value: [value ? value : -1],
-            visible:[true],
-            enumType:[-1],
-            parentId:[-1],
-            "class":["cmx.types.ConfigurableInformation"]
-        };
-    };
-
-    utils.hasValue = function (data){
-        return data.value &&  data.value[0] !=null && data.value[0].length > 0 && data.value[0] !="0" && data.value[0] !="undefined" && data.value[0] !="Unset";
-    };
-
-    utils.hasValueAndDataRef = function (data){
-        return data.value &&  data.value[0] !=null && data.value[0].length > 0 && data.value[0] !="0" && data.value[0] !="undefined" && data.value[0] !="Unset" &&
-            data.dataRef &&  data.dataRef[0] !=null && data.dataRef[0].length > 0 && data.dataRef[0] !="0" && data.dataRef[0] !="undefined";
-    };
-
-    utils.getInputCIByName = function (data,name){
-        if(!data){
-            return null;
-        }
-        var chain = 0;
-        var dstChain = chain == 0 ? data.inputs : chain == 1 ? data.outputs : null;
-        if(!dstChain){//has no chains, be nice
-            dstChain=data;
-        }
-        if (dstChain != null) {
-            for (var i = 0; i < dstChain.length; i++) {
-                var ci = dstChain[i];
-                var _n = utils.getStringValue(ci.name);
-                if (_n!=null && _n.toLowerCase() === name.toLowerCase()){
-                    return ci;
-                }
-            }
-        }
-        return null;
-    };
-    /***
-     *
-     * @param data
-     * @param chain
-     * @param name
-     * @returns {*}
-     */
-    utils.getCIByChainAndName = function (data, chain, name) {
-        if(!data){
-            return null;
-        }
-        var dstChain = chain == 0 ? data.inputs : chain == 1 ? data.outputs : null;
-        if(!dstChain){//has no chains
-            dstChain=data;
-        }
-        if (dstChain != null) {
-            for (var i = 0; i < dstChain.length; i++) {
-                var ci = dstChain[i];
-                var _n = utils.getStringValue(ci.name);
-                if (_n!=null && _n.toLowerCase() === name.toLowerCase()){
-                    return ci;
-                }
-            }
-        }
-        return null;
-    };
-    utils.getCIByUid= function (dstChain, uid) {
-        if (dstChain != null) {
-            for (var i = 0; i < dstChain.length; i++) {
-                var ci = dstChain[i];
-                var _n = utils.getStringValue(ci.uid);
-                if (_n!=null && _n === uid)
-                {
-                    return ci;
-                }
-            }
-        }
-        return null;
-    };
-    utils.getCIById= function (data, chain, id) {
-        var dstChain = chain == 0 ? data.inputs : chain == 1 ? data.outputs : null;
-        if (dstChain != null) {
-            for (var i = 0; i < dstChain.length; i++) {
-                var ci = dstChain[i];
-                if (ci.id[0] == id[0]  )
-                    return ci;
-            }
-        }
-        return null;
-    };
-    utils.getCIInputValueByName = function (data, name) {
-        var ci = utils.getCIByChainAndName(data, 0, name);
-        if (ci) {
-            return ci.value;
-        }
-        return null;
-    };
-    utils.getCIValue = function (data){
-        return utils.getCIValueByField(data,"value");
-    };
-    utils.getStringValue = function (d){
-        return utils.toString(d);
-    };
-    utils.toString = function (d){
-        if (d != null) {
-            if(!_.isArray(d))
-            {
-                return ''+ d;
-            }
-            if(d && d.length==1 && d[0]==null)
-            {
-                return null;
-            }
-            return '' + (d[0] !=null ? d[0] : d);
-        }
-        return null;
-    };
-    utils.setIntegerValue = function (data,value){
-        if (data != null) {
-
-            if(dojo.isArray(data))
-            {
-                data[0]=value;
-            }else{
-                data=value;
-            }
-        }
-    };
-
-    utils.getCIValueByField = function (data, field) {
-        if (data[field] != null) {
-            if(_.isArray(data[field])){
-                return data[field][0] ? data[field][0] : data[field];
-            }else{
-                return data[field];
-            }
-        }
-        return null;
-    };
-    utils.setCIValueByField = function (data, field, value) {
-        if(!data){
-            return data;
-        }
-        if (data[field] == null) {
-            data[field] = [];
-        }
-        data[field]=value
-        return data;
-    };
-
-    utils.setCIValue = function (data, field, value) {
-        var ci = utils.getInputCIByName(data,field);
-        if(ci){
-            utils.setCIValueByField(ci,'value',value);
-        }
-        return ci;
-    };
-    utils.getCIInputValueByNameAndField = function (data, name, field) {
-        var ci = utils.getCIByChainAndName(data, 0, name);
-        if (ci) {
-            return ci["" + field];
-        }
-        return null;
-    };
-
-    utils.getCIInputValueByNameAndFieldStr = function (data, name, field) {
-        var rawValue = utils.getCIInputValueByNameAndField(data,name,field);
-        if(rawValue){
-            return utils.getStringValue(rawValue);
-        }
-        return null;
-    };
-    utils.getCIInputValueByNameAndFieldBool = function (data, name, field) {
-        var rawValue = utils.getCIInputValueByNameAndField(data,name,field);
-        if(rawValue){
-            return utils.toBoolean(rawValue);
-        }
-        return null;
-    };
-    utils.getCIWidgetByName=function(cis,name){
-
-        for (var i = 0; i < cis.length; i++) {
-            var ci = cis[i];
-            if(ci['_widget'] && ci.name===name){
-                return ci['_widget'];
-            }
-        }
-        return null;
-    };
-    return utils;
-});
-define('xide/utils/ObjectUtils',[
-    'xide/utils',
-    'require',
-    "dojo/Deferred"
-], function (utils, require, Deferred) {
-    var _debug = false;
-    "use strict";
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //  Loader utils
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    utils.debounce = function(who,methodName,_function,delay,options,now,args){
-        var _place = who[methodName+'_debounced'];
-        if(!_place){
-            _place = who[methodName+'_debounced'] =  _.debounce(_function, delay,options);
-        }
-        if(now===true){
-            if(!who[methodName+'_debouncedFirst']){
-                who[methodName+'_debouncedFirst']=true;
-                _function.apply(who,args);
-            }
-        }
-        return _place();
-    };
-
-
-    utils.pluck=function(items,prop){
-        return _.map(items,prop);
-    };
-
-    /**
-     * Trigger downloadable file
-     * @param filename
-     * @param text
-     */
-    utils.download  = function(filename, text){
-        var element = document.createElement('a');
-        text = _.isString(text) ? text : JSON.stringify(text,null,2);
-        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        element.setAttribute('download', filename);
-        element.style.display = 'none';
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    };
-
-    /**
-     * Ask require registry at this path
-     * @param mixed
-     * @returns {*}
-     */
-    utils.hasObject = function (mixed) {
-        var result = null;
-        var _re = require;
-        try {
-            result = _re(mixed);
-        } catch (e) {
-            console.error('error in utils.hasObject ', e);
-        }
-        return result;
-    };
-    /**
-     * Returns a module by module path
-     * @param mixed {String|Object}
-     * @param _default {Object} default object
-     * @returns {Object|Promise}
-     */
-    utils.getObject = function (mixed, _default) {
-        var result = null;
-        if (utils.isString(mixed)) {
-            var _re = require;
-            try {
-                result = _re(mixed);
-            } catch (e) {
-                _debug && console.warn('utils.getObject::require failed for ' + mixed);
-            }
-            //not a loaded module yet
-            try {
-                if (!result) {
-
-                    var deferred = new Deferred();
-                    //try loader
-                    result = _re([
-                        mixed
-                    ], function (module) {
-                        deferred.resolve(module);
-                    });
-                    return deferred.promise;
-                }
-            }catch(e){
-                _debug &&  console.error('error in requiring '+mixed,e);
-            }
-            return result;
-
-        } else if (utils.isObject(mixed)) {
-            return mixed;//reflect
-        }
-        return result !== null ? result : _default;
-    };
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //  True object utils
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    utils.toArray = function (obj) {
-        var result = [];
-        for (var c in obj) {
-            result.push({
-                name: c,
-                value: obj[c]
-            });
-        }
-        return result;
-    };
-    /**
-     * Array to object conversion
-     * @param arr
-     * @returns {Object}
-     */
-    utils.toObject = function (arr, lodash) {
-        if (!arr) {
-            return {};
-        }
-        if (lodash !== false) {
-            return _.object(_.map(arr, _.values));
-        } else {
-            //CI related back compat hack
-            if (utils.isObject(arr) && arr[0]) {
-                return arr[0];
-            }
-
-            var rv = {};
-            for (var i = 0; i < arr.length; ++i) {
-                rv[i] = arr[i];
-            }
-            return rv;
-        }
-    };
-
-    /**
-     * Gets an object property by string, eg: utils.byString(someObj, 'part3[0].name');
-     * @deprecated, see objectAtPath below
-     * @param o {Object}    : the object
-     * @param s {String}    : the path within the object
-     * @param defaultValue {Object|String|Number} : an optional default value
-     * @returns {*}
-     */
-    utils.byString = function (o, s, defaultValue) {
-        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
-        s = s.replace(/^\./, '');           // strip a leading dot
-        var a = s.split('.');
-        while (a.length) {
-            var n = a.shift();
-            if (n in o) {
-                o = o[n];
-            } else {
-                return;
-            }
-        }
-        return o;
-    };
-
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //  Object path
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Internals
-     */
-
-    //cache
-    var toStr = Object.prototype.toString,
-        _hasOwnProperty = Object.prototype.hasOwnProperty;
-
-    /**
-     * @private
-     * @param type
-     * @returns {*}
-     */
-    function toString(type) {
-        return toStr.call(type);
-    }
-
-    /**
-     * @private
-     * @param key
-     * @returns {*}
-     */
-    function getKey(key) {
-        var intKey = parseInt(key,10);
-        if (intKey.toString() === key) {
-            return intKey;
-        }
-        return key;
-    }
-
-    /**
-     * internal set value at path in object
-     * @private
-     * @param obj
-     * @param path
-     * @param value
-     * @param doNotReplace
-     * @returns {*}
-     */
-    function set(obj, path, value, doNotReplace) {
-        if (_.isNumber(path)) {
-            path = [path];
-        }
-        if (_.isEmpty(path)) {
-            return obj;
-        }
-        if (_.isString(path)) {
-            return set(obj, path.split('.').map(getKey), value, doNotReplace);
-        }
-        var currentPath = path[0];
-
-        if (path.length === 1) {
-            var oldVal = obj[currentPath];
-            if (oldVal === void 0 || !doNotReplace) {
-                obj[currentPath] = value;
-            }
-            return oldVal;
-        }
-
-        if (obj[currentPath] === void 0) {
-            //check if we assume an array
-            if (_.isNumber(path[1])) {
-                obj[currentPath] = [];
-            } else {
-                obj[currentPath] = {};
-            }
-        }
-        return set(obj[currentPath], path.slice(1), value, doNotReplace);
-    }
-
-    /**
-     * deletes an property by a path
-     * @param obj
-     * @param path
-     * @returns {*}
-     */
-    function del(obj, path) {
-        if (_.isNumber(path)) {
-            path = [path];
-        }
-        if (_.isEmpty(obj)) {
-            return void 0;
-        }
-
-        if (_.isEmpty(path)) {
-            return obj;
-        }
-        if (_.isString(path)) {
-            return del(obj, path.split('.'));
-        }
-
-        var currentPath = getKey(path[0]);
-        var oldVal = obj[currentPath];
-
-        if (path.length === 1) {
-            if (oldVal !== void 0) {
-                if (_.isArray(obj)) {
-                    obj.splice(currentPath, 1);
-                } else {
-                    delete obj[currentPath];
-                }
-            }
-        } else {
-            if (obj[currentPath] !== void 0) {
-                return del(obj[currentPath], path.slice(1));
-            }
-        }
-        return obj;
-    }
-
-    /**
-     * Private helper class
-     * @private
-     * @type {{}}
-     */
-    var objectPath = {};
-
-    objectPath.has = function (obj, path) {
-        if (_.isEmpty(obj)) {
-            return false;
-        }
-        if (_.isNumber(path)) {
-            path = [path];
-        } else if (_.isString(path)) {
-            path = path.split('.');
-        }
-
-        if (_.isEmpty(path) || path.length === 0) {
-            return false;
-        }
-
-        for (var i = 0; i < path.length; i++) {
-            var j = path[i];
-            if ((_.isObject(obj) || _.isArray(obj)) && _hasOwnProperty.call(obj, j)) {
-                obj = obj[j];
-            } else {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-    /**
-     * Define private public 'ensure exists'
-     * @param obj
-     * @param path
-     * @param value
-     * @returns {*}
-     */
-    objectPath.ensureExists = function (obj, path, value) {
-        return set(obj, path, value, true);
-    };
-
-    /**
-     * Define private public 'set'
-     * @param obj
-     * @param path
-     * @param value
-     * @param doNotReplace
-     * @returns {*}
-     */
-    objectPath.set = function (obj, path, value, doNotReplace) {
-        return set(obj, path, value, doNotReplace);
-    };
-
-    /**
-     Define private public 'insert'
-     * @param obj
-     * @param path
-     * @param value
-     * @param at
-     */
-    objectPath.insert = function (obj, path, value, at) {
-        var arr = objectPath.get(obj, path);
-        at = ~~at;
-        if (!_.isArray(arr)) {
-            arr = [];
-            objectPath.set(obj, path, arr);
-        }
-        arr.splice(at, 0, value);
-    };
-
-    /**
-     * Define private public 'empty'
-     * @param obj
-     * @param path
-     * @returns {*}
-     */
-    objectPath.empty = function (obj, path) {
-        if (_.isEmpty(path)) {
-            return obj;
-        }
-        if (_.isEmpty(obj)) {
-            return void 0;
-        }
-
-        var value, i;
-        if (!(value = objectPath.get(obj, path))) {
-            return obj;
-        }
-
-        if (_.isString(value)) {
-            return objectPath.set(obj, path, '');
-        } else if (_.isBoolean(value)) {
-            return objectPath.set(obj, path, false);
-        } else if (_.isNumber(value)) {
-            return objectPath.set(obj, path, 0);
-        } else if (_.isArray(value)) {
-            value.length = 0;
-        } else if (_.isObject(value)) {
-            for (i in value) {
-                if (_hasOwnProperty.call(value, i)) {
-                    delete value[i];
-                }
-            }
-        } else {
-            return objectPath.set(obj, path, null);
-        }
-    };
-
-    /**
-     * Define private public 'push'
-     * @param obj
-     * @param path
-     */
-    objectPath.push = function (obj, path /*, values */) {
-        var arr = objectPath.get(obj, path);
-        if (!_.isArray(arr)) {
-            arr = [];
-            objectPath.set(obj, path, arr);
-        }
-        arr.push.apply(arr, Array.prototype.slice.call(arguments, 2));
-    };
-
-    /**
-     * Define private public 'coalesce'
-     * @param obj
-     * @param paths
-     * @param defaultValue
-     * @returns {*}
-     */
-    objectPath.coalesce = function (obj, paths, defaultValue) {
-        var value;
-        for (var i = 0, len = paths.length; i < len; i++) {
-            if ((value = objectPath.get(obj, paths[i])) !== void 0) {
-                return value;
-            }
-        }
-        return defaultValue;
-    };
-
-    /**
-     * Define private public 'get'
-     * @param obj
-     * @param path
-     * @param defaultValue
-     * @returns {*}
-     */
-    objectPath.get = function (obj, path, defaultValue) {
-        if (_.isNumber(path)) {
-            path = [path];
-        }
-        if (_.isEmpty(path)) {
-            return obj;
-        }
-        if (_.isEmpty(obj)) {
-            //lodash doesnt seem to work with html nodes
-            if (obj && obj.innerHTML === null) {
-                return defaultValue;
-            }
-        }
-        if (_.isString(path)) {
-            return objectPath.get(obj, path.split('.'), defaultValue);
-        }
-        var currentPath = getKey(path[0]);
-        if (path.length === 1) {
-            if (obj && obj[currentPath] === void 0) {
-                return defaultValue;
-            }
-            if (obj) {
-                return obj[currentPath];
-            }
-        }
-        if (!obj) {
-            return defaultValue;
-        }
-        return objectPath.get(obj[currentPath], path.slice(1), defaultValue);
-    };
-
-    /**
-     * Define private public 'del'
-     * @param obj
-     * @param path
-     * @returns {*}
-     */
-    objectPath.del = function (obj, path) {
-        return del(obj, path);
-    };
-    /////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //  Object path public xide/utils mixin
-    //
-    //////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     *  Returns a value by a give object path
-     *
-     *  //works also with arrays
-     *    objectPath.get(obj, "a.c.1");  //returns "f"
-     *    objectPath.get(obj, ["a","c","1"]);  //returns "f"
-     *
-     * @param obj {object}
-     * @param path {string}
-     * @param _default {object|null}
-     * @returns {*}
-     */
-    utils.getAt = function (obj, path, _default) {
-        return objectPath.get(obj, path, _default);
-    };
-
-    /**
-     * Sets a value in an object/array at a given path.
-     * @example
-     *
-     * utils.setAt(obj, "a.h", "m"); // or utils.setAt(obj, ["a","h"], "m");
-     *
-     * //set will create intermediate object/arrays
-     * objectPath.set(obj, "a.j.0.f", "m");
-     *
-     * @param obj{Object|Array}
-     * @param path {string}
-     * @param value {mixed}
-     * @returns {Object|Array}
-     */
-    utils.setAt = function (obj, path, value) {
-        return objectPath.set(obj, path, value);
-    };
-
-    /**
-     * Returns there is anything at given path within an object/array.
-     * @param obj
-     * @param path
-     */
-    utils.hasAt = function (obj, path) {
-        return objectPath.has(obj, path);
-    };
-
-    /**
-     * Ensures at given path, otherwise _default will be placed
-     * @param obj
-     * @param path
-     * @returns {*}
-     */
-    utils.ensureAt = function (obj, path, _default) {
-        return objectPath.ensureExists(obj, path, _default);
-    };
-    /**
-     * Deletes at given path
-     * @param obj
-     * @param path
-     * @returns {*}
-     */
-    utils.deleteAt = function (obj, path) {
-        return objectPath.del(obj, path);
-    };
-
-    /**
-     *
-     * @param to
-     * @param from
-     * @returns {*}
-     */
-    utils.merge = function (to, from) {
-        for (var n in from) {
-            if (typeof to[n] != 'object') {
-                to[n] = from[n];
-            } else if (typeof from[n] == 'object') {
-                to[n] = utils.merge(to[n], from[n]);
-            }
-        }
-
-        return to;
-    };
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //  Dojo's most wanted
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    utils.clone=function(/*anything*/ src){
-        // summary:
-        // Clones objects (including DOM nodes) and all children.
-        // Warning: do not clone cyclic structures.
-        // src:
-        // The object to clone
-        if(!src || typeof src != "object" || utils.isFunction(src)){
-            // null, undefined, any non-object, or function
-            return src; // anything
-        }
-        if(src.nodeType && "cloneNode" in src){
-            // DOM Node
-            return src.cloneNode(true); // Node
-        }
-        if(src instanceof Date){
-            // Date
-            return new Date(src.getTime()); // Date
-        }
-        if(src instanceof RegExp){
-            // RegExp
-            return new RegExp(src); // RegExp
-        }
-        var r, i, l;
-        if(utils.isArray(src)){
-            // array
-            r = [];
-            for(i = 0, l = src.length; i < l; ++i){
-                if(i in src){
-                    r.push(utils.clone(src[i]));
-                }
-            }
-            // we don't clone functions for performance reasons
-            // }else if(d.isFunction(src)){
-            // // function
-            // r = function(){ return src.apply(this, arguments); };
-        }else{
-            // generic objects
-            r = src.constructor ? new src.constructor() : {};
-        }
-        return utils._mixin(r, src, utils.clone);
-    };
-
-    /**
-     * Copies/adds all properties of source to dest; returns dest.
-     * @description All properties, including functions (sometimes termed "methods"), excluding any non-standard extensions
-     * found in Object.prototype, are copied/added to dest. Copying/adding each particular property is
-     * delegated to copyFunc (if any); copyFunc defaults to the Javascript assignment operator if not provided.
-     * Notice that by default, _mixin executes a so-called "shallow copy" and aggregate types are copied/added by reference.
-     * @param dest {object} The object to which to copy/add all properties contained in source.
-     * @param source {object} The object from which to draw all properties to copy into dest.
-     * @param copyFunc {function} The process used to copy/add a property in source; defaults to the Javascript assignment operator.
-     * @returns {object} dest, as modified
-     * @private
-     */
-    utils._mixin=function (dest, source, copyFunc) {
-        var name, s, i, empty = {};
-        for (name in source) {
-            // the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
-            // inherited from Object.prototype.	 For example, if dest has a custom toString() method,
-            // don't overwrite it with the toString() method that source inherited from Object.prototype
-            s = source[name];
-            if (!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))) {
-                dest[name] = copyFunc ? copyFunc(s) : s;
-            }
-        }
-
-        return dest; // Object
-    };
-    /**
-     * Copies/adds all properties of one or more sources to dest; returns dest.
-     * @param dest {object} The object to which to copy/add all properties contained in source. If dest is falsy, then
-     * a new object is manufactured before copying/adding properties begins.
-     *
-     * @param sources One of more objects from which to draw all properties to copy into dest. sources are processed
-     * left-to-right and if more than one of these objects contain the same property name, the right-most
-     * value "wins".
-     *
-     * @returns {object} dest, as modified
-     *
-     * @example
-     * make a shallow copy of an object
-     * var copy = utils.mixin({}, source);
-     *
-     * @example
-     *
-     * many class constructors often take an object which specifies
-     *        values to be configured on the object. In this case, it is
-     *        often simplest to call `lang.mixin` on the `this` object:
-     *        declare("acme.Base", null, {
-    *			constructor: function(properties){
-    *				//property configuration:
-    *				lang.mixin(this, properties);
-    *				console.log(this.quip);
-    *			},
-    *			quip: "I wasn't born yesterday, you know - I've seen movies.",
-    *			* ...
-    *		});
-     *
-     *        //create an instance of the class and configure it
-     *        var b = new acme.Base({quip: "That's what it does!" });
-     *
-     */
-    utils.mixin = function (dest, sources) {
-        if(sources) {
-
-            if (!dest) {
-                dest = {};            }
-
-            var l = arguments.length;
-            for (var i = 1 ; i < l; i++) {
-                utils._mixin(dest, arguments[i]);
-            }
-            return dest; // Object
-        }
-        return dest;
-    };
-
-    /**
-     * Clone object keys
-     * @param defaults
-     * @returns {{}}
-     */
-    utils.cloneKeys = function (defaults, skipEmpty) {
-        var result = {};
-        for (var _class in defaults) {
-            if (skipEmpty === true && !(_class in defaults)) {
-                continue;
-            }
-            result[_class] = defaults[_class];
-        }
-        return result;
-    };
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //
-    //  STD
-    /**
-     *
-     * @param what
-     * @returns {*}
-     */
-    utils.isArray=function(what){
-        return _.isArray(what);
-    };
-    /**
-     *
-     * @param what
-     * @returns {*}
-     */
-    utils.isObject=function(what){
-        return _.isObject(what);
-    };
-    /**
-     *
-     * @param what
-     * @returns {*}
-     */
-    utils.isString=function(what){
-        return _.isString(what);
-    };
-    /**
-     *
-     * @param what
-     * @returns {*}
-     */
-    utils.isNumber=function(what){
-        return _.isNumber(what);
-    };
-    /**
-     *
-     * @param it
-     * @returns {*}
-     */
-    utils.isFunction=function(it){
-        // summary:
-        // Return true if it is a Function
-        // it: anything
-        // Item to test.
-        return _.isFunction(it);
-    };
-    return utils;
-});
-/** @module xide/utils/CSSUtils
- *  @description All string related functions
- */
-define('xide/utils/CSSUtils',[
-    'xide/utils',
-    'xide/types'
-
-], function (utils, types) {
-
-
-    "use strict";
-
-    /**
-     *
-     * @param styleString
-     * @param property
-     * @returns {*}
-     */
-    utils.findStyle=function(styleString,property){
-        var parser = new CSSParser();
-        var content = ".foo{";
-        content+=styleString;
-        content+="}";
-        var sheet=parser.parse(content, false, true);
-        var declarations = sheet.cssRules[0].declarations;
-        var declaration = _.find(declarations,{
-            property:property
-        });
-
-        if(declaration){
-            return declaration.valueText;
-        }
-        return "";
-    }
-
-    /**
-     *
-     * @param styleString
-     * @returns {*}
-     */
-    utils.getBackgroundUrl=function(styleString){
-        var background = utils.findStyle(styleString,"background-image");
-        if(background) {
-            try {
-                return background.match(/\((.*?)\)/)[1].replace(/('|")/g, '');
-            }catch(e){}
-        }
-        return null;
-    }
-
     return utils;
 });
 
@@ -6364,357 +4645,46 @@ define('xide/utils/CSSUtils',[
 }).call(this);
 define("xdojo/declare", function(){});
 
-define('xide/factory/Objects',[
-    'dcl/dcl',
-    'xide/utils',
-    'xide/factory',
-    'xdojo/declare'
-], function (dcl,utils, factory, declare) {
-    /***
-     * Convinience object factory via dojo/declare
-     * @param classNameOrPrototype
-     * @param ctrArgs
-     * @param baseClasses
-     * @returns {*}
-     */
-    factory.createInstance = function (classNameOrPrototype, ctrArgs, baseClasses) {
-        var ctrArgsFinal = {};
-        utils.mixin(ctrArgsFinal, ctrArgs);
-        //prepare object prototype, try dojo and then abort
-        var objectProtoType = classNameOrPrototype;
-        if (_.isString(classNameOrPrototype)) {
-            var proto = dojo.getObject(objectProtoType) || dcl.getObject(objectProtoType);
-            if (proto) {
-                objectProtoType = proto;
-            } else {
-                console.error('no such class : ' + classNameOrPrototype);
-                return null;
+(function () {
+
+    var __isAMD = !!(typeof define === 'function' && define.amd),
+        __isNode = (typeof exports === 'object'),
+        __isWeb = !__isNode,
+    //is that enough at some point?
+        __isDojoRequire = !!(typeof require === 'function' && require.packs),
+        __isRequireJS = !__isDojoRequire,
+        __deliteHas = !!(typeof has === 'function' && has.addModule);
+
+    define('xdojo/has',[
+        //needed?
+        'require',
+        'exports',
+        //should be extended for the missing .config() method when in delite
+        'module',
+        __isDojoRequire ? 'dojo/has' : 'requirejs-dplugins/has'
+    ], function (require, exports, module, dHas) {
+
+        if (dHas) {
+            if (typeof exports !== "undefined") {
+                exports.has = dHas;
             }
-        }
-
-        baseClasses && ( objectProtoType = declare(baseClasses, objectProtoType.prototype));
-
-        if(!ctrArgsFinal.id){
-            var className = objectProtoType.declaredClass || 'no_class_';
-            ctrArgsFinal.id = className.replace(/\//g, "_") + utils.createUUID();
-        }
-
-        var instance = new objectProtoType(ctrArgsFinal);
-
-        //@TODO: trash
-        instance && ( instance.ctrArgs = ctrArgsFinal);
-
-        return instance;
-    };
-    return factory;
-});
-define('xide/factory/Events',[
-    'xide/factory',
-    'dojo/_base/connect',
-    'dojo/_base/lang',
-    "dojo/on",
-    'dojo/has'
-], function (factory, connect, lang, on,has) {
-
-    var _debug = false,         //print publish messages in console
-        _tryEvents = false,     //put publish in try/catch block
-        _foo=null,              //noop
-        _nativeEvents = {
-            "click": _foo,
-            "dblclick":_foo,
-            "mousedown":_foo,
-            "mouseup":_foo,
-            "mouseover":_foo,
-            "mousemove":_foo,
-            "mouseout":_foo,
-            "keypress":_foo,
-            "keydown":_foo,
-            "keyup":_foo,
-            "focus":_foo,
-            "blur":_foo,
-            "change":_foo
-        },
-        _debugGroup=false;
-
-
-    /**
-     * Returns true if it is a DOM element, might be not needed anymore
-     * @param o
-     * @returns {*}
-     * @private
-     */
-    function _isElement(o){
-        return (
-            typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-            o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
-        );
-    }
-    /**
-     * Event debouncer/throttler
-     * @param eventHandler
-     * @param waitForMirror
-     * @returns {Function}
-     */
-    function applyEventOnce(eventHandler, waitForMirror) {
-        var timer;
-        var mirror = this;
-        return function() {
-            var _arguments = arguments;
-            if (timer)
-                clearTimeout(timer);
-            timer = setTimeout(function() {
-                if (waitForMirror && mirror.isPending())
-                    return setTimeout(function() { applyEventOnce(eventHandler, true) }, 0);
-                eventHandler.apply(eventHandler, _arguments);
-            }, 0);
-        };
-    }
-
-    /**
-     * asyncForEach does runs a chain of promises, needed this specialized for event callbacks
-     * @param array
-     * @param fn
-     * @param test
-     * @param callback
-     */
-    function asyncForEach(array, fn, test, callback) {
-        if (!callback) {
-            callback = test;
-            test = null;
-        }
-
-        array = array.slice(); // copy before use
-
-        var nested = false, callNext = true;
-        loop();
-
-        function loop() {
-            while (callNext && !nested) {
-                callNext = false;
-                while (array.length > 0 && test && !test(array[0]))
-                    array.shift();
-
-                var item = array.shift();
-                // TODO: implement proper err argument?
-                if (!item)
-                    return callback && callback();
-
-                nested = true;
-                fn(item, loop);
-                nested = false;
+            if (__isNode) {
+                return module.exports;
+            } else if (__isWeb && __isAMD) {
+                return dHas;
             }
-            callNext = true;
-        }
-    }
-
-    /***
-     * @param keys
-     * @param data
-     * @param callee
-     * @extends module:xide/factory
-     * @memberOf xide/factory
-     */
-    factory.publish = function (keys, data, callee,filter) {
-
-        var msgStruct   = data ? _.isString(data) ? {message: data} : data : {},
-            eventKeys   = keys,
-            _publish    = connect.publish,
-            result      = [];//lookup cache
-
-        //normalize to array
-        if (!_.isArray(keys)) {
-            eventKeys = [keys];
-        }
-        for (var i = 0,l=eventKeys.length; i < l; i++) {
-
-            var eventKey = eventKeys[i];
-
-            if(filter && !filter(eventKey)){
-                continue;
-            }
-
-            if (_debug) {
-                //console.group("Events");
-                _debugGroup = true;
-                console.log('publish ' + eventKey + ' from : ' + (callee ? callee.id : ''), msgStruct);
-            }
-
-            if(_tryEvents) {
-                try {
-                    result = _publish(eventKey, msgStruct);
-                } catch (e) {
-                    logError(e,'error whilst publishing event ' + eventKey);
-                }
-            }else{
-                result = _publish(eventKey, msgStruct);
-            }
-        }
-
-        return result;
-    };
-
-    /***
-     *
-     * Subscribes to multiple events
-     * @param keys {String[]}
-     * @param _cb {function|null} When null, it expects the owner having a function matching the event key!
-     * @param owner {Object}
-     * @extends module:xide/factory
-     * @memberOf xide/factory
-     * @returns {Object[]|null} Returns an array of regular Dojo-subscribe/on handles
-     */
-    factory.subscribe = function (keys, cb, owner,filter) {
-
-        if(has('debug')){
-            if(!keys){
-                _debug && console.error('subscribe failed, event key is empty!');
-                return null;
-            }
-        }
-
-        //some vars
-        var eventKeys  = keys,
-            _subscribe = connect.subscribe,     //cache
-            events = [];                        //resulting subscribe handles
-            //_isDom = _isElement(owner),       //dom element?
-
-        //-- not good for use-strict
-        //owner = owner || arguments.callee;
-
-        //normalize to array
-        if (!_.isArray(keys)) {
-            eventKeys = [keys];
-        }
-
-        for (var i = 0,l=eventKeys.length; i < l; i++) {
-
-            if(!eventKeys[i] || filter && !filter(eventKey)){
-                continue;
-            }
-
-            var _item =
-                    //the raw item
-                    eventKeys[i],
-                    //is string?
-                    _isString = _.isString(_item),
-                    //if string: use it, otherwise assume struct
-                    eventKey =  _isString ? _item : _item.key,
-                    //pick handler from arguments or struct
-                    _handler = _isString ? cb : _item.handler,
-                    //is native event?
-                    _isNative = eventKey in _nativeEvents,
-                    //the final handle
-                    _handle;
-
-
-            //owner specified, hitch the callback into owner's scope
-            if (owner != null) {
-                //try cb first, then owner.onEVENT_KEY, that enables similar effect as in Dojo2/Evented
-                var _cb = _handler !=null ? _handler : owner[eventKey];
-                if(_isNative){
-                    _handle = on(owner, eventKey, lang.hitch(owner, _cb));
-                }else{
-                    _handle = _subscribe(eventKey, lang.hitch(owner, _cb));
-                }
-                _handle.handler = lang.hitch(owner, _cb);
-            } else {
-                _handle =  connect.subscribe(eventKey, _handler);
-                _handle.handler = _handler;
-            }
-            //track the actual event type
-            _handle.type = eventKey;
-            events.push(_handle);
-        }
-        return events;
-    };
-    return factory;
-});
-/** @module xide/model/Base **/
-define('xide/model/Base',[
-    'dcl/dcl',
-    "dojo/_base/declare",
-    "xide/utils"
-], function (dcl,declare,utils) {
-    
-    var Implementation = {
-        declaredClass:"xide/model/Base",
-        /**
-         * Mixin constructor arguments into this.
-         * This could have been done in another base class but performance matters
-         * @todo use a mixin from lodash
-         * @constructor
-         */
-        constructor: function (args) {
-            utils.mixin(this, args);
-        },
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
-        //
-        //  Public interface, keep it small and easy
-        //
-        //////////////////////////////////////////////////////////////////////////////////////////////////////
-        /**
-         * Return a human friendly name
-         * @abstract
-         * @returns {string|null}
-         */
-        getLabel: function () {
-            return null;
-        },
-        /**
-         * Return a unique ID.
-         * @abstract
-         * @returns {string|null}
-         */
-        getID: function () {
-            return null;
-        }
-    }
-
-    var Module = declare("xide/model/Base",null,Implementation);
-    Module.dcl = dcl(null,Implementation);
-    return Module;
-});
-
-
-define('xide/utils/_LogMixin',[
-    'dcl/dcl',
-    'xide/utils',
-    'xide/model/Base'
-], function (dcl, utils,Base) {
-    return dcl(Base.dcl,{
-        declaredClass:"xide.utils._LogMixin",
-        debug_conf: null,
-        initLogger: function (debug_config) {
-            this.debug_conf = debug_config;
-        },
-        log: function (msg, msg_context) {
-            if (!msg_context) msg_context = this._debugContext()["main"];
-            if (this.showDebugMsg(msg_context)) {
-                console.log(msg);
-            }
-        },
-        showDebugMsg: function (msg_context) {
-            if (this.debug_conf != null) {
-                if (this.debug_conf["all"]) {
-                    return true;
-                }
-                else {
-                    if (this.debug_conf[msg_context]) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
-                }
-            } else {
-                console.log("No debug config, showing all.");
-                this.debug_conf = {
-                    "all": true
-                };
-                return true;
-            }
+        } else {
+            //@TODO, add simple version?
+            //we shouldn't be here
+            debugger;
         }
     });
+}).call(this);
+define('xide/factory',[
+],function(){
+    return {
+
+    }
 });
 /** @module xide/mixins/EventedMixin **/
 define('xide/mixins/EventedMixin',[
@@ -7197,232 +5167,6 @@ define('xide/mixins/EventedMixin',[
 });
 
 
-define('xide/client/ClientBase',[
-    'dcl/dcl',
-    'xide/mixins/EventedMixin',
-    'xide/model/Base',
-    'dojo/_base/unload',
-    'xide/utils'
-], function (dcl,EventedMixin,Base, unload,utils) {
-    var Module = dcl([Base.dcl,EventedMixin.dcl], {
-        declaredClass:"xide.client.ClientBase",
-        options: null,
-        _socket: null,
-        onConnectionReady: function () {
-        },
-        onClosed: function () {
-        },
-        destroy: function () {
-
-            if (this._socket && this._socket.close) {
-                this._socket.close();
-                this.onClosed();
-            }
-        },
-        _defaultOptions: function () {
-            return {};
-        },
-        init: function (args) {
-            this.options = utils.mixin(this._defaultOptions(), args.options);
-            //disconnect on onload
-            unload.addOnUnload(function () {
-                this.pageUnloaded=true;
-                this.destroy();
-            }.bind(this));
-        }
-    });
-
-    dcl.chainAfter(Module,"destroy");
-    return Module;
-});
-define('xide/client/WebSocket',[
-    "dcl/dcl",
-    'xide/utils',
-    'xide/utils/_LogMixin',
-    'xide/client/ClientBase'
-], function (dcl, utils, _logMixin, ClientBase) {
-    var debug = false;
-    return dcl([ClientBase, _logMixin], {
-        declaredClass:"xide.client.WebSocket",
-        _socket: null,
-        debugConnect: true,
-        autoReconnect: true,
-        reconnect: function () {
-            debug && console.log('reconnect!');
-        },
-        close: function () {
-            this.destroy();
-        },
-        onLostConnection:function(){
-            debug && console.log('lost connection');
-        },
-        onConnected:function(){
-            debug && console.log('on connected');
-        },
-        connect: function (_options) {
-            this.options = utils.mixin(this.options, _options);
-            var host = this.options.host;
-            //host = host.replace('http://','wss://');
-            var port = this.options.port;
-            if (this.options.debug) {
-                this.initLogger(this.options.debug);
-            }
-            if (!host) {
-                console.error('something wrong with data!',_options);
-                return;
-            }
-            debug && console.log("Connecting to " + host + ':' + port, "socket_client");
-            var protocol = [
-                'websocket',
-                'xdr-streaming',
-                'xhr-streaming',
-                'iframe-eventsource',
-                'iframe-htmlfile',
-                'xdr-polling',
-                'xhr-polling',
-                'iframe-xhr-polling',
-                'jsonp-polling'
-            ];
-
-            var options = {
-                debug: debug,
-                devel: true,
-                noCredentials:true,
-                nullOrigin:true
-            };
-            options.transports = protocol;
-            var sock = new SockJS(host + ":" + port, null, options);
-            var thiz = this;
-
-            sock.onopen = function () {
-                thiz.onConnected();
-                if (thiz.delegate.onConnected) {
-                    thiz.delegate.onConnected();
-                }
-            };
-
-            sock.onmessage = function (e) {
-                if (thiz.delegate.onServerResponse) {
-                    thiz.delegate.onServerResponse(e);
-                }
-            };
-
-            sock.onerror=function(){
-                console.error('error');
-            }
-            sock.onclose = function (e) {
-                if (thiz.autoReconnect) {
-                    debug &&  console.log('closed ' + host + ' try re-connect');
-                    if (thiz.delegate.onLostConnection) {
-                        thiz.delegate.onLostConnection(e);
-                    }
-                    thiz.reconnect();
-                }else{
-                    debug && console.log('closed ' + host);
-                }
-            };
-            this._socket = sock;
-        },
-        emit: function (signal, dataIn, tag) {
-            dataIn.tag = tag || 'notag';
-            var data = JSON.stringify(dataIn);
-            var res = this._socket.send(data);
-            debug && console.log('send ',res);
-        },
-
-        onSignal: function (signal, callback) {
-            this._socket.on('data', callback);
-        }
-    });
-});
-define('xide/factory/Clients',[
-    'xide/factory',
-    'xide/utils',
-    'xide/types',
-    'xide/client/WebSocket'
-], function (factory,utils,types,WebSocket)
-{
-    var debug = false;
-    /**
-     * Low Level Web-Socket-Client factory method
-     * @param ctrArgs
-     * @param host
-     * @param port
-     * @param delegate
-     */
-    factory.createClient=function(ctrArgs,host,port,delegate){};
-    /***
-     * High-Level Web-Socket-Client factory method
-     * @param store
-     * @param serviceName
-     * @param ctrArgs
-     * @param clientClass : optional client class prototype, default : WebSocket
-     * @returns {xide/client/WebSocket} | null
-     */
-    factory.createClientWithStore=function(store,serviceName,ctrArgs,clientClass){
-
-        var service = utils.queryStoreEx(store,{
-                name:serviceName
-            },true,true),
-            _ctorArgs = {};
-
-        utils.mixin(_ctorArgs,ctrArgs);
-
-        if(!service||service.length===0){
-            console.error('create client with : failed, no such service :  ' + serviceName );
-            return;
-        }
-
-        //service=service[0];
-
-        /*
-        if(!service.info && service.status==types.SERVICE_STATUS.OFFLINE){
-            console.error('create client with store : failed! Service has no info for '  + serviceName);
-            return;
-        }
-        */
-        if(service.status!==types.SERVICE_STATUS.ONLINE){
-            debug && console.error('create client with store : failed! Service ' +  serviceName + ' is not online ');
-            //return;
-        }
-
-        var host = 'http://' + service.host,
-            port = service.port,
-            channel='',
-            _clientProto = clientClass || WebSocket;
-
-        if(service.info){
-            host=service.info.host;
-            port=service.info.port;
-        }
-
-        try{
-            var client = new _clientProto(_ctorArgs);
-            utils.mixin(client,_ctorArgs);
-            client.init({
-                options:{
-                    host:host,
-                    port:port,
-                    channel:channel,
-                    debug:{
-                        "all": false,
-                        "protocol_connection": true,
-                        "protocol_messages": true,
-                        "socket_server":true,
-                        "socket_client":true,
-                        "socket_messages":true,
-                        "main":true
-                    }
-                }
-            });
-            client.connect();
-            return client;
-        }catch(e){
-            debug && console.error('create client with store : failed : ' + e) && logError(e);
-        }
-    };
-    return factory;
-});
 define('xide/encoding/_base',[
 	"dojo/_base/lang"
 
@@ -7888,6 +5632,2181 @@ define('xide/data/Memory',[
     return declare('xide.data.Memory',[Memory, _Base], {});
 });
 
+define('xide/utils/StoreUtils',[
+    'xide/utils',
+    'xide/data/Memory',
+    'dojo/_base/kernel'
+], function (utils, Memory,dojo) {
+    "use strict";
+    /**
+     *
+     * @param store
+     * @param item
+     * @param recursive
+     * @param idAttribute
+     * @param parentAttr
+     */
+    utils.removeFromStore = function (store, item, recursive, idAttribute, parentAttr) {
+        //remove the item itself
+        store.removeSync(item[idAttribute]);
+        //remove children recursively
+        var query = {};
+        query[parentAttr] = item[idAttribute];
+        var items = store.query(query);
+        if (items && items.length) {
+            for (var i = 0; i < items.length; i++) {
+                utils.removeFromStore(store, items[i], recursive, idAttribute, parentAttr);
+            }
+        }
+    };
+    /**
+     * CI related tools.
+     * @param val {string|array|null}
+     * @returns {string|null}
+     */
+    utils.toString = function (val) {
+        if (val !== null) {
+            if (!dojo.isArray(val)) {
+                return '' + val;
+            }
+            if (val && val.length == 1 && val[0] == null) {
+                return null;
+            }
+            return '' + (val[0] !== null ? val[0] : val);
+        }
+        return null;
+    };
+    utils.toBoolean = function (data) {
+        var resInt = false;
+        if (data !== null) {
+            var _dataStr = data[0] ? data[0] : data;
+            if (_dataStr !== null) {
+                resInt = !!(( _dataStr === true || _dataStr === 'true' || _dataStr === '1'));
+            }
+        }
+        return resInt;
+    };
+    utils.toObject = function (data) {
+        if (data !== null) {
+            return data[0] ? data[0] : data;
+        }
+        return null;
+    };
+    utils.toInt = function (data) {
+        if(_.isNumber(data)){
+            return data;
+        }
+        var resInt = -1;
+        if (data!=null) {
+            var _dataStr = data.length > 1 ? data : data[0] ? data[0] : data;
+            if (_dataStr !== null) {
+                try {
+                    resInt = parseInt(_dataStr, 10);
+                } catch (e) {
+                }
+            }
+        }
+        return resInt;
+    };
+    /***
+     *
+     * @param store
+     * @param id
+     * @return {null}
+     */
+    utils.getStoreItemById = function (store, id) {
+        return utils.queryStoreEx(store, {id: id},null,null);
+    };
+    /***
+     *
+     * @param store
+     * @param id
+     * @param type
+     * @return {null}
+     */
+    utils.getAppDataElementByIdAndType = function (store, id, type) {
+        return utils.queryStore(store, {uid: id, type: type},null,null);
+    };
+    /***
+     *
+     * @param store
+     * @param type
+     * @return {null}
+     */
+    utils.getElementsByType = function (store, type) {
+        return utils.queryStoreEx(store, {type: type});
+    };
+
+
+    /***
+     * @param store {module:xide/data/_Base} Store to query
+     * @param query {object} Literal to match
+     * @param nullEmpty {boolean|null} Return null if nothing has been found
+     * @param single {boolean|null} Return first entry
+     * @returns {*}
+     */
+    utils.queryStoreEx = function (store, query, nullEmpty, single) {
+        if (!store) {
+            console.error('utils.queryStoreEx: store = null');
+            return null;
+        }
+        if (store instanceof Memory) {
+            var result = utils.queryMemoryStoreEx(store, query);
+            if (single && result && result[0]) {
+                return result[0];
+            }
+            return result;
+        }
+        var res = null;
+        if (store.query) {
+            res = store.query(query);
+        }
+        if (nullEmpty === true) {
+            if (res && res.length === 0) {
+                return null;
+            }
+        }
+        if (single === true) {
+            if (res && res.length == 1) {
+                return res[0];
+            }
+        }
+        return res;
+    };
+
+    /**
+     *
+     * @param store
+     * @param query
+     * @param nullEmpty {boolean|null}
+     * @returns {*}
+     */
+    utils.queryStore = function (store, query, nullEmpty) {
+        var res = utils.queryStoreEx(store, query,null,null);
+        if (res && res.length == 1) {
+            return res[0];
+        }
+        if (nullEmpty !== null && nullEmpty === true) {
+            if (res && res.length === 0) {
+                return null;
+            }
+        }
+        return res;
+    };
+
+    /**
+     *
+     * @param store
+     * @param query
+     * @returns {Array}
+     */
+    utils.queryMemoryStoreEx = function (store, query) {
+        var result = [];
+        store.query(query).forEach(function (entry) {
+            result.push(entry);
+        });
+        return result;
+    };
+
+    utils.queryMemoryStoreSingle = function (store, query) {
+        var result = utils.queryMemoryStoreEx(store, query);
+        if (result.length == 1) {
+            return result[0];
+        }
+        return result;
+    };
+
+    return utils;
+});
+/** module:xide/registry **/
+define('xide/registry',[
+	"dojo/_base/array", // array.forEach array.map
+	"dojo/_base/window", // win.body
+    "xdojo/has"
+], function(array, win, has){
+	/**
+	 * @TODOS:
+	 * - add namespaces
+	 * - remove window
+	 * - augment consumer API
+	 * - use std array
+	 * - add framework constraint
+	 * - move dom api out of here
+	 * - define widget.id better
+	 * - add search by class
+     */
+	var _widgetTypeCtr = {}, hash = {};
+	var registry =  {
+		// summary:
+		//		Registry of existing widget on page, plus some utility methods.
+
+		// length: Number
+		//		Number of registered widgets
+		length: 0,
+		add: function(widget){
+			// summary:
+			//		Add a widget to the registry. If a duplicate ID is detected, a error is thrown.
+			// widget: dijit/_WidgetBase
+			//		Any dijit/_WidgetBase subclass.
+			if(this._hash[widget.id]){
+                if(has('xblox')) {
+                    this.remove(widget.id);
+                    this.add(widget);
+                }else{
+                    throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
+                }
+			}
+			hash[widget.id] = widget;
+			this.length++;
+		},
+		/**
+		 * Remove a widget from the registry. Does not destroy the widget; simply
+		 * removes the reference.
+		 * @param id
+         */
+		remove: function(id){
+			if(hash[id]){
+				delete hash[id];
+				this.length--;
+			}
+		},
+		/**
+		 *
+		 * @param id {String|Widget}
+		 * @returns {String|Widget}
+         */
+		byId: function( id){
+			// summary:
+			//		Find a widget by it's id.
+			//		If passed a widget then just returns the widget.
+			return typeof id == "string" ? hash[id] : id;	// dijit/_WidgetBase
+		},
+		byNode: function(/*DOMNode*/ node){
+			// summary:
+			//		Returns the widget corresponding to the given DOMNode
+			return hash[node.getAttribute("widgetId")]; // dijit/_WidgetBase
+		},
+
+		/**
+		 * Convert registry into a true Array
+		 * @example:
+		 *	Work with the widget .domNodes in a real Array
+		 *	array.map(registry.toArray(), function(w){ return w.domNode; });
+		 * @returns {obj[]}
+         */
+		toArray: function(){
+			return _.values(_.mapKeys(hash, function(value, key) { value.id = key; return value; }));
+		},
+		/**
+		 * Generates a unique id for a given widgetType
+		 * @param widgetType {string}
+		 * @returns {string}
+         */
+		getUniqueId: function(widgetType){
+			var id;
+			do{
+				id = widgetType + "_" +
+					(widgetType in _widgetTypeCtr ?
+						++_widgetTypeCtr[widgetType] : _widgetTypeCtr[widgetType] = 0);
+			}while(hash[id]);
+			return id;
+		},
+		/**
+		 * Search subtree under root returning widgets found.
+		 * Doesn't search for nested widgets (ie, widgets inside other widgets).
+		 * @param root {HTMLElement} Node to search under.
+		 * @param skipNode {HTMLElement} If specified, don't search beneath this node (usually containerNode).
+         * @returns {Array}
+         */
+		findWidgets: function(root, skipNode){
+			var outAry = [];
+			function getChildrenHelper(root){
+				for(var node = root.firstChild; node; node = node.nextSibling){
+					if(node.nodeType == 1){
+						var widgetId = node.getAttribute("widgetId");
+						if(widgetId){
+							var widget = hash[widgetId];
+							if(widget){	// may be null on page w/multiple dojo's loaded
+								outAry.push(widget);
+							}
+						}else if(node !== skipNode){
+							getChildrenHelper(node);
+						}
+					}
+				}
+			}
+			getChildrenHelper(root);
+			return outAry;
+		},
+		_destroyAll: function(){
+			// summary:
+			//		Code to destroy all widgets and do other cleanup on page unload
+
+			// Clean up focus manager lingering references to widgets and nodes
+			// Destroy all the widgets, top down
+			_.each(registry.findWidgets(win.body()),function(widget){
+				// Avoid double destroy of widgets like Menu that are attached to <body>
+				// even though they are logically children of other widgets.
+				if(!widget._destroyed){
+					if(widget.destroyRecursive){
+						widget.destroyRecursive();
+					}else if(widget.destroy){
+						widget.destroy();
+					}
+				}
+			});
+		},
+		getEnclosingWidget: function(/*DOMNode*/ node){
+			// summary:
+			//		Returns the widget whose DOM tree contains the specified DOMNode, or null if
+			//		the node is not contained within the DOM tree of any widget
+			while(node){
+				var id = node.nodeType == 1 && node.getAttribute("widgetId");
+				if(id){
+					return hash[id];
+				}
+				node = node.parentNode;
+			}
+			return null;
+		},
+
+		// In case someone needs to access hash.
+		// Actually, this is accessed from WidgetSet back-compatibility code
+		_hash: hash
+	};
+	return registry;
+});
+
+define('xide/utils/WidgetUtils',[
+    'xide/utils',
+    'xide/types',
+    'xide/registry'
+], function (utils,types,registry) {
+    "use strict";
+    utils.getParentWidget=function(start,declaredClass,max){
+        //sanitize start
+        start = start.containerNode || start.domNode || start;
+        var i = 0,
+            element = start,
+            widget = null,
+            _max = max || 10,
+            _lastWidget = null;
+
+        while (i < _max && !widget) {
+            if (element) {
+                element = element.parentNode;
+                var _widgetById = registry.byId(element.id);
+                var _widget = _widgetById || registry.getEnclosingWidget(element);
+                _widget && (_lastWidget = _widget);
+                if(_widget && declaredClass &&  _widget.declaredClass && _widget.declaredClass.indexOf(declaredClass)!=-1){
+                    widget = _widget;
+                }
+            }
+            i++;
+        }
+        return widget;
+    };
+    /**
+     *
+     * @param type
+     * @returns {string}
+     */
+    utils.getWidgetType = function (type) {
+        var res = "";
+        var root = 'xide.widgets.';
+        if (type == types.ECIType.ENUMERATION) {
+            res = root  + "Select";
+        }
+        if (type == types.ECIType.STRING) {
+            res = root  + "TextBox";
+        }
+
+        if (type == types.ECIType.ICON) {
+            res = root  + "TextBox";
+        }
+
+        if (type == types.ECIType.REFERENCE) {
+            res = root  + "Button";
+        }
+
+        if (type == types.ECIType.EXPRESSION) {
+            res = root  + "Expression";
+        }
+
+        if (type == types.ECIType.EXPRESSION_EDITOR) {
+            res = root  + "ExpressionEditor";
+        }
+
+        if (type == types.ECIType.ARGUMENT) {
+            res = root  + "ArgumentsWidget";
+        }
+
+        if (type == types.ECIType.WIDGET_REFERENCE) {
+            res = root  + "WidgetReference";
+        }
+
+        if (type == types.ECIType.BLOCK_REFERENCE) {
+            res =root  +  "BlockPickerWidget";
+        }
+
+        if (type == types.ECIType.BLOCK_SETTINGS) {
+            res = root  + "BlockSettingsWidget";
+        }
+
+
+        if (type == types.ECIType.DOM_PROPERTIES) {
+            res = root  + "DomStyleProperties";
+        }
+
+        if (type == types.ECIType.FILE_EDITOR) {
+            res = root  + "FileEditor";
+        }
+
+        return res;
+    };
+    return utils;
+});
+define('xide/utils/CIUtils',[
+    'xide/utils',
+    'xide/types',
+    'xide/factory',
+    'dojo/has',
+    'xide/lodash'
+],function(utils,types,factory,has,_){
+    "use strict";
+    /**
+     *
+     * @param cis
+     * @returns {Array}
+     */
+    utils.toOptions  = function(cis){
+        cis = utils.flattenCIS(cis);
+        var result = [];
+        for (var i = 0; i < cis.length; i++) {
+            var ci = cis[i];
+            result.push({
+                name:utils.toString(ci['name']),
+                value:utils.getCIValue(ci),
+                type: utils.toInt(ci['type']),
+                enumType:utils.toString(ci['enumType']),
+                visible:utils.toBoolean(ci['visible']),
+                active:utils.toBoolean(ci['active']),
+                changed:utils.toBoolean(ci['changed']),
+                group:utils.toString(ci['group']),
+                user:utils.toObject(ci['user']),
+                dst:utils.toString(ci['dst']),
+                params:utils.toString(ci['params'])
+            })
+        }
+        return result;
+    };
+
+    if(has('xideve') || has('xblox-ui')) {
+        utils.getEventsAsOptions = function (selected) {
+            var result = [
+                {label: "Select Event", value: ""}
+            ];
+            for (var e in types.EVENTS) {
+                var label = types.EVENTS[e];
+
+                var item = {
+                    label: label,
+                    value: types.EVENTS[e]
+                };
+                result.push(item);
+            }
+            result = result.concat(
+                [{label: "onclick", value: "onclick"},
+                    {label: "ondblclick", value: "dblclick"},
+                    {label: "onmousedown", value: "mousedown"},
+                    {label: "onmouseup", value: "mouseup"},
+                    {label: "onmouseover", value: "mouseover"},
+                    {label: "onmousemove", value: "mousemove"},
+                    {label: "onmouseout", value: "mouseout"},
+                    {label: "onkeypress", value: "keypress"},
+                    {label: "onkeydown", value: "keydown"},
+                    {label: "onkeyup", value: "keyup"},
+                    {label: "onfocus", value: "focus"},
+                    {label: "onblur", value: "blur"},
+                    {label: "On Load", value: "Load"}
+                ]);
+            //select the event we are listening to
+            for (var i = 0; i < result.length; i++) {
+                var obj = result[i];
+                if (obj.value === selected) {
+                    obj.selected = true;
+                    break;
+                }
+            }
+            return result;
+        };
+    }
+
+    utils.flattenCIS  = function(cis){
+        var addedCIS = [];
+        var removedCIs = [];
+        for (var i = 0; i < cis.length; i++) {
+            var ci = cis[i];
+
+            var ciType = utils.toInt(ci.type);
+
+            if(ciType > types.ECIType.END){//type is higher than core types, try to resolve it
+                var resolved = types.resolveType(ciType);
+                if(resolved){
+                    utils.mixin(addedCIS,resolved);
+                    removedCIs.push(ci);
+                }
+            }
+        }
+        if(addedCIS.length>0){
+            cis = cis.concat(addedCIS);
+        }
+        if(removedCIs){
+            for(var i in removedCIs){
+                cis.remove(removedCIs[i]);
+            }
+        }
+        return cis;
+    };
+
+    utils.arrayContains=function(array,element){
+        for (var i = 0; i < array.length; i++){
+            var _e = array[i];
+            if(_e===element){
+                return true;
+            }
+        }
+        return false;
+    };
+
+    utils.setStoreCIValueByField = function (d, field, value) {
+        if (d[field] == null) {
+            d[field] = [];
+        }
+        d[field][0] = utils.getStringValue(value);
+        return d;
+    };
+    /**
+     *
+     * @param label
+     * @param value
+     * @param extra
+     * @returns {Object}
+     */
+    utils.createOption=function(label,value,extra){
+        return utils.mixin({
+            label:label,
+            value:value !=null ? value : label
+        },extra);
+    };
+    /**
+     *
+     * @param name
+     * @param type
+     * @param value
+     * @param args
+     * @param settings
+     * @returns {{dataRef: null, dataSource: null, name: *, group: number, id: *, title: *, type: *, uid: number, value: *, visible: boolean, enumType: number, class: string}}
+     */
+    utils.createCI = function (name, type, value,args,settings) {
+        var res = {
+            dataRef:null,
+            dataSource:null,
+            name:name,
+            group:-1,
+            id:name,
+            title:name,
+            type:type,
+            uid:-1,
+            value: value!=null ? value : -1,
+            visible:true,
+            enumType:-1,
+            "class":"cmx.types.ConfigurableInformation"
+        };
+        utils.mixin(res,args);
+        if(settings){
+            if(settings.publish){
+                factory.publish(settings.publish,{
+                    CI:res,
+                    owner:settings.owner
+                },settings.owner);
+            }
+        }
+        return res;
+    };
+
+    utils.createCIAsArray = function (name, type, chain,value) {
+        return {
+            chainType:[chain ? chain : 0],
+            dataRef:[null],
+            dataSource:[null],
+            params:[],
+            name:[name],
+            group:[-1],
+            id:[name],
+            title:[name],
+            type:[type],
+            uid:[-1],
+            value: [value ? value : -1],
+            visible:[true],
+            enumType:[-1],
+            parentId:[-1],
+            "class":["cmx.types.ConfigurableInformation"]
+        };
+    };
+
+    utils.hasValue = function (data){
+        return data.value &&  data.value[0] !=null && data.value[0].length > 0 && data.value[0] !="0" && data.value[0] !="undefined" && data.value[0] !="Unset";
+    };
+
+    utils.hasValueAndDataRef = function (data){
+        return data.value &&  data.value[0] !=null && data.value[0].length > 0 && data.value[0] !="0" && data.value[0] !="undefined" && data.value[0] !="Unset" &&
+            data.dataRef &&  data.dataRef[0] !=null && data.dataRef[0].length > 0 && data.dataRef[0] !="0" && data.dataRef[0] !="undefined";
+    };
+
+    utils.getInputCIByName = function (data,name){
+        if(!data){
+            return null;
+        }
+        var chain = 0;
+        var dstChain = chain == 0 ? data.inputs : chain == 1 ? data.outputs : null;
+        if(!dstChain){//has no chains, be nice
+            dstChain=data;
+        }
+        if (dstChain != null) {
+            for (var i = 0; i < dstChain.length; i++) {
+                var ci = dstChain[i];
+                var _n = utils.getStringValue(ci.name);
+                if (_n!=null && _n.toLowerCase() === name.toLowerCase()){
+                    return ci;
+                }
+            }
+        }
+        return null;
+    };
+    /***
+     *
+     * @param data
+     * @param chain
+     * @param name
+     * @returns {*}
+     */
+    utils.getCIByChainAndName = function (data, chain, name) {
+        if(!data){
+            return null;
+        }
+        var dstChain = chain == 0 ? data.inputs : chain == 1 ? data.outputs : null;
+        if(!dstChain){//has no chains
+            dstChain=data;
+        }
+        if (dstChain != null) {
+            for (var i = 0; i < dstChain.length; i++) {
+                var ci = dstChain[i];
+                var _n = utils.getStringValue(ci.name);
+                if (_n!=null && _n.toLowerCase() === name.toLowerCase()){
+                    return ci;
+                }
+            }
+        }
+        return null;
+    };
+    utils.getCIByUid= function (dstChain, uid) {
+        if (dstChain != null) {
+            for (var i = 0; i < dstChain.length; i++) {
+                var ci = dstChain[i];
+                var _n = utils.getStringValue(ci.uid);
+                if (_n!=null && _n === uid)
+                {
+                    return ci;
+                }
+            }
+        }
+        return null;
+    };
+    utils.getCIById= function (data, chain, id) {
+        var dstChain = chain == 0 ? data.inputs : chain == 1 ? data.outputs : null;
+        if (dstChain != null) {
+            for (var i = 0; i < dstChain.length; i++) {
+                var ci = dstChain[i];
+                if (ci.id[0] == id[0]  )
+                    return ci;
+            }
+        }
+        return null;
+    };
+    utils.getCIInputValueByName = function (data, name) {
+        var ci = utils.getCIByChainAndName(data, 0, name);
+        if (ci) {
+            return ci.value;
+        }
+        return null;
+    };
+    utils.getCIValue = function (data){
+        return utils.getCIValueByField(data,"value");
+    };
+    utils.getStringValue = function (d){
+        return utils.toString(d);
+    };
+    utils.toString = function (d){
+        if (d != null) {
+            if(!_.isArray(d))
+            {
+                return ''+ d;
+            }
+            if(d && d.length==1 && d[0]==null)
+            {
+                return null;
+            }
+            return '' + (d[0] !=null ? d[0] : d);
+        }
+        return null;
+    };
+    utils.setIntegerValue = function (data,value){
+        if (data != null) {
+
+            if(dojo.isArray(data))
+            {
+                data[0]=value;
+            }else{
+                data=value;
+            }
+        }
+    };
+
+    utils.getCIValueByField = function (data, field) {
+        if (data[field] != null) {
+            if(_.isArray(data[field])){
+                return data[field][0] ? data[field][0] : data[field];
+            }else{
+                return data[field];
+            }
+        }
+        return null;
+    };
+    utils.setCIValueByField = function (data, field, value) {
+        if(!data){
+            return data;
+        }
+        if (data[field] == null) {
+            data[field] = [];
+        }
+        data[field]=value
+        return data;
+    };
+
+    utils.setCIValue = function (data, field, value) {
+        var ci = utils.getInputCIByName(data,field);
+        if(ci){
+            utils.setCIValueByField(ci,'value',value);
+        }
+        return ci;
+    };
+    utils.getCIInputValueByNameAndField = function (data, name, field) {
+        var ci = utils.getCIByChainAndName(data, 0, name);
+        if (ci) {
+            return ci["" + field];
+        }
+        return null;
+    };
+
+    utils.getCIInputValueByNameAndFieldStr = function (data, name, field) {
+        var rawValue = utils.getCIInputValueByNameAndField(data,name,field);
+        if(rawValue){
+            return utils.getStringValue(rawValue);
+        }
+        return null;
+    };
+    utils.getCIInputValueByNameAndFieldBool = function (data, name, field) {
+        var rawValue = utils.getCIInputValueByNameAndField(data,name,field);
+        if(rawValue){
+            return utils.toBoolean(rawValue);
+        }
+        return null;
+    };
+    utils.getCIWidgetByName=function(cis,name){
+
+        for (var i = 0; i < cis.length; i++) {
+            var ci = cis[i];
+            if(ci['_widget'] && ci.name===name){
+                return ci['_widget'];
+            }
+        }
+        return null;
+    };
+    return utils;
+});
+define('xide/utils/ObjectUtils',[
+    'xide/utils',
+    'require',
+    "dojo/Deferred",
+    'xide/lodash'
+], function (utils, require, Deferred,lodash) {
+    var _debug = false;
+    "use strict";
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  Loader utils
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    utils.debounce = function(who,methodName,_function,delay,options,now,args){
+        var _place = who[methodName+'_debounced'];
+        if(!_place){
+            _place = who[methodName+'_debounced'] =  lodash.debounce(_function, delay,options);
+        }
+        if(now===true){
+            if(!who[methodName+'_debouncedFirst']){
+                who[methodName+'_debouncedFirst']=true;
+                _function.apply(who,args);
+            }
+        }
+        return _place();
+    };
+
+
+    utils.pluck=function(items,prop){
+        return lodash.map(items,prop);
+    };
+
+    /**
+     * Trigger downloadable file
+     * @param filename
+     * @param text
+     */
+    utils.download  = function(filename, text){
+        var element = document.createElement('a');
+        text = lodash.isString(text) ? text : JSON.stringify(text,null,2);
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
+    /**
+     * Ask require registry at this path
+     * @param mixed
+     * @returns {*}
+     */
+    utils.hasObject = function (mixed) {
+        var result = null;
+        var _re = require;
+        try {
+            result = _re(mixed);
+        } catch (e) {
+            console.error('error in utils.hasObject ', e);
+        }
+        return result;
+    };
+    /**
+     * Returns a module by module path
+     * @param mixed {String|Object}
+     * @param _default {Object} default object
+     * @returns {Object|Promise}
+     */
+    utils.getObject = function (mixed, _default) {
+        var result = null;
+        if (utils.isString(mixed)) {
+            var _re = require;
+            try {
+                result = _re(mixed);
+            } catch (e) {
+                _debug && console.warn('utils.getObject::require failed for ' + mixed);
+            }
+            //not a loaded module yet
+            try {
+                if (!result) {
+
+                    var deferred = new Deferred();
+                    //try loader
+                    result = _re([
+                        mixed
+                    ], function (module) {
+                        deferred.resolve(module);
+                    });
+                    return deferred.promise;
+                }
+            }catch(e){
+                _debug &&  console.error('error in requiring '+mixed,e);
+            }
+            return result;
+
+        } else if (utils.isObject(mixed)) {
+            return mixed;//reflect
+        }
+        return result !== null ? result : _default;
+    };
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  True object utils
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    utils.toArray = function (obj) {
+        var result = [];
+        for (var c in obj) {
+            result.push({
+                name: c,
+                value: obj[c]
+            });
+        }
+        return result;
+    };
+    /**
+     * Array to object conversion
+     * @param arr
+     * @returns {Object}
+     */
+    utils.toObject = function (arr, lodash) {
+        if (!arr) {
+            return {};
+        }
+        if (lodash !== false) {
+            return lodash.object(lodash.map(arr, lodash.values));
+        } else {
+            //CI related back compat hack
+            if (utils.isObject(arr) && arr[0]) {
+                return arr[0];
+            }
+
+            var rv = {};
+            for (var i = 0; i < arr.length; ++i) {
+                rv[i] = arr[i];
+            }
+            return rv;
+        }
+    };
+
+    /**
+     * Gets an object property by string, eg: utils.byString(someObj, 'part3[0].name');
+     * @deprecated, see objectAtPath below
+     * @param o {Object}    : the object
+     * @param s {String}    : the path within the object
+     * @param defaultValue {Object|String|Number} : an optional default value
+     * @returns {*}
+     */
+    utils.byString = function (o, s, defaultValue) {
+        s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+        s = s.replace(/^\./, '');           // strip a leading dot
+        var a = s.split('.');
+        while (a.length) {
+            var n = a.shift();
+            if (n in o) {
+                o = o[n];
+            } else {
+                return;
+            }
+        }
+        return o;
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  Object path
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Internals
+     */
+
+    //cache
+    var toStr = Object.prototype.toString,
+        _hasOwnProperty = Object.prototype.hasOwnProperty;
+
+    /**
+     * @private
+     * @param type
+     * @returns {*}
+     */
+    function toString(type) {
+        return toStr.call(type);
+    }
+
+    /**
+     * @private
+     * @param key
+     * @returns {*}
+     */
+    function getKey(key) {
+        var intKey = parseInt(key,10);
+        if (intKey.toString() === key) {
+            return intKey;
+        }
+        return key;
+    }
+
+    /**
+     * internal set value at path in object
+     * @private
+     * @param obj
+     * @param path
+     * @param value
+     * @param doNotReplace
+     * @returns {*}
+     */
+    function set(obj, path, value, doNotReplace) {
+        if (lodash.isNumber(path)) {
+            path = [path];
+        }
+        if (lodash.isEmpty(path)) {
+            return obj;
+        }
+        if (lodash.isString(path)) {
+            return set(obj, path.split('.').map(getKey), value, doNotReplace);
+        }
+        var currentPath = path[0];
+
+        if (path.length === 1) {
+            var oldVal = obj[currentPath];
+            if (oldVal === void 0 || !doNotReplace) {
+                obj[currentPath] = value;
+            }
+            return oldVal;
+        }
+
+        if (obj[currentPath] === void 0) {
+            //check if we assume an array
+            if (lodash.isNumber(path[1])) {
+                obj[currentPath] = [];
+            } else {
+                obj[currentPath] = {};
+            }
+        }
+        return set(obj[currentPath], path.slice(1), value, doNotReplace);
+    }
+
+    /**
+     * deletes an property by a path
+     * @param obj
+     * @param path
+     * @returns {*}
+     */
+    function del(obj, path) {
+        if (lodash.isNumber(path)) {
+            path = [path];
+        }
+        if (lodash.isEmpty(obj)) {
+            return void 0;
+        }
+
+        if (lodash.isEmpty(path)) {
+            return obj;
+        }
+        if (lodash.isString(path)) {
+            return del(obj, path.split('.'));
+        }
+
+        var currentPath = getKey(path[0]);
+        var oldVal = obj[currentPath];
+
+        if (path.length === 1) {
+            if (oldVal !== void 0) {
+                if (lodash.isArray(obj)) {
+                    obj.splice(currentPath, 1);
+                } else {
+                    delete obj[currentPath];
+                }
+            }
+        } else {
+            if (obj[currentPath] !== void 0) {
+                return del(obj[currentPath], path.slice(1));
+            }
+        }
+        return obj;
+    }
+
+    /**
+     * Private helper class
+     * @private
+     * @type {{}}
+     */
+    var objectPath = {};
+
+    objectPath.has = function (obj, path) {
+        if (lodash.isEmpty(obj)) {
+            return false;
+        }
+        if (lodash.isNumber(path)) {
+            path = [path];
+        } else if (lodash.isString(path)) {
+            path = path.split('.');
+        }
+
+        if (lodash.isEmpty(path) || path.length === 0) {
+            return false;
+        }
+
+        for (var i = 0; i < path.length; i++) {
+            var j = path[i];
+            if ((lodash.isObject(obj) || lodash.isArray(obj)) && _hasOwnProperty.call(obj, j)) {
+                obj = obj[j];
+            } else {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    /**
+     * Define private public 'ensure exists'
+     * @param obj
+     * @param path
+     * @param value
+     * @returns {*}
+     */
+    objectPath.ensureExists = function (obj, path, value) {
+        return set(obj, path, value, true);
+    };
+
+    /**
+     * Define private public 'set'
+     * @param obj
+     * @param path
+     * @param value
+     * @param doNotReplace
+     * @returns {*}
+     */
+    objectPath.set = function (obj, path, value, doNotReplace) {
+        return set(obj, path, value, doNotReplace);
+    };
+
+    /**
+     Define private public 'insert'
+     * @param obj
+     * @param path
+     * @param value
+     * @param at
+     */
+    objectPath.insert = function (obj, path, value, at) {
+        var arr = objectPath.get(obj, path);
+        at = ~~at;
+        if (!lodash.isArray(arr)) {
+            arr = [];
+            objectPath.set(obj, path, arr);
+        }
+        arr.splice(at, 0, value);
+    };
+
+    /**
+     * Define private public 'empty'
+     * @param obj
+     * @param path
+     * @returns {*}
+     */
+    objectPath.empty = function (obj, path) {
+        if (lodash.isEmpty(path)) {
+            return obj;
+        }
+        if (lodash.isEmpty(obj)) {
+            return void 0;
+        }
+
+        var value, i;
+        if (!(value = objectPath.get(obj, path))) {
+            return obj;
+        }
+
+        if (lodash.isString(value)) {
+            return objectPath.set(obj, path, '');
+        } else if (lodash.isBoolean(value)) {
+            return objectPath.set(obj, path, false);
+        } else if (lodash.isNumber(value)) {
+            return objectPath.set(obj, path, 0);
+        } else if (lodash.isArray(value)) {
+            value.length = 0;
+        } else if (lodash.isObject(value)) {
+            for (i in value) {
+                if (_hasOwnProperty.call(value, i)) {
+                    delete value[i];
+                }
+            }
+        } else {
+            return objectPath.set(obj, path, null);
+        }
+    };
+
+    /**
+     * Define private public 'push'
+     * @param obj
+     * @param path
+     */
+    objectPath.push = function (obj, path /*, values */) {
+        var arr = objectPath.get(obj, path);
+        if (!lodash.isArray(arr)) {
+            arr = [];
+            objectPath.set(obj, path, arr);
+        }
+        arr.push.apply(arr, Array.prototype.slice.call(arguments, 2));
+    };
+
+    /**
+     * Define private public 'coalesce'
+     * @param obj
+     * @param paths
+     * @param defaultValue
+     * @returns {*}
+     */
+    objectPath.coalesce = function (obj, paths, defaultValue) {
+        var value;
+        for (var i = 0, len = paths.length; i < len; i++) {
+            if ((value = objectPath.get(obj, paths[i])) !== void 0) {
+                return value;
+            }
+        }
+        return defaultValue;
+    };
+
+    /**
+     * Define private public 'get'
+     * @param obj
+     * @param path
+     * @param defaultValue
+     * @returns {*}
+     */
+    objectPath.get = function (obj, path, defaultValue) {
+        if (lodash.isNumber(path)) {
+            path = [path];
+        }
+        if (lodash.isEmpty(path)) {
+            return obj;
+        }
+        if (lodash.isEmpty(obj)) {
+            //lodash doesnt seem to work with html nodes
+            if (obj && obj.innerHTML === null) {
+                return defaultValue;
+            }
+        }
+        if (lodash.isString(path)) {
+            return objectPath.get(obj, path.split('.'), defaultValue);
+        }
+        var currentPath = getKey(path[0]);
+        if (path.length === 1) {
+            if (obj && obj[currentPath] === void 0) {
+                return defaultValue;
+            }
+            if (obj) {
+                return obj[currentPath];
+            }
+        }
+        if (!obj) {
+            return defaultValue;
+        }
+        return objectPath.get(obj[currentPath], path.slice(1), defaultValue);
+    };
+
+    /**
+     * Define private public 'del'
+     * @param obj
+     * @param path
+     * @returns {*}
+     */
+    objectPath.del = function (obj, path) {
+        return del(obj, path);
+    };
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  Object path public xide/utils mixin
+    //
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     *  Returns a value by a give object path
+     *
+     *  //works also with arrays
+     *    objectPath.get(obj, "a.c.1");  //returns "f"
+     *    objectPath.get(obj, ["a","c","1"]);  //returns "f"
+     *
+     * @param obj {object}
+     * @param path {string}
+     * @param _default {object|null}
+     * @returns {*}
+     */
+    utils.getAt = function (obj, path, _default) {
+        return objectPath.get(obj, path, _default);
+    };
+
+    /**
+     * Sets a value in an object/array at a given path.
+     * @example
+     *
+     * utils.setAt(obj, "a.h", "m"); // or utils.setAt(obj, ["a","h"], "m");
+     *
+     * //set will create intermediate object/arrays
+     * objectPath.set(obj, "a.j.0.f", "m");
+     *
+     * @param obj{Object|Array}
+     * @param path {string}
+     * @param value {mixed}
+     * @returns {Object|Array}
+     */
+    utils.setAt = function (obj, path, value) {
+        return objectPath.set(obj, path, value);
+    };
+
+    /**
+     * Returns there is anything at given path within an object/array.
+     * @param obj
+     * @param path
+     */
+    utils.hasAt = function (obj, path) {
+        return objectPath.has(obj, path);
+    };
+
+    /**
+     * Ensures at given path, otherwise _default will be placed
+     * @param obj
+     * @param path
+     * @returns {*}
+     */
+    utils.ensureAt = function (obj, path, _default) {
+        return objectPath.ensureExists(obj, path, _default);
+    };
+    /**
+     * Deletes at given path
+     * @param obj
+     * @param path
+     * @returns {*}
+     */
+    utils.deleteAt = function (obj, path) {
+        return objectPath.del(obj, path);
+    };
+
+    /**
+     *
+     * @param to
+     * @param from
+     * @returns {*}
+     */
+    utils.merge = function (to, from) {
+        for (var n in from) {
+            if (typeof to[n] != 'object') {
+                to[n] = from[n];
+            } else if (typeof from[n] == 'object') {
+                to[n] = utils.merge(to[n], from[n]);
+            }
+        }
+
+        return to;
+    };
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  Dojo's most wanted
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    utils.clone=function(/*anything*/ src){
+        // summary:
+        // Clones objects (including DOM nodes) and all children.
+        // Warning: do not clone cyclic structures.
+        // src:
+        // The object to clone
+        if(!src || typeof src != "object" || utils.isFunction(src)){
+            // null, undefined, any non-object, or function
+            return src; // anything
+        }
+        if(src.nodeType && "cloneNode" in src){
+            // DOM Node
+            return src.cloneNode(true); // Node
+        }
+        if(src instanceof Date){
+            // Date
+            return new Date(src.getTime()); // Date
+        }
+        if(src instanceof RegExp){
+            // RegExp
+            return new RegExp(src); // RegExp
+        }
+        var r, i, l;
+        if(utils.isArray(src)){
+            // array
+            r = [];
+            for(i = 0, l = src.length; i < l; ++i){
+                if(i in src){
+                    r.push(utils.clone(src[i]));
+                }
+            }
+            // we don't clone functions for performance reasons
+            // }else if(d.isFunction(src)){
+            // // function
+            // r = function(){ return src.apply(this, arguments); };
+        }else{
+            // generic objects
+            r = src.constructor ? new src.constructor() : {};
+        }
+        return utils._mixin(r, src, utils.clone);
+    };
+
+    /**
+     * Copies/adds all properties of source to dest; returns dest.
+     * @description All properties, including functions (sometimes termed "methods"), excluding any non-standard extensions
+     * found in Object.prototype, are copied/added to dest. Copying/adding each particular property is
+     * delegated to copyFunc (if any); copyFunc defaults to the Javascript assignment operator if not provided.
+     * Notice that by default, _mixin executes a so-called "shallow copy" and aggregate types are copied/added by reference.
+     * @param dest {object} The object to which to copy/add all properties contained in source.
+     * @param source {object} The object from which to draw all properties to copy into dest.
+     * @param copyFunc {function} The process used to copy/add a property in source; defaults to the Javascript assignment operator.
+     * @returns {object} dest, as modified
+     * @private
+     */
+    utils._mixin=function (dest, source, copyFunc) {
+        var name, s, i, empty = {};
+        for (name in source) {
+            // the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
+            // inherited from Object.prototype.	 For example, if dest has a custom toString() method,
+            // don't overwrite it with the toString() method that source inherited from Object.prototype
+            s = source[name];
+            if (!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))) {
+                dest[name] = copyFunc ? copyFunc(s) : s;
+            }
+        }
+
+        return dest; // Object
+    };
+    /**
+     * Copies/adds all properties of one or more sources to dest; returns dest.
+     * @param dest {object} The object to which to copy/add all properties contained in source. If dest is falsy, then
+     * a new object is manufactured before copying/adding properties begins.
+     *
+     * @param sources One of more objects from which to draw all properties to copy into dest. sources are processed
+     * left-to-right and if more than one of these objects contain the same property name, the right-most
+     * value "wins".
+     *
+     * @returns {object} dest, as modified
+     *
+     * @example
+     * make a shallow copy of an object
+     * var copy = utils.mixin({}, source);
+     *
+     * @example
+     *
+     * many class constructors often take an object which specifies
+     *        values to be configured on the object. In this case, it is
+     *        often simplest to call `lang.mixin` on the `this` object:
+     *        declare("acme.Base", null, {
+    *			constructor: function(properties){
+    *				//property configuration:
+    *				lang.mixin(this, properties);
+    *				console.log(this.quip);
+    *			},
+    *			quip: "I wasn't born yesterday, you know - I've seen movies.",
+    *			* ...
+    *		});
+     *
+     *        //create an instance of the class and configure it
+     *        var b = new acme.Base({quip: "That's what it does!" });
+     *
+     */
+    utils.mixin = function (dest, sources) {
+        if(sources) {
+
+            if (!dest) {
+                dest = {};            }
+
+            var l = arguments.length;
+            for (var i = 1 ; i < l; i++) {
+                utils._mixin(dest, arguments[i]);
+            }
+            return dest; // Object
+        }
+        return dest;
+    };
+
+    /**
+     * Clone object keys
+     * @param defaults
+     * @returns {{}}
+     */
+    utils.cloneKeys = function (defaults, skipEmpty) {
+        var result = {};
+        for (var _class in defaults) {
+            if (skipEmpty === true && !(_class in defaults)) {
+                continue;
+            }
+            result[_class] = defaults[_class];
+        }
+        return result;
+    };
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //  STD
+    /**
+     *
+     * @param what
+     * @returns {*}
+     */
+    utils.isArray=function(what){
+        return lodash.isArray(what);
+    };
+    /**
+     *
+     * @param what
+     * @returns {*}
+     */
+    utils.isObject=function(what){
+        return lodash.isObject(what);
+    };
+    /**
+     *
+     * @param what
+     * @returns {*}
+     */
+    utils.isString=function(what){
+        return lodash.isString(what);
+    };
+    /**
+     *
+     * @param what
+     * @returns {*}
+     */
+    utils.isNumber=function(what){
+        return lodash.isNumber(what);
+    };
+    /**
+     *
+     * @param it
+     * @returns {*}
+     */
+    utils.isFunction=function(it){
+        // summary:
+        // Return true if it is a Function
+        // it: anything
+        // Item to test.
+        return lodash.isFunction(it);
+    };
+    return utils;
+});
+/** @module xide/utils/CSSUtils
+ *  @description All string related functions
+ */
+define('xide/utils/CSSUtils',[
+    'xide/utils',
+    'xide/types'
+
+], function (utils, types) {
+
+
+    "use strict";
+
+    /**
+     *
+     * @param styleString
+     * @param property
+     * @returns {*}
+     */
+    utils.findStyle=function(styleString,property){
+        var parser = new CSSParser();
+        var content = ".foo{";
+        content+=styleString;
+        content+="}";
+        var sheet=parser.parse(content, false, true);
+        var declarations = sheet.cssRules[0].declarations;
+        var declaration = _.find(declarations,{
+            property:property
+        });
+
+        if(declaration){
+            return declaration.valueText;
+        }
+        return "";
+    }
+
+    /**
+     *
+     * @param styleString
+     * @returns {*}
+     */
+    utils.getBackgroundUrl=function(styleString){
+        var background = utils.findStyle(styleString,"background-image");
+        if(background) {
+            try {
+                return background.match(/\((.*?)\)/)[1].replace(/('|")/g, '');
+            }catch(e){}
+        }
+        return null;
+    }
+
+    return utils;
+});
+
+define('xide/factory/Objects',[
+    'dcl/dcl',
+    'xide/utils',
+    'xide/factory',
+    'xdojo/declare'
+], function (dcl,utils, factory, declare) {
+    /***
+     * Convinience object factory via dojo/declare
+     * @param classNameOrPrototype
+     * @param ctrArgs
+     * @param baseClasses
+     * @returns {*}
+     */
+    factory.createInstance = function (classNameOrPrototype, ctrArgs, baseClasses) {
+        var ctrArgsFinal = {};
+        utils.mixin(ctrArgsFinal, ctrArgs);
+        //prepare object prototype, try dojo and then abort
+        var objectProtoType = classNameOrPrototype;
+        if (_.isString(classNameOrPrototype)) {
+            var proto = dojo.getObject(objectProtoType) || dcl.getObject(objectProtoType);
+            if (proto) {
+                objectProtoType = proto;
+            } else {
+                console.error('no such class : ' + classNameOrPrototype);
+                return null;
+            }
+        }
+
+        baseClasses && ( objectProtoType = declare(baseClasses, objectProtoType.prototype));
+
+        if(!ctrArgsFinal.id){
+            var className = objectProtoType.declaredClass || 'no_class_';
+            ctrArgsFinal.id = className.replace(/\//g, "_") + utils.createUUID();
+        }
+
+        var instance = new objectProtoType(ctrArgsFinal);
+
+        //@TODO: trash
+        instance && ( instance.ctrArgs = ctrArgsFinal);
+
+        return instance;
+    };
+    return factory;
+});
+define('xide/factory/Events',[
+    'xide/factory',
+    'dojo/_base/connect',
+    'dojo/_base/lang',
+    "dojo/on",
+    'dojo/has'
+], function (factory, connect, lang, on,has) {
+
+    var _debug = false,         //print publish messages in console
+        _tryEvents = false,     //put publish in try/catch block
+        _foo=null,              //noop
+        _nativeEvents = {
+            "click": _foo,
+            "dblclick":_foo,
+            "mousedown":_foo,
+            "mouseup":_foo,
+            "mouseover":_foo,
+            "mousemove":_foo,
+            "mouseout":_foo,
+            "keypress":_foo,
+            "keydown":_foo,
+            "keyup":_foo,
+            "focus":_foo,
+            "blur":_foo,
+            "change":_foo
+        },
+        _debugGroup=false;
+
+
+    /**
+     * Returns true if it is a DOM element, might be not needed anymore
+     * @param o
+     * @returns {*}
+     * @private
+     */
+    function _isElement(o){
+        return (
+            typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+            o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName==="string"
+        );
+    }
+    /**
+     * Event debouncer/throttler
+     * @param eventHandler
+     * @param waitForMirror
+     * @returns {Function}
+     */
+    function applyEventOnce(eventHandler, waitForMirror) {
+        var timer;
+        var mirror = this;
+        return function() {
+            var _arguments = arguments;
+            if (timer)
+                clearTimeout(timer);
+            timer = setTimeout(function() {
+                if (waitForMirror && mirror.isPending())
+                    return setTimeout(function() { applyEventOnce(eventHandler, true) }, 0);
+                eventHandler.apply(eventHandler, _arguments);
+            }, 0);
+        };
+    }
+
+    /**
+     * asyncForEach does runs a chain of promises, needed this specialized for event callbacks
+     * @param array
+     * @param fn
+     * @param test
+     * @param callback
+     */
+    function asyncForEach(array, fn, test, callback) {
+        if (!callback) {
+            callback = test;
+            test = null;
+        }
+
+        array = array.slice(); // copy before use
+
+        var nested = false, callNext = true;
+        loop();
+
+        function loop() {
+            while (callNext && !nested) {
+                callNext = false;
+                while (array.length > 0 && test && !test(array[0]))
+                    array.shift();
+
+                var item = array.shift();
+                // TODO: implement proper err argument?
+                if (!item)
+                    return callback && callback();
+
+                nested = true;
+                fn(item, loop);
+                nested = false;
+            }
+            callNext = true;
+        }
+    }
+
+    /***
+     * @param keys
+     * @param data
+     * @param callee
+     * @extends module:xide/factory
+     * @memberOf xide/factory
+     */
+    factory.publish = function (keys, data, callee,filter) {
+
+        var msgStruct   = data ? _.isString(data) ? {message: data} : data : {},
+            eventKeys   = keys,
+            _publish    = connect.publish,
+            result      = [];//lookup cache
+
+        //normalize to array
+        if (!_.isArray(keys)) {
+            eventKeys = [keys];
+        }
+        for (var i = 0,l=eventKeys.length; i < l; i++) {
+
+            var eventKey = eventKeys[i];
+
+            if(filter && !filter(eventKey)){
+                continue;
+            }
+
+            if (_debug) {
+                //console.group("Events");
+                _debugGroup = true;
+                console.log('publish ' + eventKey + ' from : ' + (callee ? callee.id : ''), msgStruct);
+            }
+
+            if(_tryEvents) {
+                try {
+                    result = _publish(eventKey, msgStruct);
+                } catch (e) {
+                    logError(e,'error whilst publishing event ' + eventKey);
+                }
+            }else{
+                result = _publish(eventKey, msgStruct);
+            }
+        }
+
+        return result;
+    };
+
+    /***
+     *
+     * Subscribes to multiple events
+     * @param keys {String[]}
+     * @param _cb {function|null} When null, it expects the owner having a function matching the event key!
+     * @param owner {Object}
+     * @extends module:xide/factory
+     * @memberOf xide/factory
+     * @returns {Object[]|null} Returns an array of regular Dojo-subscribe/on handles
+     */
+    factory.subscribe = function (keys, cb, owner,filter) {
+
+        if(has('debug')){
+            if(!keys){
+                _debug && console.error('subscribe failed, event key is empty!');
+                return null;
+            }
+        }
+
+        //some vars
+        var eventKeys  = keys,
+            _subscribe = connect.subscribe,     //cache
+            events = [];                        //resulting subscribe handles
+            //_isDom = _isElement(owner),       //dom element?
+
+        //-- not good for use-strict
+        //owner = owner || arguments.callee;
+
+        //normalize to array
+        if (!_.isArray(keys)) {
+            eventKeys = [keys];
+        }
+
+        for (var i = 0,l=eventKeys.length; i < l; i++) {
+
+            if(!eventKeys[i] || filter && !filter(eventKey)){
+                continue;
+            }
+
+            var _item =
+                    //the raw item
+                    eventKeys[i],
+                    //is string?
+                    _isString = _.isString(_item),
+                    //if string: use it, otherwise assume struct
+                    eventKey =  _isString ? _item : _item.key,
+                    //pick handler from arguments or struct
+                    _handler = _isString ? cb : _item.handler,
+                    //is native event?
+                    _isNative = eventKey in _nativeEvents,
+                    //the final handle
+                    _handle;
+
+
+            //owner specified, hitch the callback into owner's scope
+            if (owner != null) {
+                //try cb first, then owner.onEVENT_KEY, that enables similar effect as in Dojo2/Evented
+                var _cb = _handler !=null ? _handler : owner[eventKey];
+                if(_isNative){
+                    _handle = on(owner, eventKey, lang.hitch(owner, _cb));
+                }else{
+                    _handle = _subscribe(eventKey, lang.hitch(owner, _cb));
+                }
+                _handle.handler = lang.hitch(owner, _cb);
+            } else {
+                _handle =  connect.subscribe(eventKey, _handler);
+                _handle.handler = _handler;
+            }
+            //track the actual event type
+            _handle.type = eventKey;
+            events.push(_handle);
+        }
+        return events;
+    };
+    return factory;
+});
+/** @module xide/model/Base **/
+define('xide/model/Base',[
+    'dcl/dcl',
+    "dojo/_base/declare",
+    "xide/utils"
+], function (dcl,declare,utils) {
+    
+    var Implementation = {
+        declaredClass:"xide/model/Base",
+        /**
+         * Mixin constructor arguments into this.
+         * This could have been done in another base class but performance matters
+         * @todo use a mixin from lodash
+         * @constructor
+         */
+        constructor: function (args) {
+            utils.mixin(this, args);
+        },
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        //
+        //  Public interface, keep it small and easy
+        //
+        //////////////////////////////////////////////////////////////////////////////////////////////////////
+        /**
+         * Return a human friendly name
+         * @abstract
+         * @returns {string|null}
+         */
+        getLabel: function () {
+            return null;
+        },
+        /**
+         * Return a unique ID.
+         * @abstract
+         * @returns {string|null}
+         */
+        getID: function () {
+            return null;
+        }
+    }
+
+    var Module = declare("xide/model/Base",null,Implementation);
+    Module.dcl = dcl(null,Implementation);
+    return Module;
+});
+
+
+define('xide/utils/_LogMixin',[
+    'dcl/dcl',
+    'xide/utils',
+    'xide/model/Base'
+], function (dcl, utils,Base) {
+    return dcl(Base.dcl,{
+        declaredClass:"xide.utils._LogMixin",
+        debug_conf: null,
+        initLogger: function (debug_config) {
+            this.debug_conf = debug_config;
+        },
+        log: function (msg, msg_context) {
+            if (!msg_context) msg_context = this._debugContext()["main"];
+            if (this.showDebugMsg(msg_context)) {
+                console.log(msg);
+            }
+        },
+        showDebugMsg: function (msg_context) {
+            if (this.debug_conf != null) {
+                if (this.debug_conf["all"]) {
+                    return true;
+                }
+                else {
+                    if (this.debug_conf[msg_context]) {
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            } else {
+                console.log("No debug config, showing all.");
+                this.debug_conf = {
+                    "all": true
+                };
+                return true;
+            }
+        }
+    });
+});
+define('xide/client/ClientBase',[
+    'dcl/dcl',
+    'xide/mixins/EventedMixin',
+    'xide/model/Base',
+    'dojo/_base/unload',
+    'xide/utils'
+], function (dcl,EventedMixin,Base, unload,utils) {
+    var Module = dcl([Base.dcl,EventedMixin.dcl], {
+        declaredClass:"xide.client.ClientBase",
+        options: null,
+        _socket: null,
+        onConnectionReady: function () {
+        },
+        onClosed: function () {
+        },
+        destroy: function () {
+
+            if (this._socket && this._socket.close) {
+                this._socket.close();
+                this.onClosed();
+            }
+        },
+        _defaultOptions: function () {
+            return {};
+        },
+        init: function (args) {
+            this.options = utils.mixin(this._defaultOptions(), args.options);
+            //disconnect on onload
+            unload.addOnUnload(function () {
+                this.pageUnloaded=true;
+                this.destroy();
+            }.bind(this));
+        }
+    });
+
+    dcl.chainAfter(Module,"destroy");
+    return Module;
+});
+define('xide/client/WebSocket',[
+    "dcl/dcl",
+    'xide/utils',
+    'xide/utils/_LogMixin',
+    'xide/client/ClientBase'
+], function (dcl, utils, _logMixin, ClientBase) {
+    var debug = false;
+    return dcl([ClientBase, _logMixin], {
+        declaredClass:"xide.client.WebSocket",
+        _socket: null,
+        debugConnect: true,
+        autoReconnect: true,
+        reconnect: function () {
+            debug && console.log('reconnect!');
+        },
+        close: function () {
+            this.destroy();
+        },
+        onLostConnection:function(){
+            debug && console.log('lost connection');
+        },
+        onConnected:function(){
+            debug && console.log('on connected');
+        },
+        connect: function (_options) {
+            this.options = utils.mixin(this.options, _options);
+            var host = this.options.host;
+            //host = host.replace('http://','wss://');
+            var port = this.options.port;
+            if (this.options.debug) {
+                this.initLogger(this.options.debug);
+            }
+            if (!host) {
+                console.error('something wrong with data!',_options);
+                return;
+            }
+            debug && console.log("Connecting to " + host + ':' + port, "socket_client");
+            var protocol = [
+                'websocket',
+                'xdr-streaming',
+                'xhr-streaming',
+                'iframe-eventsource',
+                'iframe-htmlfile',
+                'xdr-polling',
+                'xhr-polling',
+                'iframe-xhr-polling',
+                'jsonp-polling'
+            ];
+
+            var options = {
+                debug: debug,
+                devel: true,
+                noCredentials:true,
+                nullOrigin:true
+            };
+            options.transports = protocol;
+            var sock = new SockJS(host + ":" + port, null, options);
+            var thiz = this;
+
+            sock.onopen = function () {
+                thiz.onConnected();
+                if (thiz.delegate.onConnected) {
+                    thiz.delegate.onConnected();
+                }
+            };
+
+            sock.onmessage = function (e) {
+                if (thiz.delegate.onServerResponse) {
+                    thiz.delegate.onServerResponse(e);
+                }
+            };
+
+            sock.onerror=function(){
+                console.error('error');
+            }
+            sock.onclose = function (e) {
+                if (thiz.autoReconnect) {
+                    debug &&  console.log('closed ' + host + ' try re-connect');
+                    if (thiz.delegate.onLostConnection) {
+                        thiz.delegate.onLostConnection(e);
+                    }
+                    thiz.reconnect();
+                }else{
+                    debug && console.log('closed ' + host);
+                }
+            };
+            this._socket = sock;
+        },
+        emit: function (signal, dataIn, tag) {
+            dataIn.tag = tag || 'notag';
+            var data = JSON.stringify(dataIn);
+            var res = this._socket.send(data);
+            debug && console.log('send ',res);
+        },
+
+        onSignal: function (signal, callback) {
+            this._socket.on('data', callback);
+        }
+    });
+});
+define('xide/factory/Clients',[
+    'xide/factory',
+    'xide/utils',
+    'xide/types',
+    'xide/client/WebSocket'
+], function (factory,utils,types,WebSocket)
+{
+    var debug = false;
+    /**
+     * Low Level Web-Socket-Client factory method
+     * @param ctrArgs
+     * @param host
+     * @param port
+     * @param delegate
+     */
+    factory.createClient=function(ctrArgs,host,port,delegate){};
+    /***
+     * High-Level Web-Socket-Client factory method
+     * @param store
+     * @param serviceName
+     * @param ctrArgs
+     * @param clientClass : optional client class prototype, default : WebSocket
+     * @returns {xide/client/WebSocket} | null
+     */
+    factory.createClientWithStore=function(store,serviceName,ctrArgs,clientClass){
+
+        var service = utils.queryStoreEx(store,{
+                name:serviceName
+            },true,true),
+            _ctorArgs = {};
+
+        utils.mixin(_ctorArgs,ctrArgs);
+
+        if(!service||service.length===0){
+            console.error('create client with : failed, no such service :  ' + serviceName );
+            return;
+        }
+
+        //service=service[0];
+
+        /*
+        if(!service.info && service.status==types.SERVICE_STATUS.OFFLINE){
+            console.error('create client with store : failed! Service has no info for '  + serviceName);
+            return;
+        }
+        */
+        if(service.status!==types.SERVICE_STATUS.ONLINE){
+            debug && console.error('create client with store : failed! Service ' +  serviceName + ' is not online ');
+            //return;
+        }
+
+        var host = 'http://' + service.host,
+            port = service.port,
+            channel='',
+            _clientProto = clientClass || WebSocket;
+
+        if(service.info){
+            host=service.info.host;
+            port=service.info.port;
+        }
+
+        try{
+            var client = new _clientProto(_ctorArgs);
+            utils.mixin(client,_ctorArgs);
+            client.init({
+                options:{
+                    host:host,
+                    port:port,
+                    channel:channel,
+                    debug:{
+                        "all": false,
+                        "protocol_connection": true,
+                        "protocol_messages": true,
+                        "socket_server":true,
+                        "socket_client":true,
+                        "socket_messages":true,
+                        "main":true
+                    }
+                }
+            });
+            client.connect();
+            return client;
+        }catch(e){
+            debug && console.error('create client with store : failed : ' + e) && logError(e);
+        }
+    };
+    return factory;
+});
 define('xide/data/Model',[
 	'dcl/dcl',
 	'dojo/_base/declare',
@@ -10024,9 +9943,10 @@ define('xide/manager/ContextBase',[
     'xide/factory',
     'xide/types',
     'xide/utils',
-    'xide/mixins/EventedMixin'
-], function (dcl,factory, types,utils,EventedMixin) {
-
+    'xide/mixins/EventedMixin',
+    'dojo/_base/kernel',
+    'dojo/_base/lang'
+], function (dcl,factory, types,utils,EventedMixin,dojo,lang) {
     var _debug = false;
     /**
      * @class module:xide/manager/ContextBase
@@ -10036,6 +9956,9 @@ define('xide/manager/ContextBase',[
         language: "en",
         managers: [],
         mixins: null,
+        getModule:function(_module){
+            return lang.getObject(utils.replaceAll('/', '.', _module)) || lang.getObject(_module) || (dcl.getObject ? dcl.getObject(_module) || dcl.getObject(utils.replaceAll('/', '.', _module)) : null);
+        },
         /***
          * createManager creates and instances and tracks it in a local array.
          * @param clz : class name or prototype
@@ -10044,7 +9967,6 @@ define('xide/manager/ContextBase',[
          * @returns {module:xide/manager/ManagerBase} : instance of the manager
          */
         createManager: function (clz, config, ctrArgs) {
-
             try {
                 if (!this.managers) {
                     this.managers = [];
@@ -10055,8 +9977,6 @@ define('xide/manager/ContextBase',[
                     config: config || this.config
                 };
                 utils.mixin(ctrArgsFinal, ctrArgs);
-
-
                 if (_.isString(clz) && this.namespace) {
                     var _clz = null;
                     if (clz.indexOf('.') == -1) {
@@ -10105,7 +10025,6 @@ define('xide/manager/ContextBase',[
          * @param mixins
          */
         doMixins: function (mixins) {
-
             this.mixins = mixins || this.mixins;
             for (var i = 0; i < mixins.length; i++) {
                 var mixin = mixins[i];
@@ -10140,15 +10059,12 @@ define('xide/manager/Context',[
     'require',
     "dojo/promise/all",
     'xdojo/has!host-browser?xide/manager/Context_UI'
-
 ], function (dcl, lang, json, Deferred, has, ContextBase, factory,
              types, utils, _require, all, Context_UI) {
 
     !has('host-browser') && has.add('xlog', function () {
         return true;
     }, true);
-
-
 
     var isServer = has('host-node'),
         isBrowser = has('host-browser'),
@@ -10161,52 +10077,6 @@ define('xide/manager/Context',[
      * @extends module:xide/manager/ContextBase
      */
     var Module = dcl(bases, {
-        getMount:function(mount){
-
-            var resourceManager = this.getResourceManager(),
-                vfsConfig =  resourceManager ? resourceManager.getVariable('VFS_CONFIG') || {} : null;
-
-            if(vfsConfig && vfsConfig[mount]) {
-                return vfsConfig[mount];
-            }
-            return null;
-        },
-        toVFSShort:function(path,mount){
-
-            var resourceManager = this.getResourceManager(),
-                vfsConfig =  resourceManager ? resourceManager.getVariable('VFS_CONFIG') || {} : null;
-
-            if(vfsConfig && vfsConfig[mount]){
-                var mountPath = vfsConfig[mount];
-                mountPath = utils.replaceAll('//','/',mountPath);
-                mountPath = mountPath.replace(/\/+$/, "");
-                if(path.indexOf(mountPath) !==-1){
-                    var _start = mountPath;
-                    _start = _start.replace(/\/+$/, "");
-                    var libPath = path.substr(path.indexOf(_start) + (_start.length + 1 ),path.length);
-                    return libPath;
-                }
-            }
-            return null;
-        },
-        findVFSMount:function(path){
-
-            var resourceManager = this.getResourceManager(),
-                vfsConfig =  resourceManager ? resourceManager.getVariable('VFS_CONFIG') || {} : null;
-
-            if(vfsConfig){
-                for (var mount in vfsConfig) {
-                    var mountPath = vfsConfig[mount];
-                    mountPath = utils.replaceAll('//','/',mountPath);
-                    mountPath = mountPath.replace(/\/+$/, "");
-                    if(path.indexOf(mountPath) !==-1){
-                        return mount;
-                    }
-                }
-
-            }
-            return null;
-        },
         declaredClass: "xide.manager.Context",
         application: null,
         contextManager: null,
@@ -10230,15 +10100,12 @@ define('xide/manager/Context',[
          * Global event handlers
          */
         onXIDEMessage: function (data, publish) {
-
             if(!data || !data.event){
                 return;
             }
             var thiz = this;
             if (data.event === types.EVENTS.ON_FILE_CHANGED) {
-
                 debugFileChanges && console.log("on file changed " ,data);
-
                 //inotify plus
                 if (data.data && data.data.mask && data.data.mask.indexOf('delete') !== -1) {
                     thiz.publish(types.EVENTS.ON_FILE_DELETED, data);
@@ -10281,14 +10148,10 @@ define('xide/manager/Context',[
                         path: path
                     });
                 }
-
-
-
                 /**
                  * Try generic
                  */
                 if (path.match(/\.js$/)) {
-
                     var modulePath = data.data.modulePath;
                     if (modulePath) {
                         modulePath = modulePath.replace('.js', '');
@@ -10342,7 +10205,6 @@ define('xide/manager/Context',[
             }
         },
         onNodeServiceStoreReady: function (evt) {
-
             if (this.xideServiceClient) {
                 this.xideServiceClient.destroy();
             }
@@ -10380,7 +10242,6 @@ define('xide/manager/Context',[
          * @param evt
          */
         reloadModules: function (modules, patch) {
-
             var head = new Deferred(),
                 pluginPromises = [],
                 newModules = [],
@@ -10414,21 +10275,13 @@ define('xide/manager/Context',[
             });
             return head;
         },
-        getModule:function(_module){
-            return lang.getObject(utils.replaceAll('/', '.', _module)) || lang.getObject(_module) || (dcl.getObject ? dcl.getObject(_module) || dcl.getObject(utils.replaceAll('/', '.', _module)) : null);
-        },
         _reloadModule: function (_module, reload) {
-
             var _errorHandle = null;
             var dfd = new Deferred();
-            
-
-            if(!isServer && _module.indexOf('nodejs') && _module.indexOf('tests') ){
+            if(!isServer && _module.indexOf('nodejs')!==-1){
                 return;
             }
-
             _module = _module.replace('0/8','0.8');
-
             function handleError(error){
                 debugModuleReload && console.log(error.src, error.id);
                 debugModuleReload && console.error('require error ' + _module,error);
@@ -10482,7 +10335,6 @@ define('xide/manager/Context',[
             _require.undef(_module);
 
             var thiz = this;
-
             if (reload) {
                 setTimeout(function () {
                     _require({
@@ -10495,14 +10347,11 @@ define('xide/manager/Context',[
                             _require({
                                 cacheBust: null
                             });
-
                             if (_.isString(moduleLoaded)) {
                                 console.error('module reloaded failed : ' + moduleLoaded + ' for module : ' + _module);
                                 return;
                             }
-
                             moduleLoaded.modulePath = _module;
-
                             if (obj) {
                                 thiz.mergeFunctions(obj.prototype, moduleLoaded.prototype,obj,moduleLoaded);
                                 if (obj.prototype && obj.prototype._onReloaded) {
@@ -10538,15 +10387,11 @@ define('xide/manager/Context',[
             }
             return dfd;
         },
-
-
         onCSSChanged: function (evt) {
             if(isBrowser) {
                 var path = evt.path;
                 var _p = this.findVFSMount(path);
-                console.log('onCSSChanged ' + _p,evt);
                 var _p2 = this.toVFSShort(path,_p);
-                console.log('onCSSChanged ' + _p2,evt);
                 path = utils.replaceAll('//', '/', path);
                 path = path.replace('/PMaster/', '');
                 var reloadFn = window['xappOnStyleSheetChanged'];
@@ -10556,12 +10401,10 @@ define('xide/manager/Context',[
             }
         },
         onDidChangeFileContent: function (evt) {
-
             if (evt['didProcess']) {
                 return;
             }
             evt['didProcess'] = true;
-
             if (!this.vfsMounts) {
                 return;
             }
@@ -10588,7 +10431,6 @@ define('xide/manager/Context',[
             if (!this.vfsMounts[mount]) {
                 return;
             }
-
             module = '' + evt.path;
             module = module.replace('./', '');
             module = module.replace('/', '.');
@@ -10608,6 +10450,46 @@ define('xide/manager/Context',[
         /*
          * get/set
          */
+        getMount:function(mount){
+            var resourceManager = this.getResourceManager();
+            var vfsConfig =  resourceManager ? resourceManager.getVariable('VFS_CONFIG') || {} : null;
+            if(vfsConfig && vfsConfig[mount]) {
+                return vfsConfig[mount];
+            }
+            return null;
+        },
+        toVFSShort:function(path,mount){
+            var resourceManager = this.getResourceManager();
+            var vfsConfig =  resourceManager ? resourceManager.getVariable('VFS_CONFIG') || {} : null;
+            if(vfsConfig && vfsConfig[mount]){
+                var mountPath = vfsConfig[mount];
+                mountPath = utils.replaceAll('//','/',mountPath);
+                mountPath = mountPath.replace(/\/+$/, "");
+                if(path.indexOf(mountPath) !==-1){
+                    var _start = mountPath;
+                    _start = _start.replace(/\/+$/, "");
+                    var libPath = path.substr(path.indexOf(_start) + (_start.length + 1 ),path.length);
+                    return libPath;
+                }
+            }
+            return null;
+        },
+        findVFSMount:function(path){
+            var resourceManager = this.getResourceManager();
+            var vfsConfig =  resourceManager ? resourceManager.getVariable('VFS_CONFIG') || {} : null;
+            if(vfsConfig){
+                for (var mount in vfsConfig) {
+                    var mountPath = vfsConfig[mount];
+                    mountPath = utils.replaceAll('//','/',mountPath);
+                    mountPath = mountPath.replace(/\/+$/, "");
+                    if(path.indexOf(mountPath) !==-1){
+                        return mount;
+                    }
+                }
+
+            }
+            return null;
+        },
         getBlockManager: function () {
             return this.blockManager;
         },
@@ -10645,7 +10527,6 @@ define('xide/manager/Context',[
             this.language = 'en';
             this.subscribe(types.EVENTS.ON_CHANGED_CONTENT, this.onDidChangeFileContent);
             if (has('xnode')) {
-                //this.subscribe(types.EVENTS.ON_MODULE_RELOADED, this.onModuleReloaded);
                 this.subscribe(types.EVENTS.ON_NODE_SERVICE_STORE_READY, this.onNodeServiceStoreReady);
             }
         },
@@ -10668,10 +10549,8 @@ define('xide/manager/Context',[
             return this.args && this.args.file;
         }
     });
-
     dcl.chainAfter(Module, 'constructManagers');
     dcl.chainAfter(Module, 'initManagers');
-
     return Module;
 });
 /** @module xide/manager/ManagerBase **/
@@ -11485,6 +11364,7 @@ define('xide/rpc/JsonRPC',[
 
 define('xide/manager/RPCService',[
     'dojo/_base/declare',
+    'dojo/_base/kernel',
     'dojo/_base/lang',
     'xide/rpc/Service',
     'xide/rpc/JsonRPC',
@@ -11494,7 +11374,7 @@ define('xide/manager/RPCService',[
     'xide/types',
     'xide/mixins/EventedMixin',
     'xide/encoding/SHA1'
-], function (declare, lang, Service, JsonRPC, has, Deferred,utils,types,EventedMixin,SHA1) {
+], function (declare,dojo,lang, Service, JsonRPC, has, Deferred,utils,types,EventedMixin,SHA1) {
 
     return declare("xide.manager.RPCService", [Service,EventedMixin], {
         extraArgs: null,

@@ -1130,7 +1130,7 @@
   color: #d2d2d2;
 }
 /* line 286, ../sass/bootstrap-override-blue.scss */
-.xTheme-blue .dgrid-scroller {
+.xTheme-blue .__dgrid-scroller {
   -webkit-box-shadow: inset 0 0 10px black;
   -moz-box-shadow: inset 0 0 10px black;
   -o-box-shadow: inset 0 0 10px black;
@@ -1307,17 +1307,18 @@
 }
 /* line 479, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-focus:active {
-  outline: 1px dotted rgba(255, 82, 0, 0.65);
+  outline: 1px dotted rgba(255, 82, 0, 0.35);
   outline-offset: -1px;
   background-color: rgba(0, 0, 0, 0.2);
   font-weight: bold;
 }
-/* line 487, ../sass/bootstrap-override-blue.scss */
+/* line 486, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-focus:focus {
-  outline: 1px solid #5760ff;
+  outline: 1px solid rgba(87, 96, 255, 0.8);
   outline-offset: -2px;
-  background-color: rgba(0, 50, 235, 0.16);
+  background-color: rgba(0, 9, 76, 0.4);
   font-weight: bold;
+  font-size: 110%;
 }
 /* line 493, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-selected {
@@ -1327,7 +1328,7 @@
 }
 /* line 498, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-row.dgrid-row-odd:not(.dgrid-selected) {
-  background-color: rgba(22, 22, 22, 0.28);
+  background-color: rgba(22, 22, 22, 0.18);
 }
 /* line 503, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .widget {

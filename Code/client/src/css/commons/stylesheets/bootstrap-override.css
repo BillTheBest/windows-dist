@@ -5892,43 +5892,6 @@ table.dojoDndAvatar {
   display: block;
 }
 
-/* line 1, ../sass/Focus.scss */
-.dgrid-cell :focus {
-  outline: 1px solid #e9841d;
-}
-
-/* line 4, ../sass/Focus.scss */
-.dgrid-focus {
-  outline: 1px solid rgba(233, 132, 29, 0.61);
-  outline-offset: -2px;
-}
-
-/* line 8, ../sass/Focus.scss */
-.dgrid-tree-container .dgrid-focus {
-  outline-offset: -2px !important;
-}
-
-/* line 11, ../sass/Focus.scss */
-html.has-webkit .dgrid *:focus,
-html.has-mozilla .dgrid*:focus,
-html.has-opera .dgrid *:focus {
-  outline: 1px solid #e9841d !important;
-}
-
-/* line 16, ../sass/Focus.scss */
-html.has-webkit .dijitTreeNode *:focus,
-html.has-mozilla .dijitTreeNode *:focus,
-html.has-opera .dijitTreeNode *:focus {
-  outline: 1px solid #e9841d !important;
-}
-
-/* line 21, ../sass/Focus.scss */
-html.has-mozilla .dgrid-focus,
-html.has-webkit .dgrid-focus,
-html.has-opera .dgrid-focus {
-  outline-offset: -1px;
-}
-
 /* line 1, ../sass/LogGrid.scss */
 .logGridView .field-level {
   width: 50px;
@@ -5982,19 +5945,25 @@ html.has-opera .dgrid-focus {
 .dgrid-expando-icon {
   width: 16px;
   font-family: FontAwesome;
+  opacity: 0.5;
 }
 
-/* line 14, ../sass/dgrid.scss */
+/* line 15, ../sass/dgrid.scss */
+.itemFolderList, .grid-icon {
+  opacity: 0.7;
+}
+
+/* line 19, ../sass/dgrid.scss */
 .dgrid-expando-icon:after {
   content: '';
 }
 
-/* line 18, ../sass/dgrid.scss */
+/* line 23, ../sass/dgrid.scss */
 .wcLayout .dgrid-content {
   width: inherit !important;
 }
 
-/* line 22, ../sass/dgrid.scss */
+/* line 27, ../sass/dgrid.scss */
 .grid-header {
   height: auto;
   width: 100%;
@@ -6002,18 +5971,18 @@ html.has-opera .dgrid-focus {
   display: inline-block;
 }
 
-/* line 29, ../sass/dgrid.scss */
+/* line 34, ../sass/dgrid.scss */
 .grid-body {
   width: 100%;
 }
 
-/* line 33, ../sass/dgrid.scss */
+/* line 38, ../sass/dgrid.scss */
 .grid-table {
   width: 100%;
   height: 100%;
 }
 
-/* line 38, ../sass/dgrid.scss */
+/* line 43, ../sass/dgrid.scss */
 .dgrid {
   position: relative;
   overflow: hidden;
@@ -6021,12 +5990,12 @@ html.has-opera .dgrid-focus {
   display: block;
 }
 
-/* line 45, ../sass/dgrid.scss */
+/* line 50, ../sass/dgrid.scss */
 .dgrid-header {
   background-color: #eee;
 }
 
-/* line 50, ../sass/dgrid.scss */
+/* line 55, ../sass/dgrid.scss */
 .dgrid-header-row {
   position: absolute;
   /*right: 13px;*/
@@ -6034,7 +6003,7 @@ html.has-opera .dgrid-focus {
   top: 0;
 }
 
-/* line 57, ../sass/dgrid.scss */
+/* line 62, ../sass/dgrid.scss */
 .dgrid-header-scroll {
   position: absolute;
   top: 0;
@@ -6042,14 +6011,14 @@ html.has-opera .dgrid-focus {
   /*height: 24px !important;*/
 }
 
-/* line 66, ../sass/dgrid.scss */
+/* line 71, ../sass/dgrid.scss */
 .dgrid-footer {
   position: absolute;
   bottom: 0;
   width: 100%;
 }
 
-/* line 72, ../sass/dgrid.scss */
+/* line 77, ../sass/dgrid.scss */
 .dgrid-header-hidden {
   font-size: 0;
   height: 0 !important;
@@ -6061,17 +6030,17 @@ html.has-opera .dgrid-focus {
   padding-bottom: 0 !important;
 }
 
-/* line 83, ../sass/dgrid.scss */
+/* line 88, ../sass/dgrid.scss */
 .dgrid-footer-hidden {
   display: none;
 }
 
-/* line 87, ../sass/dgrid.scss */
+/* line 92, ../sass/dgrid.scss */
 .dgrid-sortable {
   cursor: pointer;
 }
 
-/* line 91, ../sass/dgrid.scss */
+/* line 96, ../sass/dgrid.scss */
 .dgrid-header,
 .dgrid-header-row,
 .dgrid-footer {
@@ -6079,7 +6048,7 @@ html.has-opera .dgrid-focus {
   background-color: transparent;
 }
 
-/* line 98, ../sass/dgrid.scss */
+/* line 103, ../sass/dgrid.scss */
 .dgrid-row-table {
   border-collapse: collapse;
   border: none;
@@ -6089,7 +6058,7 @@ html.has-opera .dgrid-focus {
   height: 100%;
 }
 
-/* line 107, ../sass/dgrid.scss */
+/* line 112, ../sass/dgrid.scss */
 .dgrid-cell {
   padding: 4px;
   text-align: left;
@@ -6102,13 +6071,13 @@ html.has-opera .dgrid-focus {
   box-sizing: border-box;
 }
 
-/* line 119, ../sass/dgrid.scss */
+/* line 124, ../sass/dgrid.scss */
 .dgrid-content {
   position: relative;
   height: 99%;
 }
 
-/* line 124, ../sass/dgrid.scss */
+/* line 129, ../sass/dgrid.scss */
 .dgrid-scroller {
   overflow-x: auto;
   /*overflow-y: scroll;*/
@@ -6119,25 +6088,25 @@ html.has-opera .dgrid-focus {
   width: 100%;
 }
 
-/* line 134, ../sass/dgrid.scss */
+/* line 139, ../sass/dgrid.scss */
 .dgrid-preload {
   font-size: 0;
   line-height: 0;
 }
 
-/* line 139, ../sass/dgrid.scss */
+/* line 144, ../sass/dgrid.scss */
 .dgrid-loading {
   position: relative;
   height: 100%;
 }
 
-/* line 144, ../sass/dgrid.scss */
+/* line 149, ../sass/dgrid.scss */
 .dgrid-above {
   position: absolute;
   bottom: 0;
 }
 
-/* line 150, ../sass/dgrid.scss */
+/* line 155, ../sass/dgrid.scss */
 .dgrid-sort-arrow {
   background-position: -64px -16px;
   display: block;
@@ -6146,22 +6115,22 @@ html.has-opera .dgrid-focus {
   height: 12px;
 }
 
-/* line 158, ../sass/dgrid.scss */
+/* line 163, ../sass/dgrid.scss */
 .dgrid-sort-up .dgrid-sort-arrow {
   background-position: 0px -16px;
 }
 
-/* line 163, ../sass/dgrid.scss */
+/* line 168, ../sass/dgrid.scss */
 .dgrid-input {
   width: 99%;
 }
 
-/* line 168, ../sass/dgrid.scss */
+/* line 173, ../sass/dgrid.scss */
 html.has-mozilla .dgrid-focus {
   outline-offset: -1px;
 }
 
-/* line 172, ../sass/dgrid.scss */
+/* line 177, ../sass/dgrid.scss */
 .dgrid-scrollbar-measure {
   width: 100px;
   height: 100px;
@@ -6170,28 +6139,28 @@ html.has-mozilla .dgrid-focus {
   top: -9999px;
 }
 
-/* line 180, ../sass/dgrid.scss */
+/* line 185, ../sass/dgrid.scss */
 .dgrid-autoheight {
   height: auto;
 }
 
-/* line 184, ../sass/dgrid.scss */
+/* line 189, ../sass/dgrid.scss */
 .dgrid-autoheight .dgrid-scroller {
   position: relative;
   overflow-y: hidden;
 }
 
-/* line 189, ../sass/dgrid.scss */
+/* line 194, ../sass/dgrid.scss */
 .dgrid-autoheight .dgrid-header-scroll {
   display: none;
 }
 
-/* line 193, ../sass/dgrid.scss */
+/* line 198, ../sass/dgrid.scss */
 .dgrid-autoheight .dgrid-header {
   right: 0;
 }
 
-/* line 197, ../sass/dgrid.scss */
+/* line 202, ../sass/dgrid.scss */
 .dgrid-column-set {
   overflow: hidden;
   width: 100%;
@@ -6201,51 +6170,51 @@ html.has-mozilla .dgrid-focus {
   touch-action: pan-y;
 }
 
-/* line 206, ../sass/dgrid.scss */
+/* line 211, ../sass/dgrid.scss */
 .dgrid-column-set-cell {
   vertical-align: top;
   height: 100%;
 }
 
-/* line 211, ../sass/dgrid.scss */
+/* line 216, ../sass/dgrid.scss */
 .dgrid-column-set-scroller-container {
   font-size: 0;
   position: absolute;
   bottom: 0;
 }
 
-/* line 217, ../sass/dgrid.scss */
+/* line 222, ../sass/dgrid.scss */
 .dgrid-autoheight .dgrid-column-set-scroller-container {
   position: relative;
 }
 
-/* line 221, ../sass/dgrid.scss */
+/* line 226, ../sass/dgrid.scss */
 .dgrid-column-set-scroller {
   display: inline-block;
   overflow-x: auto;
   overflow-y: hidden;
 }
 
-/* line 227, ../sass/dgrid.scss */
+/* line 232, ../sass/dgrid.scss */
 .dgrid-column-set-scroller-content {
   height: 1px;
 }
 
-/* line 231, ../sass/dgrid.scss */
+/* line 236, ../sass/dgrid.scss */
 .ui-icon-triangle-1-e:before {
   content: "\f0da";
   width: auto;
   padding-left: 2px;
 }
 
-/* line 244, ../sass/dgrid.scss */
+/* line 249, ../sass/dgrid.scss */
 .ui-icon-triangle-1-se:before {
   content: "\f0d7";
   padding-left: 2px;
   width: auto;
 }
 
-/* line 252, ../sass/dgrid.scss */
+/* line 257, ../sass/dgrid.scss */
 .dgrid-tree-container {
   -webkit-transition-duration: 0.3s;
   -moz-transition-duration: 0.3s;
@@ -6255,7 +6224,7 @@ html.has-mozilla .dgrid-focus {
   overflow: hidden;
 }
 
-/* line 261, ../sass/dgrid.scss */
+/* line 266, ../sass/dgrid.scss */
 .dgrid-tree-container.dgrid-tree-resetting {
   -webkit-transition-duration: 0;
   -moz-transition-duration: 0;
@@ -6264,7 +6233,7 @@ html.has-mozilla .dgrid-focus {
   transition-duration: 0;
 }
 
-/* line 269, ../sass/dgrid.scss */
+/* line 274, ../sass/dgrid.scss */
 .dgrid-hider-toggle {
   background-position: 0 -192px;
   background-color: transparent;
@@ -6275,13 +6244,13 @@ html.has-mozilla .dgrid-focus {
   top: 0;
 }
 
-/* line 279, ../sass/dgrid.scss */
+/* line 284, ../sass/dgrid.scss */
 .dgrid-rtl-swap .dgrid-hider-toggle {
   right: auto;
   left: 0;
 }
 
-/* line 284, ../sass/dgrid.scss */
+/* line 289, ../sass/dgrid.scss */
 .dgrid-hider-menu {
   position: absolute;
   top: 0;
@@ -6295,19 +6264,19 @@ html.has-mozilla .dgrid-focus {
   overflow-y: auto;
 }
 
-/* line 297, ../sass/dgrid.scss */
+/* line 302, ../sass/dgrid.scss */
 .dgrid-rtl-swap .dgrid-hider-menu {
   right: auto;
   left: 17px;
 }
 
-/* line 302, ../sass/dgrid.scss */
+/* line 307, ../sass/dgrid.scss */
 .dgrid-hider-menu-row {
   position: relative;
   padding: 2px;
 }
 
-/* line 307, ../sass/dgrid.scss */
+/* line 312, ../sass/dgrid.scss */
 .dgrid-hider-menu-check {
   position: absolute;
   top: 2px;
@@ -6315,28 +6284,28 @@ html.has-mozilla .dgrid-focus {
   padding: 0;
 }
 
-/* line 314, ../sass/dgrid.scss */
+/* line 319, ../sass/dgrid.scss */
 .dgrid-hider-menu-label {
   display: block;
   padding-left: 20px;
 }
 
-/* line 319, ../sass/dgrid.scss */
+/* line 324, ../sass/dgrid.scss */
 .dgrid-header .dojoDndTarget .dgrid-cell {
   display: table-cell;
 }
 
-/* line 323, ../sass/dgrid.scss */
+/* line 328, ../sass/dgrid.scss */
 .dgrid-header .dojoDndItemBefore {
   border-left: 2px dotted #000 !important;
 }
 
-/* line 327, ../sass/dgrid.scss */
+/* line 332, ../sass/dgrid.scss */
 .dgrid-header .dojoDndItemAfter {
   border-right: 2px dotted #000 !important;
 }
 
-/* line 331, ../sass/dgrid.scss */
+/* line 336, ../sass/dgrid.scss */
 .dgrid-column-resizer {
   position: absolute;
   width: 2px;
@@ -6344,7 +6313,7 @@ html.has-mozilla .dgrid-focus {
   z-index: 1000;
 }
 
-/* line 338, ../sass/dgrid.scss */
+/* line 343, ../sass/dgrid.scss */
 .dgrid-resize-handle {
   height: 100px;
   width: 0;
@@ -6357,37 +6326,37 @@ html.has-mozilla .dgrid-focus {
   outline: none;
 }
 
-/* line 350, ../sass/dgrid.scss */
+/* line 355, ../sass/dgrid.scss */
 .dgrid-resize-header-container {
   height: 100%;
 }
 
-/* line 354, ../sass/dgrid.scss */
+/* line 359, ../sass/dgrid.scss */
 html.has-touch .dgrid-resize-handle {
   border-left: 20px solid transparent;
 }
 
-/* line 358, ../sass/dgrid.scss */
+/* line 363, ../sass/dgrid.scss */
 html.has-touch .dgrid-column-resizer {
   width: 2px;
 }
 
-/* line 362, ../sass/dgrid.scss */
+/* line 367, ../sass/dgrid.scss */
 .dgrid-resize-header-container {
   position: relative;
 }
 
-/* line 366, ../sass/dgrid.scss */
+/* line 371, ../sass/dgrid.scss */
 .dgrid-header .dgrid-cell {
   overflow: hidden;
 }
 
-/* line 370, ../sass/dgrid.scss */
+/* line 375, ../sass/dgrid.scss */
 .dgrid-spacer-row {
   height: 0;
 }
 
-/* line 374, ../sass/dgrid.scss */
+/* line 379, ../sass/dgrid.scss */
 .dgrid-spacer-row th {
   padding-top: 0;
   padding-bottom: 0;
@@ -6395,23 +6364,23 @@ html.has-touch .dgrid-column-resizer {
   border-bottom: none;
 }
 
-/* line 381, ../sass/dgrid.scss */
+/* line 386, ../sass/dgrid.scss */
 .dgrid-status {
   padding: 2px;
 }
 
-/* line 385, ../sass/dgrid.scss */
+/* line 390, ../sass/dgrid.scss */
 .dgrid-pagination .dgrid-status {
   float: left;
 }
 
-/* line 389, ../sass/dgrid.scss */
+/* line 394, ../sass/dgrid.scss */
 .dgrid-pagination .dgrid-navigation,
 .dgrid-pagination .dgrid-page-size {
   float: right;
 }
 
-/* line 394, ../sass/dgrid.scss */
+/* line 399, ../sass/dgrid.scss */
 .dgrid-navigation .dgrid-page-link {
   cursor: pointer;
   font-weight: bold;
@@ -6420,7 +6389,7 @@ html.has-touch .dgrid-column-resizer {
   padding: 0 4px;
 }
 
-/* line 402, ../sass/dgrid.scss */
+/* line 407, ../sass/dgrid.scss */
 .dgrid-first,
 .dgrid-last,
 .dgrid-next,
@@ -6428,75 +6397,122 @@ html.has-touch .dgrid-column-resizer {
   font-size: 130%;
 }
 
-/* line 409, ../sass/dgrid.scss */
+/* line 414, ../sass/dgrid.scss */
 .dgrid-pagination .dgrid-page-disabled {
   color: #aaa;
   cursor: default;
 }
 
-/* line 414, ../sass/dgrid.scss */
+/* line 419, ../sass/dgrid.scss */
 .dgrid-page-input {
   margin-top: 1px;
   width: 2em;
   text-align: center;
 }
 
-/* line 420, ../sass/dgrid.scss */
+/* line 425, ../sass/dgrid.scss */
 .dgrid-page-size {
   margin: 1px 4px 0 4px;
 }
 
-/* line 424, ../sass/dgrid.scss */
+/* line 429, ../sass/dgrid.scss */
 .dgrid-rtl-swap .dgrid-header-row {
   right: 0;
   left: 17px;
 }
 
-/* line 429, ../sass/dgrid.scss */
+/* line 434, ../sass/dgrid.scss */
 .dgrid-rtl-swap .dgrid-header-scroll {
   left: 0px;
   right: auto;
 }
 
-/* line 434, ../sass/dgrid.scss */
+/* line 439, ../sass/dgrid.scss */
 .dgrid-rtl .dgrid-cell {
   text-align: right;
 }
 
-/* line 438, ../sass/dgrid.scss */
+/* line 443, ../sass/dgrid.scss */
 .dgrid-rtl .dgrid-sort-arrow {
   float: left;
   margin: 0 5px 0 4px;
 }
 
-/* line 443, ../sass/dgrid.scss */
+/* line 448, ../sass/dgrid.scss */
 .dgrid-rtl .ui-icon-triangle-1-e {
   background-position: -96px -16px;
 }
 
-/* line 447, ../sass/dgrid.scss */
+/* line 452, ../sass/dgrid.scss */
 .dgrid-rtl .ui-icon-triangle-1-se {
   background-position: -80px -16px;
 }
 
-/* line 451, ../sass/dgrid.scss */
+/* line 456, ../sass/dgrid.scss */
 .dgrid-rtl .dgrid-pagination .dgrid-status {
   float: right;
 }
 
-/* line 455, ../sass/dgrid.scss */
+/* line 460, ../sass/dgrid.scss */
 .dgrid-rtl .dgrid-pagination .dgrid-page-size {
   float: right;
 }
 
-/* line 459, ../sass/dgrid.scss */
+/* line 464, ../sass/dgrid.scss */
 .dgrid-rtl .dgrid-pagination .dgrid-navigation {
   float: left;
 }
 
-/* line 463, ../sass/dgrid.scss */
+/* line 468, ../sass/dgrid.scss */
 .dgrid-rtl.dgrid-autoheight .dgrid-header {
   left: 0;
+}
+
+/* line 472, ../sass/dgrid.scss */
+.dgrid-scroller {
+  /*box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.89);*/
+}
+
+/* line 475, ../sass/dgrid.scss */
+.wcLayout .dgrid-cell {
+  padding: 5px;
+}
+
+/* line 478, ../sass/dgrid.scss */
+.dgrid-cell :focus {
+  outline: 1px solid rgba(233, 132, 29, 0.53);
+}
+
+/* line 481, ../sass/dgrid.scss */
+.dgrid-focus {
+  outline: 1px solid rgba(233, 132, 29, 0.49);
+  outline-offset: -2px;
+}
+
+/* line 485, ../sass/dgrid.scss */
+.dgrid-tree-container .dgrid-focus {
+  outline-offset: -2px !important;
+}
+
+/* line 488, ../sass/dgrid.scss */
+html.has-webkit .dgrid *:focus,
+html.has-mozilla .dgrid*:focus,
+html.has-opera .dgrid *:focus {
+  outline: 1px solid rgba(233, 132, 29, 0.55) !important;
+}
+
+/* line 493, ../sass/dgrid.scss */
+html.has-webkit .dijitTreeNode *:focus,
+html.has-mozilla .dijitTreeNode *:focus,
+html.has-opera .dijitTreeNode *:focus {
+  outline: 1px solid rgba(233, 132, 29, 0.57) !important;
+}
+
+/* line 498, ../sass/dgrid.scss */
+html.has-mozilla .dgrid-focus,
+html.has-webkit .dgrid-focus,
+html.has-opera .dgrid-focus {
+  outline-offset: -1px;
 }
 
 /* line 1, ../sass/grid.scss */
@@ -12759,56 +12775,56 @@ body {
   background-color: #e8e8e8;
   border-bottom: 1px solid #cacaca;
 }
-/* line 283, ../sass/bootstrap-override-white.scss */
+/* line 285, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-row.dgrid-row-odd {
-  background-color: rgba(16, 16, 16, 0.09);
+  background-color: #f0f0f0;
 }
-/* line 288, ../sass/bootstrap-override-white.scss */
+/* line 292, ../sass/bootstrap-override-white.scss */
 .xTheme-white .statusbar.widget {
   border-top: 1px solid #cacaca;
   background-color: #e8e8e8 !important;
   color: #555 !important;
   border-radius: 0px !important;
 }
-/* line 296, ../sass/bootstrap-override-white.scss */
+/* line 300, ../sass/bootstrap-override-white.scss */
 .xTheme-white .breadcrumb > .active {
   color: #555;
 }
-/* line 299, ../sass/bootstrap-override-white.scss */
+/* line 303, ../sass/bootstrap-override-white.scss */
 .xTheme-white .thumbText {
   margin-right: 2px !important;
 }
-/* line 304, ../sass/bootstrap-override-white.scss */
+/* line 308, ../sass/bootstrap-override-white.scss */
 .xTheme-white .body {
   /*@include scrollbars(.5em, slategray);*/
 }
-/* line 310, ../sass/bootstrap-override-white.scss */
+/* line 314, ../sass/bootstrap-override-white.scss */
 .xTheme-white .widget {
   /*font-weight: 400 !important;*/
 }
-/* line 315, ../sass/bootstrap-override-white.scss */
+/* line 319, ../sass/bootstrap-override-white.scss */
 .xTheme-white .widgetContainer {
   margin: 0px;
 }
-/* line 319, ../sass/bootstrap-override-white.scss */
+/* line 323, ../sass/bootstrap-override-white.scss */
 .xTheme-white .toolbar-button {
   color: #666;
 }
-/* line 322, ../sass/bootstrap-override-white.scss */
+/* line 326, ../sass/bootstrap-override-white.scss */
 .xTheme-white .bg-opaque {
   background-color: #f8f8f8 !important;
 }
-/* line 326, ../sass/bootstrap-override-white.scss */
+/* line 330, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dijitMenuSeparatorTop {
   border-bottom: none !important;
   border-top: none !important;
 }
-/* line 330, ../sass/bootstrap-override-white.scss */
+/* line 334, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dijitMenuSeparatorBottom {
   border-bottom: 1px solid rgba(51, 51, 51, 0.35);
   border-top: none !important;
 }
-/* line 336, ../sass/bootstrap-override-white.scss */
+/* line 340, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dijitPopup {
   position: absolute !important;
   border: 1px solid #ccc;
@@ -12819,31 +12835,31 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
 }
-/* line 349, ../sass/bootstrap-override-white.scss */
+/* line 353, ../sass/bootstrap-override-white.scss */
 .xTheme-white .metro .tile .tile-content.icon [class*="fa-"],
 .xTheme-white .metro .tile .tile-content.icon img {
   color: #222222;
 }
-/* line 354, ../sass/bootstrap-override-white.scss */
+/* line 358, ../sass/bootstrap-override-white.scss */
 .xTheme-white .breadcrumb a {
   color: inherit;
 }
-/* line 358, ../sass/bootstrap-override-white.scss */
+/* line 362, ../sass/bootstrap-override-white.scss */
 .xTheme-white .breadcrumb > li + li:before {
   color: inherit;
 }
-/* line 366, ../sass/bootstrap-override-white.scss */
+/* line 370, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-focus:active {
   /*outline: 1px dotted rgba(255, 82, 0, 0.65)  !important;*/
   outline-offset: -1px;
   /*background-color: rgba(0,0,0,0.5);*/
   font-weight: bold;
 }
-/* line 372, ../sass/bootstrap-override-white.scss */
+/* line 376, ../sass/bootstrap-override-white.scss */
 .xTheme-white .wcFrameButton {
   /*font-size:inherit;*/
 }
-/* line 376, ../sass/bootstrap-override-white.scss */
+/* line 380, ../sass/bootstrap-override-white.scss */
 .xTheme-white KBD {
   background-color: initial;
   box-shadow: none;
@@ -12852,7 +12868,7 @@ body {
   /*font-family: inherit;*/
   margin: 4px;
 }
-/* line 387, ../sass/bootstrap-override-white.scss */
+/* line 391, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-selected {
   /*background-color: rgba(44, 39, 36, 0.52) !important;*/
   /*@include box-shadow(inset 0 1px 5px rgba(0, 0, 0, 0.8));*/
@@ -12867,7 +12883,7 @@ body {
   /* #4 AND INFINITY!!! (CSS3 only) */
   box-shadow: inset 0 0 0 1px orange;
 }
-/* line 409, ../sass/bootstrap-override-white.scss */
+/* line 413, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-focus:focus {
   /*outline: 1px solid rgba(87, 96, 255,0.5);*/
   outline-offset: -1px;
@@ -12879,23 +12895,23 @@ body {
   border-style: groove inset;
   @include box-sizing(content-box);*/
 }
-/* line 422, ../sass/bootstrap-override-white.scss */
+/* line 426, ../sass/bootstrap-override-white.scss */
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder,
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:hover,
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:focus,
 .xTheme-white .bootstrap-select > .dropdown-toggle.bs-placeholder:active {
   color: #fff;
 }
-/* line 429, ../sass/bootstrap-override-white.scss */
+/* line 433, ../sass/bootstrap-override-white.scss */
 .xTheme-white .dgrid-selected .metro .tile .tile-content.icon [class*="fa-"] {
   color: #f8f8f8 !important;
 }
-/* line 434, ../sass/bootstrap-override-white.scss */
+/* line 438, ../sass/bootstrap-override-white.scss */
 .xTheme-white .nav-tabs > .active {
   border: 1px solid rgba(255, 0, 0, 0.35);
   box-shadow: inset -1px -1px 1px 0px rgba(71, 237, 0, 0.1);
 }
-/* line 443, ../sass/bootstrap-override-white.scss */
+/* line 447, ../sass/bootstrap-override-white.scss */
 .xTheme-white .metro .tile .tile-content.icon img {
   color: #f8f8f8 !important;
 }
@@ -13630,7 +13646,7 @@ body {
   color: #d2d2d2;
 }
 /* line 286, ../sass/bootstrap-override-blue.scss */
-.xTheme-blue .dgrid-scroller {
+.xTheme-blue .__dgrid-scroller {
   -webkit-box-shadow: inset 0 0 10px black;
   -moz-box-shadow: inset 0 0 10px black;
   -o-box-shadow: inset 0 0 10px black;
@@ -13807,17 +13823,18 @@ body {
 }
 /* line 479, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-focus:active {
-  outline: 1px dotted rgba(255, 82, 0, 0.65);
+  outline: 1px dotted rgba(255, 82, 0, 0.35);
   outline-offset: -1px;
   background-color: rgba(0, 0, 0, 0.2);
   font-weight: bold;
 }
-/* line 487, ../sass/bootstrap-override-blue.scss */
+/* line 486, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-focus:focus {
-  outline: 1px solid #5760ff;
+  outline: 1px solid rgba(87, 96, 255, 0.8);
   outline-offset: -2px;
-  background-color: rgba(0, 50, 235, 0.16);
+  background-color: rgba(0, 9, 76, 0.4);
   font-weight: bold;
+  font-size: 110%;
 }
 /* line 493, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-selected {
@@ -13827,7 +13844,7 @@ body {
 }
 /* line 498, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .dgrid-row.dgrid-row-odd:not(.dgrid-selected) {
-  background-color: rgba(22, 22, 22, 0.28);
+  background-color: rgba(22, 22, 22, 0.18);
 }
 /* line 503, ../sass/bootstrap-override-blue.scss */
 .xTheme-blue .widget {
@@ -15485,7 +15502,26 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 225, ../sass/bootstrap-override.scss */
+/* line 214, ../sass/bootstrap-override.scss */
+.xTheme-default .mainMenu .focus .dropdown-menu > li > a {
+  /*color: $dropdown-link-active-color;*/
+}
+/* line 229, ../sass/bootstrap-override.scss */
+.xTheme-default .contextMenu .focus {
+  background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0077b3);
+  background-image: -o-linear-gradient(top, #0088cc, #0077b3);
+  background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
+/* line 242, ../sass/bootstrap-override.scss */
+.xTheme-default *:focus {
+  outline: 1px rgba(255, 0, 0, 0.6) solid;
+  outline-offset: -1px;
+}
+/* line 248, ../sass/bootstrap-override.scss */
 .xTheme-default .ActionRibbonToolbar .ribbon_3rows_button:hover {
   background-image: -moz-linear-gradient(top, #0088cc, #0077b3);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0077b3));
@@ -15495,39 +15531,39 @@ body {
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
 }
-/* line 236, ../sass/bootstrap-override.scss */
+/* line 259, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbon_3rows_button:hover {
   cursor: pointer;
 }
-/* line 239, ../sass/bootstrap-override.scss */
+/* line 262, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup {
   position: absolute;
   background-clip: padding-box;
 }
-/* line 244, ../sass/bootstrap-override.scss */
+/* line 267, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu UL {
   padding-left: 10px;
 }
-/* line 248, ../sass/bootstrap-override.scss */
+/* line 271, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu > li > a {
   display: inline-block;
 }
-/* line 251, ../sass/bootstrap-override.scss */
+/* line 274, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu > li > a:hover {
   background-color: unset !important;
   background-image: none !important;
   filter: none;
 }
-/* line 256, ../sass/bootstrap-override.scss */
+/* line 279, ../sass/bootstrap-override.scss */
 .xTheme-default .xPopup .dropdown-menu > li > .icon {
   /*float: left;*/
 }
-/* line 264, ../sass/bootstrap-override.scss */
+/* line 287, ../sass/bootstrap-override.scss */
 .xTheme-default .disabled .action-checkbox {
   opacity: 0.2;
   cursor: not-allowed;
 }
-/* line 270, ../sass/bootstrap-override.scss */
+/* line 293, ../sass/bootstrap-override.scss */
 .xTheme-default .quickToolbar .action-checkbox {
   /*
   padding: 0;
@@ -15535,80 +15571,80 @@ body {
   margin-left: 20px;
   */
 }
-/* line 279, ../sass/bootstrap-override.scss */
+/* line 302, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid-extra {
   width: 100%;
   height: 80px;
 }
-/* line 284, ../sass/bootstrap-override.scss */
+/* line 307, ../sass/bootstrap-override.scss */
 .xTheme-default .nav-tabs > .changed {
   border: 1px solid rgba(255, 0, 0, 0.5);
   border-radius: 4px;
 }
-/* line 288, ../sass/bootstrap-override.scss */
+/* line 311, ../sass/bootstrap-override.scss */
 .xTheme-default .nav-tabs > .active.changed {
   border: 1px solid red;
   border-radius: 4px;
 }
-/* line 294, ../sass/bootstrap-override.scss */
+/* line 317, ../sass/bootstrap-override.scss */
 .xTheme-default .nav-tabs > li.active > a, .xTheme-default .nav-tabs > li.active > a:hover, .xTheme-default .nav-tabs > li.active > a:focus {
   background-color: inherit;
   border: none;
   box-shadow: inset 2px 3px 9px -4px black;
 }
-/* line 301, ../sass/bootstrap-override.scss */
+/* line 324, ../sass/bootstrap-override.scss */
 .xTheme-default .divider-vertical {
   height: 33px;
   margin: 0 9px;
   border-right: 1px solid #222222;
   border-left: 1px solid #222222;
 }
-/* line 308, ../sass/bootstrap-override.scss */
+/* line 331, ../sass/bootstrap-override.scss */
 .xTheme-default .navbar-inverse .divider-vertical {
   border-right-color: #222222;
   border-left-color: #111111;
 }
 @media (max-width: 767px) {
-  /* line 314, ../sass/bootstrap-override.scss */
+  /* line 337, ../sass/bootstrap-override.scss */
   .xTheme-default .navbar-collapse .nav > .divider-vertical {
     display: none;
   }
 }
-/* line 319, ../sass/bootstrap-override.scss */
+/* line 342, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitCheckBox {
   background-color: inherit;
 }
-/* line 323, ../sass/bootstrap-override.scss */
+/* line 346, ../sass/bootstrap-override.scss */
 .xTheme-default .quickToolbar {
   font-size: 120%;
 }
-/* line 327, ../sass/bootstrap-override.scss */
+/* line 350, ../sass/bootstrap-override.scss */
 .xTheme-default .selectize-dropdown {
   /*background: $opaque;*/
 }
-/* line 330, ../sass/bootstrap-override.scss */
+/* line 353, ../sass/bootstrap-override.scss */
 .xTheme-default .selectize-dropdown .active {
   /*background-color: #f5f5f5;*/
   /*color: $dark-transparent;*/
 }
-/* line 334, ../sass/bootstrap-override.scss */
+/* line 357, ../sass/bootstrap-override.scss */
 .xTheme-default .selectize-dropdown .active.create {
   color: #262626;
 }
-/* line 337, ../sass/bootstrap-override.scss */
+/* line 360, ../sass/bootstrap-override.scss */
 .xTheme-default .xbloxHelp {
   padding: 8px;
   overflow: auto;
 }
-/* line 341, ../sass/bootstrap-override.scss */
+/* line 364, ../sass/bootstrap-override.scss */
 .xTheme-default .xbloxHelp PRE {
   font-size: 110%;
 }
-/* line 347, ../sass/bootstrap-override.scss */
+/* line 370, ../sass/bootstrap-override.scss */
 .xTheme-default .border-bottom {
   border-bottom-color: #e6e6e6;
 }
-/* line 351, ../sass/bootstrap-override.scss */
+/* line 374, ../sass/bootstrap-override.scss */
 .xTheme-default .jsoneditor .search input,
 .xTheme-default .jsoneditor .search .results {
   font-family: arial, sans-serif;
@@ -15617,106 +15653,102 @@ body {
   background: transparent;
   /* For Firefox */
 }
-/* line 360, ../sass/bootstrap-override.scss */
+/* line 383, ../sass/bootstrap-override.scss */
 .xTheme-default .jsoneditor .search .frame {
   border: 1px solid #4a5150;
   background-color: transparent;
   padding: 1px;
   margin: 0;
 }
-/* line 368, ../sass/bootstrap-override.scss */
+/* line 391, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu.navbar {
   border: none;
 }
-/* line 371, ../sass/bootstrap-override.scss */
+/* line 394, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu {
   font-size: 100%;
 }
-/* line 373, ../sass/bootstrap-override.scss */
+/* line 396, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu A {
   font-size: 110%;
 }
-/* line 376, ../sass/bootstrap-override.scss */
+/* line 399, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu .dropdown-context.scrollable-menu {
   border-top: none;
 }
-/* line 381, ../sass/bootstrap-override.scss */
+/* line 404, ../sass/bootstrap-override.scss */
 .xTheme-default .actionToolbar A {
   cursor: pointer;
 }
-/* line 386, ../sass/bootstrap-override.scss */
+/* line 409, ../sass/bootstrap-override.scss */
 .xTheme-default .actionToolbar .disabled .icon {
   opacity: 0.5;
 }
-/* line 391, ../sass/bootstrap-override.scss */
+/* line 414, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-menu A {
   cursor: pointer;
 }
-/* line 394, ../sass/bootstrap-override.scss */
+/* line 417, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-menu > li > a {
   white-space: initial;
 }
-/* line 398, ../sass/bootstrap-override.scss */
+/* line 421, ../sass/bootstrap-override.scss */
 .xTheme-default .VariablesGrid .field-name {
   padding-left: 10px;
 }
-/* line 406, ../sass/bootstrap-override.scss */
+/* line 429, ../sass/bootstrap-override.scss */
 .xTheme-default #staticTopContainer .actionToolbar {
   /*box-shadow: none;*/
 }
-/* line 411, ../sass/bootstrap-override.scss */
+/* line 434, ../sass/bootstrap-override.scss */
 .xTheme-default .accordion-body.in {
   overflow: visible;
 }
-/* line 412, ../sass/bootstrap-override.scss */
+/* line 435, ../sass/bootstrap-override.scss */
 .xTheme-default .panel-group {
   margin-bottom: 0;
 }
-/* line 420, ../sass/bootstrap-override.scss */
+/* line 443, ../sass/bootstrap-override.scss */
 .xTheme-default .panel-scroll {
   max-height: 400px;
   overflow: hidden;
   overflow-y: auto;
 }
-/* line 426, ../sass/bootstrap-override.scss */
+/* line 449, ../sass/bootstrap-override.scss */
 .xTheme-default .fullWidth {
   /*width: 100%;*/
 }
-/* line 430, ../sass/bootstrap-override.scss */
+/* line 453, ../sass/bootstrap-override.scss */
 .xTheme-default .inline-icon {
   padding-right: 4px;
   line-height: inherit;
 }
-/* line 436, ../sass/bootstrap-override.scss */
+/* line 459, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-body .dgrid-cell {
   border: none;
 }
-/* line 441, ../sass/bootstrap-override.scss */
+/* line 464, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid KBD {
   font-size: 100%;
 }
-/* line 445, ../sass/bootstrap-override.scss */
+/* line 468, ../sass/bootstrap-override.scss */
 .xTheme-default .blockGrid.Tree .dgrid-row {
   line-height: 1.8em;
 }
-/* line 449, ../sass/bootstrap-override.scss */
+/* line 472, ../sass/bootstrap-override.scss */
 .xTheme-default .blockGrid.Tree .dgrid-content {
   padding: 0px;
 }
-/* line 455, ../sass/bootstrap-override.scss */
+/* line 479, ../sass/bootstrap-override.scss */
 .xTheme-default .blockGrid .Thumb .dgrid-row {
   margin: 3px;
 }
-/* line 461, ../sass/bootstrap-override.scss */
-.xTheme-default .dgrid-scroller {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.89);
-}
-/* line 466, ../sass/bootstrap-override.scss */
+/* line 484, ../sass/bootstrap-override.scss */
 .xTheme-default .dgrid-header-scroll, .xTheme-default .dgrid-header .dgrid-cell {
   background-color: rgba(22, 22, 22, 0.28);
   /*border-bottom: 1px solid $opaque;*/
 }
-/* line 507, ../sass/bootstrap-override.scss */
+/* line 525, ../sass/bootstrap-override.scss */
 .xTheme-default .container-fluid {
   height: 100%;
   display: table;
@@ -15724,20 +15756,20 @@ body {
   padding-right: 0;
   padding-left: 0;
 }
-/* line 515, ../sass/bootstrap-override.scss */
+/* line 533, ../sass/bootstrap-override.scss */
 .xTheme-default .row-fluid {
   height: 100%;
   display: table-cell;
   vertical-align: middle;
   width: 100%;
 }
-/* line 522, ../sass/bootstrap-override.scss */
+/* line 540, ../sass/bootstrap-override.scss */
 .xTheme-default .centering {
   float: none;
   margin: 0 auto;
   text-align: center;
 }
-/* line 529, ../sass/bootstrap-override.scss */
+/* line 547, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-context {
   /*
       max-height: 500px;
@@ -15745,93 +15777,93 @@ body {
   /*position:fixed;*/
   /*overflow-x: hidden;*/
 }
-/* line 536, ../sass/bootstrap-override.scss */
+/* line 554, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-menu > li > .checkbox {
   margin-left: 10px;
 }
-/* line 546, ../sass/bootstrap-override.scss */
+/* line 564, ../sass/bootstrap-override.scss */
 .xTheme-default .CIDialog .widget .widgetTitle {
   padding-left: 4px !important;
 }
-/* line 554, ../sass/bootstrap-override.scss */
+/* line 572, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .panel-body {
   overflow: auto;
 }
-/* line 559, ../sass/bootstrap-override.scss */
+/* line 577, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .vertical .widgetValue {
   float: right;
 }
-/* line 564, ../sass/bootstrap-override.scss */
+/* line 582, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .widgetValue {
   border: none;
 }
-/* line 568, ../sass/bootstrap-override.scss */
+/* line 586, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .EditBox {
   width: 100%;
 }
-/* line 571, ../sass/bootstrap-override.scss */
+/* line 589, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .widgetValue {
   border: none;
 }
-/* line 576, ../sass/bootstrap-override.scss */
+/* line 594, ../sass/bootstrap-override.scss */
 .xTheme-default .widgetTitle {
   padding-left: 8px;
 }
-/* line 580, ../sass/bootstrap-override.scss */
+/* line 598, ../sass/bootstrap-override.scss */
 .xTheme-default .widgetContainer {
   margin-top: 8px;
 }
-/* line 584, ../sass/bootstrap-override.scss */
+/* line 602, ../sass/bootstrap-override.scss */
 .xTheme-default .bootstrap-select.btn-group .dropdown-menu {
   min-width: 200px !important;
 }
-/* line 594, ../sass/bootstrap-override.scss */
+/* line 612, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .vertical .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
   width: auto;
 }
-/* line 598, ../sass/bootstrap-override.scss */
+/* line 616, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .vertical .widgetTitle {
   min-width: 40px;
   padding-left: 8px;
 }
-/* line 606, ../sass/bootstrap-override.scss */
+/* line 624, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonOpen {
   min-height: 12em;
   max-height: 13em;
 }
-/* line 610, ../sass/bootstrap-override.scss */
+/* line 628, ../sass/bootstrap-override.scss */
 .xTheme-default .ribbonClose {
   max-height: inherit;
   min-height: inherit;
 }
-/* line 617, ../sass/bootstrap-override.scss */
+/* line 635, ../sass/bootstrap-override.scss */
 .xTheme-default .modal {
   /*z-index: inherit;*/
 }
-/* line 620, ../sass/bootstrap-override.scss */
+/* line 638, ../sass/bootstrap-override.scss */
 .xTheme-default .modal .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
   width: auto;
 }
-/* line 627, ../sass/bootstrap-override.scss */
+/* line 645, ../sass/bootstrap-override.scss */
 .xTheme-default .FilePicker .wcSplitterBar {
   opacity: 0.5;
 }
-/* line 632, ../sass/bootstrap-override.scss */
+/* line 650, ../sass/bootstrap-override.scss */
 .xTheme-default .toolbar-button {
   background: transparent none;
   border: none;
 }
-/* line 637, ../sass/bootstrap-override.scss */
+/* line 655, ../sass/bootstrap-override.scss */
 .xTheme-default .statusbar.widget {
   background-color: #4a5150;
   color: #666;
 }
-/* line 641, ../sass/bootstrap-override.scss */
+/* line 659, ../sass/bootstrap-override.scss */
 .xTheme-default .status-bar-text {
   width: 100%;
   padding-right: 20px;
 }
-/* line 645, ../sass/bootstrap-override.scss */
+/* line 663, ../sass/bootstrap-override.scss */
 .xTheme-default .status-bar-collapser {
   position: absolute;
   width: auto;
@@ -15841,38 +15873,38 @@ body {
   margin-right: 10px;
   right: 0;
 }
-/* line 653, ../sass/bootstrap-override.scss */
+/* line 671, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLoadingIconContainer {
   width: 50%;
 }
-/* line 656, ../sass/bootstrap-override.scss */
+/* line 674, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLoadingBackground {
   background-color: transparent;
 }
-/* line 659, ../sass/bootstrap-override.scss */
+/* line 677, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLoadingIcon {
   font-size: 30px;
   height: 30px;
   color: #4ab0ce;
 }
-/* line 665, ../sass/bootstrap-override.scss */
+/* line 683, ../sass/bootstrap-override.scss */
 .xTheme-default .bg-opaque {
   background-color: #2c3130;
 }
-/* line 671, ../sass/bootstrap-override.scss */
+/* line 689, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-footer {
   border-top: none;
 }
-/* line 674, ../sass/bootstrap-override.scss */
+/* line 692, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-header {
   border-bottom: none;
 }
-/* line 678, ../sass/bootstrap-override.scss */
+/* line 696, ../sass/bootstrap-override.scss */
 .xTheme-default .modal {
   text-align: center;
   padding: 0 !important;
 }
-/* line 683, ../sass/bootstrap-override.scss */
+/* line 701, ../sass/bootstrap-override.scss */
 .xTheme-default .modal:before {
   content: '';
   display: inline-block;
@@ -15881,13 +15913,13 @@ body {
   margin-right: -4px;
   /* Adjusts for spacing */
 }
-/* line 691, ../sass/bootstrap-override.scss */
+/* line 709, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-dialog {
   display: inline-block;
   text-align: left;
   vertical-align: middle;
 }
-/* line 698, ../sass/bootstrap-override.scss */
+/* line 716, ../sass/bootstrap-override.scss */
 .xTheme-default .messenger-message-inner {
   white-space: pre-wrap;
   /*
@@ -15896,101 +15928,101 @@ body {
   -o-text-overflow: ellipsis;
   -moz-binding: url('../fonts/truncate.xml#ellipsis');*/
 }
-/* line 709, ../sass/bootstrap-override.scss */
+/* line 727, ../sass/bootstrap-override.scss */
 .xTheme-default .commandSettings .widget {
   font-size: 105%;
 }
-/* line 718, ../sass/bootstrap-override.scss */
+/* line 736, ../sass/bootstrap-override.scss */
 .xTheme-default .bootstrap3-dialog .modal-content {
   /*background-color: @opaque;*/
 }
-/* line 722, ../sass/bootstrap-override.scss */
+/* line 740, ../sass/bootstrap-override.scss */
 .xTheme-default .modal-body, .xTheme-default .modal-header {
   padding: 8px;
 }
-/* line 726, ../sass/bootstrap-override.scss */
+/* line 744, ../sass/bootstrap-override.scss */
 .xTheme-default .wcPanelTabContent {
   overflow-y: auto !important;
 }
-/* line 734, ../sass/bootstrap-override.scss */
+/* line 752, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .containerNode {
   padding: 8px;
 }
-/* line 738, ../sass/bootstrap-override.scss */
+/* line 756, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .widgetContainer {
   margin: 0px;
 }
-/* line 749, ../sass/bootstrap-override.scss */
+/* line 767, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView.Accordion .containerNode {
   padding: 4px;
 }
-/* line 753, ../sass/bootstrap-override.scss */
+/* line 771, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView.Accordion .widgetContainer {
   margin-top: 4px;
 }
-/* line 756, ../sass/bootstrap-override.scss */
+/* line 774, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView.Accordion .panel-heading > .accordion-toggle {
   display: block;
   padding: 4px 8px;
 }
-/* line 765, ../sass/bootstrap-override.scss */
+/* line 783, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .modal-footer {
   border: none;
 }
-/* line 768, ../sass/bootstrap-override.scss */
+/* line 786, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-info {
   background-color: #5bc0de;
 }
-/* line 771, ../sass/bootstrap-override.scss */
+/* line 789, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-primary {
   background-color: #428bca;
 }
-/* line 774, ../sass/bootstrap-override.scss */
+/* line 792, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-success {
   background-color: #5cb85c;
 }
-/* line 777, ../sass/bootstrap-override.scss */
+/* line 795, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-warning {
   background-color: #f0ad4e;
 }
-/* line 780, ../sass/bootstrap-override.scss */
+/* line 798, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .type-danger {
   background-color: #d9534f;
 }
-/* line 784, ../sass/bootstrap-override.scss */
+/* line 802, ../sass/bootstrap-override.scss */
 .xTheme-default .jsPanel .panel-body {
   /*padding: 8px;*/
 }
-/* line 791, ../sass/bootstrap-override.scss */
+/* line 809, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .tabbable {
   /*padding: 10px;*/
 }
-/* line 795, ../sass/bootstrap-override.scss */
+/* line 813, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .tab-content {
   /*padding: 0px !important;*/
 }
-/* line 801, ../sass/bootstrap-override.scss */
+/* line 819, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .wcLayoutPane {
   /*padding: 0px !important;*/
 }
-/* line 805, ../sass/bootstrap-override.scss */
+/* line 823, ../sass/bootstrap-override.scss */
 .xTheme-default .CIView .radio label, .xTheme-default .CIView .checkbox label {
   min-width: 150px;
 }
-/* line 811, ../sass/bootstrap-override.scss */
+/* line 829, ../sass/bootstrap-override.scss */
 .xTheme-default .wcLayoutPane {
   padding: 4px;
 }
-/* line 815, ../sass/bootstrap-override.scss */
+/* line 833, ../sass/bootstrap-override.scss */
 .xTheme-default .panel-body {
   padding: 0px;
 }
-/* line 819, ../sass/bootstrap-override.scss */
+/* line 837, ../sass/bootstrap-override.scss */
 .xTheme-default .panel .dijitContentPane {
   width: inherit;
   height: inherit;
 }
-/* line 825, ../sass/bootstrap-override.scss */
+/* line 843, ../sass/bootstrap-override.scss */
 .xTheme-default .actionToolbar .navbar-nav > li > a {
   padding-left: 12px;
   padding-right: 12px;
@@ -15998,23 +16030,23 @@ body {
   padding-bottom: 8px;
   line-height: 18px;
 }
-/* line 834, ../sass/bootstrap-override.scss */
+/* line 852, ../sass/bootstrap-override.scss */
 .xTheme-default .wcPanelTab, .xTheme-default .dijitTab, .xTheme-default .dijitTabButton, .xTheme-default .wcFrameTitleBar, .xTheme-default .wcFrameTitle, .xTheme-default .dijitAccordionTitle, .xTheme-default .dijitButtonText, .xTheme-default .actionToolbarButtonElusive {
   /*color: rgba(220, 220, 220, 1);*/
 }
-/* line 837, ../sass/bootstrap-override.scss */
+/* line 855, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitTab, .xTheme-default .wcPanelTab {
   background-color: inherit;
 }
-/* line 841, ../sass/bootstrap-override.scss */
+/* line 859, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitDialog {
   background-color: #565656;
 }
-/* line 844, ../sass/bootstrap-override.scss */
+/* line 862, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitDialogUnderlayWrapper {
   background-color: rgba(10, 0, 0, 0.68) !important;
 }
-/* line 847, ../sass/bootstrap-override.scss */
+/* line 865, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitPopup {
   position: absolute !important;
   border: 1px solid rgba(0, 0, 0, 0.5);
@@ -16023,46 +16055,46 @@ body {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   background-clip: padding-box;
 }
-/* line 856, ../sass/bootstrap-override.scss */
+/* line 874, ../sass/bootstrap-override.scss */
 .xTheme-default .dijitMenuItemLabel {
   margin-top: 2px;
   margin-bottom: 2px;
 }
-/* line 861, ../sass/bootstrap-override.scss */
+/* line 879, ../sass/bootstrap-override.scss */
 .xTheme-default .btn.btn-default {
   font-size: 14px;
 }
-/* line 865, ../sass/bootstrap-override.scss */
+/* line 883, ../sass/bootstrap-override.scss */
 .xTheme-default .btn.transparent {
   background-color: transparent;
   border: none !important;
 }
-/* line 869, ../sass/bootstrap-override.scss */
+/* line 887, ../sass/bootstrap-override.scss */
 .xTheme-default .btn.transparent:disabled {
   background-color: transparent !important;
 }
-/* line 873, ../sass/bootstrap-override.scss */
+/* line 891, ../sass/bootstrap-override.scss */
 .xTheme-default .wcScrollableY {
   overflow: hidden;
 }
-/* line 877, ../sass/bootstrap-override.scss */
+/* line 895, ../sass/bootstrap-override.scss */
 .xTheme-default .wcScrollableX {
   overflow: hidden;
 }
-/* line 881, ../sass/bootstrap-override.scss */
+/* line 899, ../sass/bootstrap-override.scss */
 .xTheme-default .radio label, .xTheme-default .checkbox label {
   /*min-height: initial;*/
   margin-top: -3px;
 }
-/* line 888, ../sass/bootstrap-override.scss */
+/* line 906, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu .navigation {
   height: 30px;
 }
-/* line 891, ../sass/bootstrap-override.scss */
+/* line 909, ../sass/bootstrap-override.scss */
 .xTheme-default .mainMenu .nav > li > a {
   /*padding-bottom: 0px;*/
 }
-/* line 895, ../sass/bootstrap-override.scss */
+/* line 913, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-context:after,
 .xTheme-default .dropdown-context-up:after,
 .xTheme-default .dropdown-context-left:after {
@@ -16072,7 +16104,7 @@ body {
   width: 0;
   border: none;
 }
-/* line 905, ../sass/bootstrap-override.scss */
+/* line 923, ../sass/bootstrap-override.scss */
 .xTheme-default .dropdown-context:before, .xTheme-default .dropdown-context-up:before, .xTheme-default .dropdown-context-left:before {
   display: none;
   content: '';

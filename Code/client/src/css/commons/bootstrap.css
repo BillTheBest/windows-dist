@@ -1944,9 +1944,6 @@ BODY {
 .dojoDndItemOver {
   /*background: none repeat scroll 0 0 rgba(245, 245, 245, 0.42) !important;*/
 }
-.wcLayout .dgrid-cell {
-  padding: 3px;
-}
 .wcSplitterBar {
   /*background-image: none !important;*/
   /*background-color: rgba(0, 0, 0, 0.2) !important;*/

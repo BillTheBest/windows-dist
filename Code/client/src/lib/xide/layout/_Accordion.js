@@ -168,7 +168,7 @@ define([
 
                 this.scrollable = true;
                 var extra = '';
-                this.templateString = '<div class="panel widget ' + extra + '" attachTo="panelNode"><div class="panel-heading" attachTo="titleBar">'+
+                this.templateString = '<div tabindex="1"  class="panel ' + extra + '" attachTo="panelNode"><div class="panel-heading" attachTo="titleBar">'+
                     toggleNodeStr +
                     '</div><div attachTo="containerRoot" class="containerNode panel-collapse ${!containerClass}" id="${!id}-Collapse" aria-expanded="${!ariaOpen}">'+
                     '<div style="height: ${!height};padding:${!padding}" class="panel-body" attachTo="containerNode"></div>'+

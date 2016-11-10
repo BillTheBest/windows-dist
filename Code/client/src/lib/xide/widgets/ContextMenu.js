@@ -6,10 +6,13 @@ define([
     'xide/_base/_Widget',
     "xide/mixins/ActionMixin",
     'xaction/ActionContext',
-    "xide/widgets/_MenuMixin2",
+    "xide/widgets/_MenuMixin4",
     "xide/model/Path",
-    "xide/_Popup"
-], function (dcl,types,i18,_Widget,_XWidget,ActionMixin, ActionContext, MenuMixinClass,Path,_Popup) {
+    "xide/_Popup",
+    "xide/$",
+    "xide/lodash",
+    "xide/widgets/_MenuKeyboard"
+], function (dcl,types,i18,_Widget,_XWidget,ActionMixin, ActionContext, MenuMixinClass,Path,_Popup,$,_,_MenuKeyboard) {
 
     var ActionRendererClass = dcl(null, {
         renderTopLevel: function (name, where) {
@@ -29,6 +32,8 @@ define([
     var _debugMenuData = false;
     var _debugOldMenuData = false;
 
+    var KeyboardControl = _MenuKeyboard;
+
     var ContextMenu = dcl([_Widget.dcl, ActionContext.dcl, ActionMixin.dcl, ActionRendererClass,MenuMixinClass,_XWidget.StoreMixin], {
         target: null,
         openTarget:null,
@@ -38,7 +43,6 @@ define([
         declaredClass:'xide.widgets.ContextMenu',
         menuData:null,
         addContext: function (selector, data) {
-
             this.menuData = data;
             var id,
                 $menu,
@@ -53,7 +57,6 @@ define([
                     selector.append($menu);
                 }
             } else {
-
                 var d = new Date();
                 id = d.getTime();
                 $menu = self.buildMenu(data, id);
@@ -61,12 +64,28 @@ define([
             }
 
             var options = this.getDefaultOptions();
-            this.__on(target, 'contextmenu', null, function (e) {
+
+            this.keyboardController = new KeyboardControl();
+            this.keyboardController.setup(this);
+
+            function mouseEnterHandlerSubs(e){
+                var navigationData = this.keyboardController.toNavigationData($(e.target),this.getRootContainer());
+                if(!navigationData) {
+                    return;
+                }
+                this.keyboardController.clear(navigationData.parent);
+                this.menu.focus();
+                navigationData.element.focus();
+                this.menu.data('currentTarget',navigationData.element);
+
+            }
+            function setupContainer($container){
+                self.__on($container, 'mouseenter', 'LI', mouseEnterHandlerSubs.bind(self));
+            }
+
+            function constextMenuHandler(e) {
                 if(self.limitTo){
                     var $target = $(e.target);
-                    if($target.hasClass(self.limitTo)){
-
-                    }
                     $target = $target.parent();
                     if(!$target.hasClass(self.limitTo)){
                         return;
@@ -74,13 +93,20 @@ define([
                 }
                 self.openEvent = e;
                 self.isOpen = true;
+                this.lastFocused = document.activeElement;
                 self.onOpen(e);
                 e.preventDefault();
                 e.stopPropagation();
                 $('.dropdown-context:not(.dropdown-context-sub)').hide();
+
                 var $dd = $('#dropdown-' + id);
-                $dd.focus();
                 $dd.css('zIndex',_Popup.nextZ(1));
+                if(!$dd.data('init')){
+                    $dd.data('init',true);
+                    setupContainer($dd);
+                    self.keyboardController.initContainer($dd);
+                }
+
                 if (typeof options.above == 'boolean' && options.above) {
                     $dd.css({
                         top: e.pageY - 20 - $('#dropdown-' + id).height(),
@@ -121,7 +147,17 @@ define([
                         });
                     }
                 }
-            });
+                this.keyboardController.activate($(this.keyboardController.children($dd)[0]),$dd);
+            }
+            this.__on(target, 'contextmenu', null,constextMenuHandler.bind(this));
+
+            this.__on($menu,'keydown',function(e){
+                if(e.keyCode==27){
+                    var navData = this.keyboardController.toNavigationData($(e.target),this.getRootContainer());
+                    navData && navData.element && this.keyboardController.close(navData.element);
+                    $(this.lastFocused).focus();
+                }
+            }.bind(this));
 
             return $menu;
         },
@@ -130,12 +166,14 @@ define([
         },
         buildMenu:function (data, id, subMenu,update) {
             var subClass = (subMenu) ? ' dropdown-context-sub' : ' scrollable-menu ',
-                menuString = '<ul aria-expanded="true" role="menu" class="dropdown-menu dropdown-context' + subClass + '" id="dropdown-' + id + '"></ul>',
+                menuString = '<ul tabindex="-1" aria-expanded="true" role="menu" class="dropdown-menu dropdown-context' + subClass + '" id="dropdown-' + id + '"></ul>',
                 $menu = update ? (this._rootMenu || $(menuString)) : $(menuString);
 
             if(!subMenu){
                 this._rootMenu = $menu;
+                this._rootMenu.addClass('contextMenu')
             }
+            $menu.data('data', data);
             return this.buildMenuItems($menu, data, id, subMenu);
         },
         onActionAdded:function(actions){

@@ -115,9 +115,8 @@ define('xblox/component',[
 
 define('xblox/types/Types',[
     'xide/types/Types',
-    'dojo/_base/lang',
     'xide/utils'
-],function(types,lang,utils){
+],function(types,utils){
 
         types.BLOCK_MODE = {
             NORMAL:0,

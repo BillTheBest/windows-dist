@@ -5,12 +5,13 @@ define([
     'xide/utils',
     'xide/registry',
     'xaction/Action',
-    'xaction/DefaultActions'
-], function (dcl, types, utils, registry, Action, DefaultActions) {
+    'xaction/DefaultActions',
+    "xide/popup"
+], function (dcl, types, utils, registry, Action, DefaultActions,popup) {
 
     var createCallback = function (func, menu, item) {
         return function (event) {
-            func(event, menu, item);
+            return func(event, menu, item);
         };
     };
 
@@ -29,6 +30,7 @@ define([
         hideSubsFirst: false,
         collapseSmallGroups: 0,
         containerClass: '',
+        lastTree:null,
         onActionAdded: function (actions) {
             this.setActionStore(this.getActionStore(), actions.owner || this, false, true, actions);
         },
@@ -202,7 +204,7 @@ define([
                         $sub.css('position', 'initial');
                         function close() {
                             var _wrapper = $sub.data('_popupWrapper');
-                            window.popup.close({
+                            popup.close({
                                 domNode: $sub[0],
                                 _popupWrapper: _wrapper
                             });
@@ -218,7 +220,7 @@ define([
                             });
                         }
 
-                        window.popup.open({
+                        popup.open({
                             //parent: self,
                             popup: $sub[0],
                             around: _root[0],
@@ -240,8 +242,6 @@ define([
                         });
                         return;
                     } else {
-
-                        console.log('do as usual', _root);
                         if (!$sub.data('didSetup')) {
                             $sub.data('didSetup', true);
                             _root.on('mouseleave', function () {
@@ -249,7 +249,6 @@ define([
                             });
                         }
                     }
-
 
                     //reset top
                     $sub.css({
@@ -304,20 +303,26 @@ define([
                     divider += '"></li>';
                     item.widget = divider;
                     $menu.append(divider);
+                    divider.data('item',item);
+
                 } else if (typeof item.header !== 'undefined' && !item.widget) {
-                    var header = item.vertical ? '<li class="divider-vertical' : '<li class="nav-header';
+                    var header = item.vertical ? '<li class="divider-vertical' : '<li class="nav-header testClass';
                     header += (addDynamicTag) ? ' dynamic-menu-item' : '';
                     header += '">' + item.header + '</li>';
+                    header = $(header);
                     item.widget = header;
                     $menu.append(header);
+                    header.data('item',item);
+
                 } else if (typeof item.menu_item_src !== 'undefined') {
 
                 } else {
+
                     if (!widget && typeof item.target !== 'undefined') {
                         linkTarget = ' target="' + item.target + '"';
                     }
                     if (typeof item.subMenu !== 'undefined' && !widget) {
-                        var sub_menu = '<li class="dropdown-submenu ' + this.containerClass;
+                        var sub_menu = '<li tabindex="-1" class="dropdown-submenu ' + this.containerClass;
                         sub_menu += (addDynamicTag) ? ' dynamic-menu-item' : '';
                         sub_menu += '"><a>';
 
@@ -333,7 +338,7 @@ define([
                             if (item.render) {
                                 $sub = item.render(item, $menu);
                             } else {
-                                var element = '<li tabindex="2" class="" ';
+                                var element = '<li tabindex="-1" class="" ';
                                 element += (addDynamicTag) ? ' class="dynamic-menu-item"' : '';
                                 element += '><a >';
                                 if (typeof data[i].icon !== 'undefined') {
@@ -353,9 +358,10 @@ define([
                         } else {
                             var $action = item.action;
                             if ($sub && $sub.find) {
-                                $sub.find('a')
-                                    .addClass('context-event')
-                                    .on('click', createCallback($action, item, $sub));
+                                var trigger = $sub.find('a');
+                                trigger.addClass('context-event');
+                                var handler = createCallback($action, item, $sub);
+                                trigger.data('handler',handler).on('click',handler);
                             }
                         }
                     }
@@ -474,11 +480,10 @@ define([
             });
             result = result.filter(function (action) {
                 var actionVisibility = action.getVisibility != null ? action.getVisibility(visibility) : {};
-                if (action.show === false || actionVisibility === false || actionVisibility.show === false) {
-                    return false;
-                }
-                return true;
+                return !(action.show === false || actionVisibility === false || actionVisibility.show === false);
+
             });
+
             return result;
         },
         toActions: function (commands, store) {
@@ -515,10 +520,8 @@ define([
                 command: action.command,
                 lazy: lazy,
                 addClickHandler: function () {
-                    if (actionType === types.ACTION_TYPE.MULTI_TOGGLE) {
-                        return false;
-                    }
-                    return true;
+                    return actionType !== types.ACTION_TYPE.MULTI_TOGGLE;
+
                 },
                 render: function (data, $menu) {
                     if (self.renderItem) {
@@ -538,7 +541,7 @@ define([
                     }
 
                     if (actionType === types.ACTION_TYPE.MULTI_TOGGLE) {
-                        element = '<li class="" >';
+                        element = '<li tabindex="-1" class="" >';
                         var id = action._store.id + '_' + action.command + '_' + self.id;
                         var checked = action.get('value');
                         //checkbox-circle
@@ -575,7 +578,7 @@ define([
 
 
                     //default:
-                    element = '<li><a title="' + title + ' ' + keyComboString + '">';
+                    element = '<li tabindex="-1"><a title="' + title + ' ' + keyComboString + '">';
                     var _icon = data.icon || icon;
 
                     //icon

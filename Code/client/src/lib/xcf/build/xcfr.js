@@ -404,14 +404,12 @@ define('xcf/model/Command',[
     'xide/utils',
     'xide/types',
     'dojo/Deferred',
-    'module',
-    'require',
     'xblox/types/Types'
-], function (dcl, Block, Contains, utils, types, Deferred, module, require, BTypes) {
+], function (dcl, Block, Contains, utils, types, Deferred, BTypes) {
     var debug = false;
     /**
      * The command model. A 'command' consists out of a few parameters and a series of
-     *  XCF - Command - Block expresssions. Those expressions need to be evaluated before send them to the device
+     *  XCF - Command - Block expressions. Those expressions need to be evaluated before send them to the device
      * @class module:xcf/model/Command
      * @augments module:xide/mixins/EventedMixin
      * @extends module:xblox/model/Block_UI
@@ -463,7 +461,6 @@ define('xcf/model/Command',[
          */
         onCommandFinish: function (msg) {
             var scope = this.getScope();
-            var context = scope.getContext();//driver instance
             var result = {};
             var dfd = null;
             if (msg.params && msg.params.id) {
@@ -494,11 +491,7 @@ define('xcf/model/Command',[
          * @param msg.cmd {string} the command string being sent
          */
         onCommandPaused: function (msg) {
-            var scope = this.getScope();
-            var context = scope.getContext();//driver instance
-            var result = {};
             var params = msg.params;
-
             if (params && params.id) {
                 msg.lastResponse && this.storeResult(msg.lastResponse);
                 this._emit('paused', {
@@ -521,15 +514,9 @@ define('xcf/model/Command',[
          */
         onCommandStopped: function (msg) {
             var scope = this.getScope();
-            var context = scope.getContext();//driver instance
             var result = {};
             var params = msg.params;
-
             if (params && params.id) {
-                /*
-                 this._emit('cmd:'+msg.cmd + '_' + params.id,{
-                 msg:msg
-                 });*/
                 msg.lastResponse && this.storeResult(msg.lastResponse);
                 this._emit('stopped', {
                     msg: msg,
@@ -537,7 +524,6 @@ define('xcf/model/Command',[
                     id: params.id
                 });
             }
-
             var items = this.getItems(types.BLOCK_OUTLET.STOPPED);
             if (items.length) {
                 this.runFrom(items, 0, this._lastSettings);
@@ -551,15 +537,8 @@ define('xcf/model/Command',[
          * @param msg.cmd {string} the command string being sent
          */
         onCommandProgress: function (msg) {
-            var scope = this.getScope();
-            var context = scope.getContext();//driver instance
-            var result = {};
             var params = msg.params;
             if (params && params.id) {
-                /*
-                 this._emit('cmd:'+msg.cmd + '_' + params.id,{
-                 msg:msg
-                 });*/
                 msg.lastResponse && this.storeResult(msg.lastResponse);
                 this._emit('progress', {
                     msg: msg,
@@ -601,7 +580,6 @@ define('xcf/model/Command',[
         },
         onCommandError: function (msg) {
             var scope = this.getScope();
-            var context = scope.getContext();
             var params = msg.params;
             if (params.id) {
                 msg.lastResponse && this.storeResult(msg.lastResponse);
@@ -619,19 +597,14 @@ define('xcf/model/Command',[
             }
         },
         sendToDevice: function (msg, settings, stop, pause, id) {
-
             if(this._destroyed){
                 return;
             }
-            
             msg = this.replaceAll("'", '', msg);
             id = id || utils.createUUID();
             var self = this;
-
             var wait = (this.flags & types.CIFLAG.WAIT) ? true : false;
-
             this.lastCommand = '' + msg;
-
             if (this.scope.instance) {
                 if (wait) {
                     this._on('cmd:' + msg + '_' + id, function (msg) {
@@ -682,12 +655,10 @@ define('xcf/model/Command',[
             }
             var scope = this.scope;
             var value = string || this._get('send');
-            var settings = settings || {};
+            settings = settings || {};
             var flags = settings.flags || this.flags;
             var parse = !(flags & types.CIFLAG.DONT_PARSE);
             var isExpression = (flags & types.CIFLAG.EXPRESSION);
-            var wait = (flags & types.CIFLAG.WAIT) ? true : false;
-
             if (flags & types.CIFLAG.TO_HEX) {
                 value = utils.to_hex(value);
             }
@@ -709,17 +680,17 @@ define('xcf/model/Command',[
             var res = "";
             var DriverModule = this.getDriverModule();
             if (DriverModule && DriverModule.resolveBefore && useDriverModule!==false) {
-                value = DriverModule.resolveBefore(this, value);
+                value = DriverModule.resolveBefore(this, value) || value;
             }
 
-            if (/*(this.isScript(value) && parse!==false) || */isExpression && parse !== false) {
+            if (isExpression && parse !== false) {
                 res = scope.parseExpression(value, null, _overrides, null, null, null, override.args);
             } else {
                 res = '' + value;
             }
 
             if (DriverModule && DriverModule.resolveAfter && useDriverModule!==false) {
-                res = DriverModule.resolveAfter(this, res);
+                res = DriverModule.resolveAfter(this, res) || res;
             }
 
             return res;
@@ -739,7 +710,6 @@ define('xcf/model/Command',[
             }
             var value = send || this._get('send') || this.send;
             var parse = !(this.flags & types.CIFLAG.DONT_PARSE);
-            var isExpression = (this.flags & types.CIFLAG.EXPRESSION);
             var wait = (this.flags & types.CIFLAG.WAIT) ? true : false;
             var id = utils.createUUID();
 
@@ -757,7 +727,7 @@ define('xcf/model/Command',[
             }
 
             //we're already running
-            if (isInterface == true && this._loop) {
+            if (isInterface === true && this._loop) {
                 this.reset();
             }
             if (wait !== true) {
@@ -839,7 +809,7 @@ define('xcf/model/Command',[
                 out += "<span class='text-primary inline-icon'>" + this.getBlockIcon() + "</span>";
             }
             label !== false && (out += "" + this.makeEditable('name', 'bottom', 'text', 'Enter a unique name', 'inline') + "");
-            breakDetail == true && (out += "<br/>");
+            breakDetail === true && (out += "<br/>");
             detail !== false && (out += ("<span class='text-muted small'> Send:<kbd class='text-warning'>" + this.makeEditable('send', 'bottom', 'text', 'Enter the string to send', 'inline')) + "</kbd></span>");
             if (icon !== false) {
                 this.startup && (out += this.getIcon('fa-bell inline-icon text-warning', 'text-align:right;float:right;', ''));
@@ -849,7 +819,7 @@ define('xcf/model/Command',[
             return out;
         },
         getInterval: function () {
-            return parseInt(this.interval);
+            return parseInt(this.interval,10);
         },
         start: function () {
             if (this.startup && !this.auto) {
@@ -984,7 +954,7 @@ define('xcf/model/Command',[
         onChangeField: function (field, newValue, cis) {
             var interval = this.getInterval();
             if (field == 'auto') {
-                if (newValue == true) {
+                if (newValue === true) {
                     interval > 0 && this.scope.loopBlock(this);
                 } else {
                     if (this._loop) {
@@ -993,7 +963,7 @@ define('xcf/model/Command',[
                 }
             }
             if (field == 'enabled') {
-                if (newValue == false) {
+                if (newValue === false) {
                     this.reset();
                 } else {
                     if (interval) {
@@ -1020,7 +990,7 @@ define('xcf/model/Command',[
             }
         },
         stop: function (isDestroy) {
-            if(isDestroy ==true){
+            if(isDestroy ===true){
                 return;
             }
             this.onSuccess(this, {
@@ -2271,7 +2241,7 @@ define('xcf/manager/BeanManager',[
             if (item) {
                 var view = this.getView(item);
                 if (view) {
-                    utils.destroyWidget(view);
+                    utils.destroy(view);
                 }
             }
         },

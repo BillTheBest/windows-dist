@@ -1,11 +1,10 @@
 /** @module xide/layout/_TabContainer **/
 define([
-    "xdojo/has",
     "dcl/dcl",
     'xide/utils',
     "xide/_base/_Widget",
     "xide/container/_PaneBase"
-], function (has,dcl,utils,_Widget,_PaneBase) {
+], function (dcl,utils,_Widget,_PaneBase) {
 
 
     var TabPaneClass = dcl(_PaneBase,{

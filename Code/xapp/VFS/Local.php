@@ -923,9 +923,10 @@ class XApp_VFS_Local extends XApp_VFS_Base implements Xapp_VFS_Interface_Access
 		// show folder size
 		if (($field_options & XAPP_XFILE_SHOW_FOLDER_SIZE) == XAPP_XFILE_SHOW_FOLDER_SIZE) {
 			if (is_dir($filepath)) {
-				$size = XApp_Directory_Utils::getDirectorySize($filepath);
-				$item->{XAPP_NODE_FIELD_SIZE} = XApp_File_Utils::formatSizeUnits($size);
-				$item->{XAPP_NODE_FIELD_SIZE_BYTES} = $size;
+			//	$size = XApp_Directory_Utils::getDirectorySize($filepath);
+			//	$item->{XAPP_NODE_FIELD_SIZE} = XApp_File_Utils::formatSizeUnits($size);
+			//	$item->{XAPP_NODE_FIELD_SIZE_BYTES} = $size;
+				$item->{XAPP_NODE_FIELD_SIZE_BYTES} = "Unknown";
 			}
 
 		}
