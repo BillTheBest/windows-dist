@@ -91,6 +91,7 @@ define([
                         w.startup();
                         w._started = true;
                         result = true;
+                        w._emit('startup');
                     }
                 }
             }
