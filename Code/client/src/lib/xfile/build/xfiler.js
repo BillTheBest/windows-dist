@@ -235,7 +235,7 @@ define("xdojo/declare", function(){});
 define('xide/types',[
     "dcl/dcl"
 ],function(dcl){
-    return dcl(null,{
+    return new dcl(null,{
         declaredClass:"xide/types"
     });
 });
@@ -2782,11 +2782,13 @@ define('xide/types/Types',[
     dojo.fromJson = function (js, debug) {
         var res = null;
         var didFail = false;
+        debug = true;
         try {
             res = eval("(" + js + ")");
         } catch (e) {
             didFail = true;
         }
+
         if (didFail) {
             var js2 = js.substring(js.indexOf('{'), js.lastIndexOf('}') + 1);
             try {
@@ -2803,10 +2805,6 @@ define('xide/types/Types',[
                                 "data": null
                             }
                         }, "id": 0
-                    };
-                    return {
-                        error: '1',
-                        message: js
                     };
                 }
                 throw new Error(js);
@@ -3198,10 +3196,11 @@ define('xide/model/Base',[
     });
 }).call(this);
 define('xide/factory',[
-],function(){
-    return {
-
-    }
+    'dcl/dcl'
+],function(dcl){
+    return new dcl(null,{
+        declaredClass:'xide/factory'
+    });
 });
 /** @module xide/mixins/EventedMixin **/
 define('xide/mixins/EventedMixin',[
@@ -17207,7 +17206,7 @@ define('xide/widgets/TemplatedWidgetBase',[
             this._messages = [];
         },
         updateTitleNode: function (value) {}
-    }
+    };
 
     //var Module = declare("xide.widgets.TemplatedWidgetBase", [_Widget, _XWidget,_TemplatedMixin, _WidgetsInTemplateMixin, EventedMixin],Implementation);
     var Module = dcl([_XWidget2],Implementation);
@@ -39469,10 +39468,9 @@ define('xide/rpc/Service',[
     "dojo/_base/xhr",
     "dojo/_base/declare",
     "xide/rpc/AdapterRegistry",
-    "dojo/_base/url"
-], function(dojo,lang,xhr,declare,AdapterRegistry,url)
-{
-
+    "dojo/_base/url",
+    "xide/utils"
+], function(dojo,lang,xhr,declare,AdapterRegistry,url,utils){
     var transportRegistry = new AdapterRegistry(true);
     var envelopeRegistry = new AdapterRegistry(true);
     var _nextId  = 1;
@@ -39499,7 +39497,6 @@ define('xide/rpc/Service',[
     }
 
     var service = declare("xide.rpc.Service", null, {
-
         constructor: function(smd, options){
             // summary:
             //		Take a string as a url to retrieve an smd or an object that is an smd or partial smd to use
@@ -39522,7 +39519,6 @@ define('xide/rpc/Service',[
             var url;
             var self = this;
             function processSmd(smd){
-
                 smd._baseUrl = new dojo._Url((dojo.isBrowser ? location.href : dojo.config.baseUrl) ,url || '.') + '';
                 self._smd = smd;
                 if(options && options.services==='methods'){
@@ -39533,7 +39529,6 @@ define('xide/rpc/Service',[
                         lang.mixin(smd,options.mixin);
                     }
                     options = null;
-
                 }
 
                 //generate the methods
@@ -39560,19 +39555,17 @@ define('xide/rpc/Service',[
                     if(!text){
                         throw new Error("Unable to load SMD from " + smd);
                     }else{
-                        processSmd(dojo.fromJson(text));
+                        processSmd(utils.fromJson(text));
                     }
                 }else{
                     processSmd(smd);
                 }
             }
-
             this._options = (options ? options : {});
             this._requestId = 0;
         },
 
         _generateService: function(serviceName, method){
-
             if(this[method]){
                 throw new Error("WARNING: "+ serviceName+ " already exists for service. Unable to generate function");
             }
@@ -39694,12 +39687,9 @@ define('xide/rpc/Service',[
     service.transportRegistry = transportRegistry;
     service.envelopeRegistry = envelopeRegistry;
     service._nextId = _nextId;
-
     service.getTarget = getTarget;
-
     service.toOrdered= toOrdered;
     service._sync = _sync;
-
     envelopeRegistry.register("URL", function(str){ return str == "URL"; },{
 		serialize:function(smd, method, data ){
 			var d = dojo.objectToQuery(data);
@@ -39740,7 +39730,6 @@ define('xide/rpc/Service',[
 					target += '/' + i + '/' + data[i];
 				}
 			}
-
 			return {
 				data:'',
 				target: target
@@ -39773,7 +39762,6 @@ define('xide/rpc/Service',[
             return dojo.io.script.get(r);
         }
     });*/
-
     if(dojo._contentHandlers) {
         dojo._contentHandlers.auto = function (xhr) {
             // automatically choose the right handler based on the returned content type
@@ -39786,18 +39774,1590 @@ define('xide/rpc/Service',[
             return results;
         };
     }
-
     return service;
+});
 
+/** @module xide/utils/StringUtils
+ *  @description All string related functions
+ */
+define('xide/utils/StringUtils',[
+    'xide/utils',
+    'xide/types',
+    'dojo/json',
+    'xide/lodash'
+], function (utils, types, json, _) {
+    "use strict";
+
+    /**
+     *
+     * @param replacer
+     * @param cycleReplacer
+     * @returns {Function}
+     */
+    function serializer(replacer, cycleReplacer) {
+        var stack = [], keys = [];
+
+        if (cycleReplacer == null) cycleReplacer = function (key, value) {
+            if (stack[0] === value) return "[Circular ~]";
+            return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
+        };
+
+        return function (key, value) {
+            if (stack.length > 0) {
+                var thisPos = stack.indexOf(this);
+                ~thisPos ? stack.splice(thisPos + 1) : stack.push(this);
+                ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key);
+                if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
+            }
+            else stack.push(value);
+
+            return replacer == null ? value : replacer.call(this, key, value)
+        }
+    }
+
+    /**
+     *
+     * @param obj
+     * @returns {*}
+     */
+    utils.stringify = function (obj) {
+        return JSON.stringify(obj, serializer(), 2);
+    };
+
+    function stringify(obj, replacer, spaces, cycleReplacer) {
+        return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+    }
+
+    /**
+     * Takes a number and returns a rounded fixed digit string.
+     * Returns an empty string if first parameter is NaN, (-)Infinity or not of type number.
+     * If parameter trailing is set to true trailing zeros will be kept.
+     *
+     * @param {number} num the number
+     * @param {number} [digits=3] digit count
+     * @param {boolean} [trailing=false] keep trailing zeros
+     * @memberOf module:xide/utils/StringUtils
+     *
+     * @example
+     *
+     test(fsuxx(-6.8999999999999995), '-6.9');
+     test(fsuxx(0.020000000000000004), '0.02');
+     test(fsuxx(0.199000000000000004), '0.199');
+     test(fsuxx(0.199000000000000004, 2), '0.2');
+     test(fsuxx(0.199000000000000004, 1), '0.2');
+     test(fsuxx(0.199000000000000004, 2, true), '0.20');
+     test(fsuxx('muh'), '');
+     test(fsuxx(false), '');
+     test(fsuxx(null), '');
+     test(fsuxx(), '');
+     test(fsuxx(NaN), '');
+     test(fsuxx(Infinity), '');
+     test(fsuxx({bla: 'blub'}), '');
+     test(fsuxx([1,2,3]), '');
+     test(fsuxx(6.8999999999999995), '6.9');
+     test(fsuxx(0.199000000000000004), '0.199');
+     test(fsuxx(0.199000000000000004, 2), '0.2');
+     test(fsuxx(0.199000000000000004, 2, true), '0.20');
+     *
+     *
+     * @returns {string}
+     *
+     */
+    utils.round = function (num, digits, trailing) {
+
+        if (typeof num !== 'number' || isNaN(num) || num === Infinity || num === -Infinity) return '';
+
+        digits = ((typeof digits === 'undefined') ? 3 : (parseInt(digits, 10) || 0));
+
+        var f = Math.pow(10, digits);
+        var res = (Math.round(num * f) / f).toFixed(digits);
+
+        // remove trailing zeros and cast back to string
+        if (!trailing) res = '' + (+res);
+
+        return res;
+    };
+
+
+
+
+    /**
+     *
+     * @param bytes
+     * @param si
+     * @returns {string}
+     */
+    utils.humanFileSize = function (bytes, si) {
+        var thresh = si ? 1000 : 1024;
+        if (Math.abs(bytes) < thresh) {
+            return bytes + ' B';
+        }
+        var units = si
+            ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+            : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+        var u = -1;
+        do {
+            bytes /= thresh;
+            ++u;
+        } while (Math.abs(bytes) >= thresh && u < units.length - 1);
+        return bytes.toFixed(1) + ' ' + units[u];
+    };
+
+    if (typeof String.prototype.startsWith != 'function') {
+        // see below for better implementation!
+        String.prototype.startsWith = function (str) {
+            return this.indexOf(str) === 0;
+        };
+    }
+
+    if ( typeof String.prototype.endsWith != 'function' ) {
+        String.prototype.endsWith = function( str ) {
+            return this.substring( this.length - str.length, this.length ) === str;
+        }
+    }
+
+    /**
+     *
+     * @param str
+     * @returns {boolean}
+     */
+    utils.isNativeEvent = function (str) {
+        var _foo = null,//just for having an optimized object map for a native event lookup below
+            _nativeEvents = {
+                "onclick": _foo,
+                "ondblclick": _foo,
+                "onmousedown": _foo,
+                "onmouseup": _foo,
+                "onmouseover": _foo,
+                "onmousemove": _foo,
+                "onmouseout": _foo,
+                "onkeypress": _foo,
+                "onkeydown": _foo,
+                "onkeyup": _foo,
+                "onfocus": _foo,
+                "onblur": _foo,
+                "onchange": _foo
+            };
+
+        if (str in _nativeEvents) {
+            return true;
+        }
+        _nativeEvents = {
+            "click": _foo,
+            "dblclick": _foo,
+            "mousedown": _foo,
+            "mouseup": _foo,
+            "mouseover": _foo,
+            "mousemove": _foo,
+            "mouseout": _foo,
+            "keypress": _foo,
+            "keydown": _foo,
+            "keyup": _foo,
+            "focus": _foo,
+            "blur": _foo,
+            "change": _foo
+        };
+
+        return str in _nativeEvents;
+
+    };
+    /**
+     *
+     * @param str
+     * @returns {boolean}
+     *
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.isSystemEvent = function (str) {
+        for (var t in types.EVENTS) {
+            if (types.EVENTS[t] === str) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    /**
+     *
+     * @param arr
+     * @param val
+     * @returns {number}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.contains = function (arr, val) {
+        for (var i = 0; i < arr.length; i++) {
+            if (arr[i] === val) {
+                return i;
+            }
+        }
+        return -1;
+    };
+    /**
+     *
+     * @param obj
+     * @param val
+     * @returns {*}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.getObjectKeyByValue = function (obj, val) {
+        if (obj && val) {
+            for (var prop in obj) {
+                if (obj.hasOwnProperty(prop)) {
+                    if (obj[prop] === val)
+                        return prop;
+                }
+            }
+        }
+        return null;
+    };
+
+    /**
+     *
+     * @param url
+     * @param parameter
+     * @returns {*}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.removeURLParameter = function (url, parameter) {
+        //prefer to use l.search if you have a location/link object
+        var urlparts = url.split('?');
+        if (urlparts.length >= 2) {
+
+            var prefix = encodeURIComponent(parameter) + '=';
+            var pars = urlparts[1].split(/[&;]/g);
+
+            //reverse iteration as may be destructive
+            for (var i = pars.length; i-- > 0;) {
+                //idiom for string.startsWith
+                if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+                    pars.splice(i, 1);
+                }
+            }
+
+            url = urlparts[0] + '?' + pars.join('&');
+            return url;
+        } else {
+            return url;
+        }
+    };
+
+    /**
+     *
+     * @param url
+     * @param paramName
+     * @param paramValue
+     * @returns {*}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.replaceUrlParam = function (url, paramName, paramValue) {
+        if (url.indexOf(paramName) == -1) {
+            url += (url.indexOf('?') > 0 ? '&' : '?') + paramName + '=' + paramValue;
+            return url;
+        }
+        var pattern = new RegExp('(' + paramName + '=).*?(&|$)');
+        var newUrl = url.replace(pattern, '$1' + paramValue + '$2');
+        if (newUrl == url) {
+            newUrl = newUrl + (newUrl.indexOf('?') > 0 ? '&' : '?') + paramName + '=' + paramValue
+        }
+        return newUrl
+    };
+
+    /**
+     *
+     * @param mount
+     * @param path
+     * @param encode
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.buildPath = function (mount, path, encode) {
+
+        //fix mount
+        var _mount = '' + mount;
+        _mount = utils.replaceAll('/', '', mount);
+        var _path = '' + path;
+        _path = _path.replace('./', '/').replace(/^\/|\/$/g, '');
+
+        var _res = _mount + '://' + _path;
+        if (encode === true) {
+            return encodeURIComponent(_res);
+        }
+        return _res;
+    };
+
+    /**
+     *
+     * @param string
+     * @returns {boolean}
+     * @memberOf module:xide/utils/StringUtils
+     *
+     */
+    utils.isImage = function (string) {
+        return string.toLowerCase().match(/\.(jpeg|jpg|gif|png)$/) != null;
+    };
+
+    /**
+     *
+     * @param field
+     * @param enumValue
+     * @returns {boolean}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.hasFlag3 = function (field, enumValue) {
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage,JSBitwiseOperatorUsage,JSBitwiseOperatorUsage,JSBitwiseOperatorUsage,JSBitwiseOperatorUsage,JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        return ((1 << enumValue) & field) ? true : false;
+    };
+
+    /**
+     *
+     * @param field
+     * @param enumValue
+     * @returns {boolean}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.hasFlag = function (field, enumValue) {
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        return ((1 << enumValue) & field) ? true : false;
+    };
+
+    /**
+     *
+     * @param enumValue
+     * @param field
+     * @returns {int|*}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.disableFlag = function (enumValue, field) {
+        enumValue &= ~(1 << field);
+        return enumValue;
+    };
+    /**
+     * XApp specific url string cleaner
+     * @param string
+     * @returns {*}
+     */
+    utils.cleanUrl = function (string) {
+        if (string) {
+            string = string.replace('//', '/');
+            string = string.replace('./', '/');
+            string = string.replace('http:/', 'http://');
+            string = string.replace('./', '/');
+            string = string.replace('////', '/');
+            string = string.replace('///', '/');
+            return string;
+        }
+        return string;
+    };
+    /**
+     * Return data from JSON
+     * @param inData
+     * @param validOnly
+     * @param imit
+     * @memberOf module:xide/utils/StringUtils
+     * @returns {*}
+     */
+    utils.getJson = function (inData, validOnly, ommit) {
+        try {
+            return _.isString(inData) ? json.parse(inData, false) : validOnly === true ? null : inData;
+        } catch (e) {
+            ommit !== false && console.error('error parsing json data ' + inData + ' error = ' + e);
+        }
+        return null;
+    };
+
+    /**
+     * Hard Dojo override to catch malformed JSON.
+     * @param js
+     * @returns {*}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.fromJson = function (js) {
+        if (!_.isString(js)) {
+            return js;
+        }
+        var res = null;
+        var didFail = false;
+        try {
+            res = eval("(" + js + ")", {});
+        } catch (e) {
+            didFail = true;
+        }
+        if (didFail) {
+            js = js.substring(js.indexOf('{'), js.lastIndexOf('}') + 1);
+            try {
+                res = eval("(" + js + ")", {});
+            } catch (e) {
+                throw new Error(js);
+            }
+        }
+        return res;
+    };
+
+    /**
+     * String Replace which works with multiple found items. Native aborts on the first needle.
+     * @param find
+     * @param replace
+     * @param str
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.replaceAll = function (find, replace, str) {
+        return str ? str.split(find).join(replace) : '';
+    };
+
+    /**
+     * CI compatible string check for null and length>0
+     * @param input
+     * @returns {boolean}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.isValidString = function (input) {
+        return input != null && input.length != null && input.length > 0 && input != "undefined"; //Boolean
+    };
+
+    /**
+     * Dojo style template replacer
+     * @param template
+     * @param obj
+     * @returns {*}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.substituteString = function (template, obj) {
+        return template.replace(/\$\{([^\s\:\}]+)(?:\:([^\s\:\}]+))?\}/g, function (match, key) {
+            return obj[key];
+        });
+    };
+
+    /**
+     *
+     * @param expression
+     * @param delimiters
+     * @returns {*}
+     * @private
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.findOcurrences = function (expression, delimiters) {
+        var d = {
+            begin: utils.escapeRegExp(delimiters.begin),
+            end: utils.escapeRegExp(delimiters.end)
+        };
+        return expression.match(new RegExp(d.begin + "([^" + d.end + "]*)" + d.end, 'g'));
+    };
+
+    /**
+     * Escape regular expressions in a string
+     * @param string
+     * @returns {*}
+     * @private
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.escapeRegExp = function (string) {
+        var special = ["[", "]", "(", ")", "{", "}", "*", "+", ".", "|", "||"];
+        for (var n = 0; n < special.length; n++) {
+            string = string.replace(special[n], "\\" + special[n]);
+        }
+
+        return string;
+    };
+    /**
+     *
+     * @param str {string} haystack
+     * @param hash {Object}
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.multipleReplace = function (str, hash) {
+        //to array
+        var a = [];
+        for (var key in hash) {
+            a[a.length] = key;
+        }
+        return str.replace(new RegExp(a.join('\\b|\\b'), 'g'), function (m) {
+            return hash[m] || hash["\\" + m];
+        });
+    };
+
+    /**
+     * Flexible replacer, supports multiple replace and safe replace
+     *
+     * @param str {string} the haystack
+
+     * @param needle {string|null} optional, only needed for simple cases, otherwise its using the 'what' map
+     *
+     * @param what {string|Object}. When string, its replacing 'needle' with 'what'. If its a hash-map:
+     * variable:value, its replacing occurrences of all variables in 'haystack'. In such case, you can specify
+     * delimiters to make sure that 'unresolved' variables will be stripped of in the result.
+     *
+     * @param delimiters {Object} Delimiters to identify variables. This is used to eliminate unresolved variables from
+     * the result.
+     *
+     * @param delimiters.begin {string}
+     * @param delimiters.end {string}
+     *
+     * @returns {string}
+     *
+     *
+     * @example:
+     *
+     * 1. simple case: replace all '/' with ''
+     *
+     * return utils.replace('/foo/','/','') //returns 'foo'
+     *
+     * 2. simple case with multiple variables:
+     *
+     * return utils.replace('darling, i miss you so much',null,{'miss':'kiss','much':'little'})
+     * # darling, i kiss you so little
+     *
+     * @memberOf module:xide/utils
+     * @extends xide/utils
+     */
+    utils.replace = function (str, needle, what, delimiters) {
+        if (!str) {
+            return '';
+        }
+        if (what && _.isObject(what) || _.isArray(what)) {
+            if (delimiters) {
+                var ocurr = utils.findOcurrences(str, delimiters),
+                    replaceAll = utils.replaceAll;
+                if (ocurr) {
+
+                    for (var i = 0, j = ocurr.length; i < j; i++) {
+                        var el = ocurr[i];
+
+                        //strip off delimiters
+                        var _variableName = replaceAll(delimiters.begin, '', el);
+                        _variableName = replaceAll(delimiters.end, '', _variableName);
+                        str = replaceAll(el, what[_variableName], str);
+                    }
+                } else {
+                    return str;
+                }
+            } else {
+                //fast case
+                return utils.multipleReplace(str, what)
+            }
+            return str;
+        }
+        //fast case
+        return utils.replaceAll(needle, what, str);
+    };
+
+    /**
+     * Capitalize
+     * @param word
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.capitalize = function (word) {
+        return word.substring(0, 1).toUpperCase() + word.substring(1);
+    };
+
+    /**
+     * vsprintf impl. of PHP
+     * @param format
+     * @param args
+     * @example
+     // example 1: vsprintf('%04d-%02d-%02d', [1988, 8, 1]);
+     // returns 1: '1988-08-01'
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.vsprintf = function (format, args) {
+        return utils.sprintf.apply(this, [format].concat(args));
+    };
+    /**
+     * PHP.js version of sprintf
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     * @link http://kevin.vanzonneveld.net
+     */
+    utils.sprintf = function () {
+        var regex = /%%|%(\d+\$)?([-+\'#0 ]*)(\*\d+\$|\*|\d+)?(\.(\*\d+\$|\*|\d+))?([scboxXuideEfFgG])/g;
+        var a = arguments,
+            i = 0,
+            format = a[i++];
+
+        // pad()
+        var pad = function (str, len, chr, leftJustify) {
+            if (!chr) {
+                chr = ' ';
+            }
+            var padding = (str.length >= len) ? '' : Array(1 + len - str.length >>> 0).join(chr);
+            return leftJustify ? str + padding : padding + str;
+        };
+
+        // justify()
+        var justify = function (value, prefix, leftJustify, minWidth, zeroPad, customPadChar) {
+            var diff = minWidth - value.length;
+            if (diff > 0) {
+                if (leftJustify || !zeroPad) {
+                    value = pad(value, minWidth, customPadChar, leftJustify);
+                } else {
+                    value = value.slice(0, prefix.length) + pad('', diff, '0', true) + value.slice(prefix.length);
+                }
+            }
+            return value;
+        };
+
+        // formatBaseX()
+        var formatBaseX = function (value, base, prefix, leftJustify, minWidth, precision, zeroPad) {
+            // Note: casts negative numbers to positive ones
+            var number = value >>> 0;
+            prefix = prefix && number && {
+                    '2': '0b',
+                    '8': '0',
+                    '16': '0x'
+                }[base] || '';
+            value = prefix + pad(number.toString(base), precision || 0, '0', false);
+            return justify(value, prefix, leftJustify, minWidth, zeroPad);
+        };
+
+        // formatString()
+        var formatString = function (value, leftJustify, minWidth, precision, zeroPad, customPadChar) {
+            if (precision != null) {
+                value = value.slice(0, precision);
+            }
+            return justify(value, '', leftJustify, minWidth, zeroPad, customPadChar);
+        };
+
+        // doFormat()
+        var doFormat = function (substring, valueIndex, flags, minWidth, _, precision, type) {
+            var number;
+            var prefix;
+            var method;
+            var textTransform;
+            var value;
+
+            if (substring === '%%') {
+                return '%';
+            }
+
+            // parse flags
+            var leftJustify = false,
+                positivePrefix = '',
+                zeroPad = false,
+                prefixBaseX = false,
+                customPadChar = ' ';
+            var flagsl = flags.length;
+            for (var j = 0; flags && j < flagsl; j++) {
+                switch (flags.charAt(j)) {
+                    case ' ':
+                        positivePrefix = ' ';
+                        break;
+                    case '+':
+                        positivePrefix = '+';
+                        break;
+                    case '-':
+                        leftJustify = true;
+                        break;
+                    case "'":
+                        customPadChar = flags.charAt(j + 1);
+                        break;
+                    case '0':
+                        zeroPad = true;
+                        break;
+                    case '#':
+                        prefixBaseX = true;
+                        break;
+                }
+            }
+
+            // parameters may be null, undefined, empty-string or real valued
+            // we want to ignore null, undefined and empty-string values
+            if (!minWidth) {
+                minWidth = 0;
+            } else if (minWidth === '*') {
+                minWidth = +a[i++];
+            } else if (minWidth.charAt(0) == '*') {
+                minWidth = +a[minWidth.slice(1, -1)];
+            } else {
+                minWidth = +minWidth;
+            }
+
+            // Note: undocumented perl feature:
+            if (minWidth < 0) {
+                minWidth = -minWidth;
+                leftJustify = true;
+            }
+
+            if (!isFinite(minWidth)) {
+                throw new Error('sprintf: (minimum-)width must be finite');
+            }
+
+            if (!precision) {
+                precision = 'fFeE'.indexOf(type) > -1 ? 6 : (type === 'd') ? 0 : undefined;
+            } else if (precision === '*') {
+                precision = +a[i++];
+            } else if (precision.charAt(0) == '*') {
+                precision = +a[precision.slice(1, -1)];
+            } else {
+                precision = +precision;
+            }
+
+            // grab value using valueIndex if required?
+            value = valueIndex ? a[valueIndex.slice(0, -1)] : a[i++];
+
+            switch (type) {
+                case 's':
+                    return formatString(String(value), leftJustify, minWidth, precision, zeroPad, customPadChar);
+                case 'c':
+                    return formatString(String.fromCharCode(+value), leftJustify, minWidth, precision, zeroPad);
+                case 'b':
+                    return formatBaseX(value, 2, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+                case 'o':
+                    return formatBaseX(value, 8, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+                case 'x':
+                    return formatBaseX(value, 16, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+                case 'X':
+                    return formatBaseX(value, 16, prefixBaseX, leftJustify, minWidth, precision, zeroPad).toUpperCase();
+                case 'u':
+                    return formatBaseX(value, 10, prefixBaseX, leftJustify, minWidth, precision, zeroPad);
+                case 'i':
+                case 'd':
+                    number = +value || 0;
+                    number = Math.round(number - number % 1); // Plain Math.round doesn't just truncate
+                    prefix = number < 0 ? '-' : positivePrefix;
+                    value = prefix + pad(String(Math.abs(number)), precision, '0', false);
+                    return justify(value, prefix, leftJustify, minWidth, zeroPad);
+                case 'e':
+                case 'E':
+                case 'f': // Should handle locales (as per setlocale)
+                case 'F':
+                case 'g':
+                case 'G':
+                    number = +value;
+                    prefix = number < 0 ? '-' : positivePrefix;
+                    method = ['toExponential', 'toFixed', 'toPrecision']['efg'.indexOf(type.toLowerCase())];
+                    textTransform = ['toString', 'toUpperCase']['eEfFgG'.indexOf(type) % 2];
+                    value = prefix + Math.abs(number)[method](precision);
+                    return justify(value, prefix, leftJustify, minWidth, zeroPad)[textTransform]();
+                default:
+                    return substring;
+            }
+        };
+
+        return format.replace(regex, doFormat);
+    };
+    /***
+     *
+     * @param str
+     * @returns {string | null}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.cleanString = function (str) {
+        if (!str) {
+            return null;
+        }
+        str = str.replace(/[\r]/g, '')
+            .replace(/[\b]/g, '')
+            .replace(/[\f]/g, '')
+            .replace(/[\n]/g, '')
+            .replace(/\\/g, '');
+        return str;
+    };
+    /***
+     *
+     * @param str {string}
+     * @returns {string | null}
+     */
+    utils.normalizePath = function (str) {
+        if (!str) {
+            return null;
+        }
+        str = utils.cleanString(str);//control characters
+        str = str.replace('./', '');//file store specifics
+        str = str.replace('/.', '');//file store specifics
+        str = str.replace(/([^:]\/)\/+/g, "$1");//double slashes
+        return str;
+    };
+
+    /**
+     *
+     * @enum
+     * @global
+     * @memberOf module:xide/types
+     */
+    types.PATH_PARTS = {
+        'DIRNAME': 1,
+        'BASENAME': 2,
+        'EXTENSION': 4,
+        'FILENAME': 8,
+        'PATHINFO_ALL': 0
+    };
+    /**
+     * PHP.js version of basename
+     * @param path {string}
+     * @param suffix {string}
+     * @example
+     //   example 1: basename('/www/site/home.htm', '.htm');
+     //   returns 1: 'home'
+     //   example 2: basename('ecra.php?p=1');
+     //   returns 2: 'ecra.php?p=1'
+     //   example 3: basename('/some/path/');
+     //   returns 3: 'path'
+     //   example 4: basename('/some/path_ext.ext/','.ext');
+     //   returns 4: 'path_ext'
+     * @returns {*}
+     * @memberOf module:xide/utils/StringUtils
+     * @link http://phpjs.org/functions/basename/
+     */
+    utils.basename = function (path, suffix) {
+        var b = path;
+        var lastChar = b.charAt(b.length - 1);
+
+        if (lastChar === '/' || lastChar === '\\') {
+            b = b.slice(0, -1);
+        }
+
+        b = b.replace(/^.*[\/\\]/g, '');
+
+        if (typeof suffix === 'string' && b.substr(b.length - suffix.length) == suffix) {
+            b = b.substr(0, b.length - suffix.length);
+        }
+        return b;
+    };
+
+    /**
+     *
+     * @param path
+     * @param options
+     * @example
+     //   example 1: pathinfo('/www/htdocs/index.html', 1);
+     //   returns 1: '/www/htdocs'
+     //   example 2: pathinfo('/www/htdocs/index.html', 'PATHINFO_BASENAME');
+     //   returns 2: 'index.html'
+     //   example 3: pathinfo('/www/htdocs/index.html', 'PATHINFO_EXTENSION');
+     //   returns 3: 'html'
+     //   example 4: pathinfo('/www/htdocs/index.html', 'PATHINFO_FILENAME');
+     //   returns 4: 'index'
+     //   example 5: pathinfo('/www/htdocs/index.html', 2 | 4);
+     //   returns 5: {basename: 'index.html', extension: 'html'}
+     //   example 6: pathinfo('/www/htdocs/index.html', 'PATHINFO_ALL');
+     //   returns 6: {dirname: '/www/htdocs', basename: 'index.html', extension: 'html', filename: 'index'}
+     //   example 7: pathinfo('/www/htdocs/index.html');
+     //   returns 7: {dirname: '/www/htdocs', basename: 'index.html', extension: 'html', filename: 'index'}
+     * @returns {object}
+     * @link http://phpjs.org/functions/pathinfo/
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.pathinfo = function (path, options) {
+        //  discuss at:
+        // original by: Nate
+        //  revised by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+        // improved by: Brett Zamir (http://brett-zamir.me)
+        // improved by: Dmitry Gorelenkov
+        //    input by: Timo
+        //        note: Inspired by actual PHP source: php5-5.2.6/ext/standard/string.c line #1559
+        //        note: The way the bitwise arguments are handled allows for greater flexibility
+        //        note: & compatability. We might even standardize this code and use a similar approach for
+        //        note: other bitwise PHP functions
+        //        note: php.js tries very hard to stay away from a core.js file with global dependencies, because we like
+        //        note: that you can just take a couple of functions and be on your way.
+        //        note: But by way we implemented this function, if you want you can still declare the PATHINFO_*
+        //        note: yourself, and then you can use: pathinfo('/www/index.html', PATHINFO_BASENAME | PATHINFO_EXTENSION);
+        //        note: which makes it fully compliant with PHP syntax.
+        //  depends on: basename
+        var opt = '',
+            real_opt = '',
+            optName = '',
+            optTemp = 0,
+            tmp_arr = {},
+            cnt = 0,
+            i = 0;
+        var have_basename = false,
+            have_extension = false,
+            have_filename = false;
+
+        // Input defaulting & sanitation
+        if (!path) {
+            return false;
+        }
+        if (!options) {
+            options = 'PATHINFO_ALL';
+        }
+
+        // Initialize binary arguments. Both the string & integer (constant) input is
+        // allowed
+        var OPTS = {
+            'PATHINFO_DIRNAME': 1,
+            'PATHINFO_BASENAME': 2,
+            'PATHINFO_EXTENSION': 4,
+            'PATHINFO_FILENAME': 8,
+            'PATHINFO_ALL': 0
+        };
+        // PATHINFO_ALL sums up all previously defined PATHINFOs (could just pre-calculate)
+        for (optName in OPTS) {
+            if (OPTS.hasOwnProperty(optName)) {
+                OPTS.PATHINFO_ALL = OPTS.PATHINFO_ALL | OPTS[optName];
+            }
+        }
+        if (typeof options !== 'number') {
+            // Allow for a single string or an array of string flags
+            options = [].concat(options);
+            for (i = 0; i < options.length; i++) {
+                // Resolve string input to bitwise e.g. 'PATHINFO_EXTENSION' becomes 4
+                if (OPTS[options[i]]) {
+                    optTemp = optTemp | OPTS[options[i]];
+                }
+            }
+            options = optTemp;
+        }
+
+        // Internal Functions
+        var __getExt = function (path) {
+            var str = path + '';
+            var dotP = str.lastIndexOf('.') + 1;
+            return !dotP ? false : dotP !== str.length ? str.substr(dotP) : '';
+        };
+
+        // Gather path infos
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_DIRNAME) {
+            var dirName = path.replace(/\\/g, '/')
+                .replace(/\/[^\/]*\/?$/, ''); // dirname
+            tmp_arr.dirname = dirName === path ? '.' : dirName;
+        }
+
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_BASENAME) {
+            if (false === have_basename) {
+                have_basename = utils.basename(path);
+            }
+            tmp_arr.basename = have_basename;
+        }
+
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_EXTENSION) {
+            if (false === have_basename) {
+                have_basename = utils.basename(path);
+            }
+            if (false === have_extension) {
+                have_extension = __getExt(have_basename);
+            }
+            if (false !== have_extension) {
+                tmp_arr.extension = have_extension;
+            }
+        }
+
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_FILENAME) {
+            if (false === have_basename) {
+                have_basename = utils.basename(path);
+            }
+            if (false === have_extension) {
+                have_extension = __getExt(have_basename);
+            }
+            if (false === have_filename) {
+                have_filename = have_basename.slice(0, have_basename.length - (have_extension ? have_extension.length + 1 :
+                        have_extension === false ? 0 : 1));
+            }
+
+            tmp_arr.filename = have_filename;
+        }
+
+        // If array contains only 1 element: return string
+        cnt = 0;
+        for (opt in tmp_arr) {
+            if (tmp_arr.hasOwnProperty(opt)) {
+                cnt++;
+                real_opt = opt;
+            }
+        }
+        if (cnt === 1) {
+            return tmp_arr[real_opt];
+        }
+
+        // Return full-blown array
+        return tmp_arr;
+    };
+
+    /**
+     * PHP.js version of parse_url
+     * @param str {string}
+     * @param component {string} enum
+     * @returns {object}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.parse_url = function (str, component) {
+        //       discuss at: http://phpjs.org/functions/parse_url/
+        //      improved by: Brett Zamir (http://brett-zamir.me)
+        //             note: original by http://stevenlevithan.com/demo/parseuri/js/assets/parseuri.js
+        //             note: blog post at http://blog.stevenlevithan.com/archives/parseuri
+        //             note: demo at http://stevenlevithan.com/demo/parseuri/js/assets/parseuri.js
+        //             note: Does not replace invalid characters with '_' as in PHP, nor does it return false with
+        //             note: a seriously malformed URL.
+        //             note: Besides function name, is essentially the same as parseUri as well as our allowing
+        //             note: an extra slash after the scheme/protocol (to allow file:/// as in PHP)
+        //        example 1: parse_url('http://username:password@hostname/path?arg=value#anchor');
+        //        returns 1: {scheme: 'http', host: 'hostname', user: 'username', pass: 'password', path: '/path', query: 'arg=value', fragment: 'anchor'}
+        var query, key = ['source', 'scheme', 'authority', 'userInfo', 'user', 'pass', 'host', 'port',
+                'relative', 'path', 'directory', 'file', 'query', 'fragment'
+            ],
+            ini = (this.php_js && this.php_js.ini) || {},
+            mode = (ini['phpjs.parse_url.mode'] &&
+                ini['phpjs.parse_url.mode'].local_value) || 'php',
+            parser = {
+                php: /^(?:([^:\/?#]+):)?(?:\/\/()(?:(?:()(?:([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?()(?:(()(?:(?:[^?#\/]*\/)*)()(?:[^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+                strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+                loose: /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/\/?)?((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/ // Added one optional slash to post-scheme to catch file:/// (should restrict this)
+            };
+
+        var m = parser[mode].exec(str),
+            uri = {},
+            i = 14;
+        while (i--) {
+            if (m[i]) {
+                uri[key[i]] = m[i];
+            }
+        }
+
+        if (component) {
+            return uri[component.replace('PHP_URL_', '')
+                .toLowerCase()];
+        }
+        if (mode !== 'php') {
+            var name = (ini['phpjs.parse_url.queryKey'] &&
+                ini['phpjs.parse_url.queryKey'].local_value) || 'queryKey';
+            parser = /(?:^|&)([^&=]*)=?([^&]*)/g;
+            uri[name] = {};
+            query = uri[key[12]] || '';
+            query.replace(parser, function ($0, $1, $2) {
+                if ($1) {
+                    uri[name][$1] = $2;
+                }
+            });
+        }
+        delete uri.source;
+        return uri;
+    };
+
+    /***
+     *
+     * @deprecated
+     */
+    utils.getMimeTable = function () {
+        return {};
+    };
+
+    /***
+     * @deprecated
+     * @returns {object}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.getMimeTable2 = function () {
+        return {
+            "mid": "fa-file-audio-o",
+            "txt": "fa-file-text-o",
+            "sql": "fa-cube",
+            "js": "fa-cube",
+            "gif": "fa-file-picture-o",
+            "jpg": "fa-file-picture-o",
+            "html": "fa-cube",
+            "htm": "fa-cube",
+            "rar": "fa-file-zip-o",
+            "gz": "fa-file-zip-o",
+            "tgz": "fa-file-zip-o",
+            "z": "fa-file-zip-o",
+            "ra": "fa-file-movie-o",
+            "ram": "fa-file-movie-o",
+            "rm": "fa-file-movie-o",
+            "pl": "source_pl.png",
+            "zip": "fa-file-zip-o",
+            "wav": "fa-file-audio-o",
+            "php": "fa-cube",
+            "php3": "fa-cube",
+            "phtml": "fa-cube",
+            "exe": "fa-file-o",
+            "bmp": "fa-file-picture-o",
+            "png": "fa-file-picture-o",
+            "css": "fa-cube",
+            "mp3": "fa-file-audio-o",
+            "m4a": "fa-file-audio-o",
+            "aac": "fa-file-audio-o",
+            "xls": "fa-file-excel-o",
+            "xlsx": "fa-file-excel-o",
+            "ods": "fa-file-excel-o",
+            "sxc": "fa-file-excel-o",
+            "csv": "fa-file-excel-o",
+            "tsv": "fa-file-excel-o",
+            "doc": "fa-file-word-o",
+            "docx": "fa-file-word-o",
+            "odt": "fa-file-word-o",
+            "swx": "fa-file-word-o",
+            "rtf": "fa-file-word-o",
+            "md": "fa-file-word-o",
+            "ppt": "fa-file-powerpoint-o",
+            "pps": "fa-file-powerpoint-o",
+            "odp": "fa-file-powerpoint-o",
+            "sxi": "fa-file-powerpoint-o",
+            "pdf": "fa-file-pdf-o",
+            "mov": "fa-file-movie-o",
+            "avi": "fa-file-movie-o",
+            "mpg": "fa-file-movie-o",
+            "mpeg": "fa-file-movie-o",
+            "mp4": "fa-file-movie-o",
+            "m4v": "fa-file-movie-o",
+            "ogv": "fa-file-movie-o",
+            "webm": "fa-file-movie-o",
+            "wmv": "fa-file-movie-o",
+            "swf": "fa-file-movie-o",
+            "flv": "fa-file-movie-o",
+            "tiff": "fa-file-picture-o",
+            "tif": "fa-file-picture-o",
+            "svg": "fa-file-picture-o",
+            "psd": "fa-file-picture-o",
+            "ers": "horo.png"
+        };
+    };
+    /***
+     *
+     * @deprecated
+     * @memberOf module:xide/utils/StringUtils
+     * @returns {object}
+     */
+    utils.getIconTable = function () {
+        return {};
+    };
+
+
+    /**
+     *
+     * @param string
+     * @param overwrite
+     * @returns {object}
+     * @memberOf module:xide/utils/StringUtils
+     * @deprecated
+     */
+    utils.urlDecode = function (string, overwrite) {
+        if (!string || !string.length) {
+            return {}
+        }
+        var obj = {};
+        var pairs = string.split("&");
+        var pair, name, value;
+        for (var i = 0, len = pairs.length; i < len; i++) {
+            pair = pairs[i].split("=");
+            name = decodeURIComponent(pair[0]);
+            value = decodeURIComponent(pair[1]);
+            if (value != null && value === 'true') {
+                value = true;
+            } else if (value === 'false') {
+                value = false;
+            }
+            if (overwrite !== true) {
+                if (typeof obj[name] == "undefined") {
+                    obj[name] = value
+                } else {
+                    if (typeof obj[name] == "string") {
+                        obj[name] = [obj[name]];
+                        obj[name].push(value)
+                    } else {
+                        obj[name].push(value)
+                    }
+                }
+            } else {
+                obj[name] = value
+            }
+        }
+        return obj;
+    };
+    /**
+     *
+     * @param string {string}
+     * @returns {object}
+     * @deprecated
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.getUrlArgs = function (string) {
+        var args = {};
+        if (string && (string.indexOf('?') != -1 || string.indexOf('&') != -1)) {
+
+            var query = string.substr(string.indexOf("?") + 1) || location.search.substring(1);
+            var pairs = query.split("&");
+            for (var i = 0; i < pairs.length; i++) {
+                var pos = pairs[i].indexOf("=");
+                var name = pairs[i].substring(0, pos);
+                var value = pairs[i].substring(pos + 1);
+                value = decodeURIComponent(value);
+                args[name] = value;
+            }
+        }
+        return args;
+    };
+
+    /**
+     *
+     * @param url {string}
+     * @returns {object}
+     * @deprecated
+     */
+    utils.urlArgs = function (url) {
+        var query = utils.getUrlArgs(url);
+        var map = {};
+        for (var param in query) {
+            var value = query[param],
+                options = utils.findOcurrences(value, {
+                    begin: "|",
+                    end: "|"
+                }),
+                parameterOptions = null;
+
+            if (options && options.length) {
+                //clean value:
+                value = value.replace(options[0], '');
+                //parse options
+                var optionString = options[0].substr(1, options[0].length - 2),
+                    optionSplit = optionString.split(','),
+                    optionsData = {};
+
+                for (var i = 0; i < optionSplit.length; i++) {
+
+                    var keyValue = optionSplit[i],
+                        pair = keyValue.split(':');
+
+                    optionsData[pair[0]] = pair[1];
+                }
+                parameterOptions = optionsData;
+            }
+
+            if (value && value.length) {
+                map[param] = {
+                    value: value,
+                    options: parameterOptions
+                }
+            }
+        }
+        return map;
+    };
+
+    /**
+     *
+     * @param fileName {string}
+     * @returns {string}
+     * @deprecated
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.getIcon = function (fileName) {
+        if (!fileName) {
+            return 'txt2.png';
+        }
+        var extension = utils.getFileExtension(fileName);
+        if (extension) {
+            var mime = utils.getMimeTable();
+            if (mime[extension] != null) {
+                return mime[extension];
+            }
+        }
+        return 'txt2.png';
+    };
+    /**
+     *
+     * @param fileName
+     * @returns {string}
+     * @deprecated
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.getIconClass = function (fileName) {
+        if (!fileName) {
+            return 'fa-file-o';
+        }
+        var extension = utils.getFileExtension(fileName);
+        if (types.customMimeIcons[extension]) {
+            return types.customMimeIcons[extension];
+        }
+        if (extension) {
+            var mime = utils.getMimeTable2();
+            if (mime[extension] != null) {
+                return mime[extension];
+            }
+        }
+        return 'fa-file-o';
+    };
+    /**
+     * File extension
+     * @deprecated
+     * @param fileName {string}
+     * @returns {string}
+     */
+    utils.getFileExtension = function (fileName) {
+        if (!fileName || fileName == "") return "";
+        var split = utils.getBaseName(fileName).split('.');
+        if (split.length > 1) return split[split.length - 1].toLowerCase();
+        return '';
+    };
+    /**
+     * Create a basic UUID via with Math.Random
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.createUUID = function () {
+        var S4 = function () {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        };
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4()); //String
+    };
+    /**
+     * Basename
+     * @param fileName {string}
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.getBaseName = function (fileName) {
+        if (fileName == null) return null;
+        var separator = "/";
+        if (fileName.indexOf("\\") !==-1)
+            separator = "\\";
+        return fileName.substr(fileName.lastIndexOf(separator) + 1, fileName.length);
+    };
+    /**
+     * PHP.js version of basename
+     * @param path {string}
+     * @param suffix
+     * @returns {string}
+     * @memberOf module:xide/utils/StringUtils
+     * @example
+
+     //   example 1: basename('/www/site/home.htm', '.htm')
+     //   returns 1: 'home'
+     //   example 2: basename('ecra.php?p=1')
+     //   returns 2: 'ecra.php?p=1'
+     //   example 3: basename('/some/path/')
+     //   returns 3: 'path'
+     //   example 4: basename('/some/path_ext.ext/','.ext')
+     //   returns 4: 'path_ext'
+
+     * @memberOf module:xide/utils/StringUtils
+     */
+    utils.basename = function basename(path, suffix) {
+        //  discuss at: http://locutus.io/php/basename/
+        // original by: Kevin van Zonneveld (http://kvz.io)
+        // improved by: Ash Searle (http://hexmen.com/blog/)
+        // improved by: Lincoln Ramsay
+        // improved by: djmix
+        // improved by: Dmitry Gorelenkov
+        var b = path;
+        var lastChar = b.charAt(b.length - 1);
+
+        if (lastChar === '/' || lastChar === '\\') {
+            b = b.slice(0, -1)
+        }
+
+        b = b.replace(/^.*[\/\\]/g, '');
+
+        if (typeof suffix === 'string' && b.substr(b.length - suffix.length) === suffix) {
+            b = b.substr(0, b.length - suffix.length)
+        }
+
+        return b
+    };
+    /**
+     *
+     * @param path {string}
+     * @param options
+     * @memberOf module:xide/utils/StringUtils
+     * @returns {object}
+     *
+     * @example
+     *
+     //   example 1: pathinfo('/www/htdocs/index.html', 1)
+     //   returns 1: '/www/htdocs'
+     //   example 2: pathinfo('/www/htdocs/index.html', 'PATHINFO_BASENAME')
+     //   returns 2: 'index.html'
+     //   example 3: pathinfo('/www/htdocs/index.html', 'PATHINFO_EXTENSION')
+     //   returns 3: 'html'
+     //   example 4: pathinfo('/www/htdocs/index.html', 'PATHINFO_FILENAME')
+     //   returns 4: 'index'
+     //   example 5: pathinfo('/www/htdocs/index.html', 2 | 4)
+     //   returns 5: {basename: 'index.html', extension: 'html'}
+     //   example 6: pathinfo('/www/htdocs/index.html', 'PATHINFO_ALL')
+     //   returns 6: {dirname: '/www/htdocs', basename: 'index.html', extension: 'html', filename: 'index'}
+     //   example 7: pathinfo('/www/htdocs/index.html')
+     //   returns 7: {dirname: '/www/htdocs', basename: 'index.html', extension: 'html', filename: 'index'}
+     */
+    utils.pathinfo = function (path, options) {
+        //  discuss at: http://locutus.io/php/pathinfo/
+        // original by: Nate
+        //  revised by: Kevin van Zonneveld (http://kvz.io)
+        // improved by: Brett Zamir (http://brett-zamir.me)
+        // improved by: Dmitry Gorelenkov
+        //    input by: Timo
+        //      note 1: Inspired by actual PHP source: php5-5.2.6/ext/standard/string.c line #1559
+        //      note 1: The way the bitwise arguments are handled allows for greater flexibility
+        //      note 1: & compatability. We might even standardize this
+        //      note 1: code and use a similar approach for
+        //      note 1: other bitwise PHP functions
+        //      note 1: Locutus tries very hard to stay away from a core.js
+        //      note 1: file with global dependencies, because we like
+        //      note 1: that you can just take a couple of functions and be on your way.
+        //      note 1: But by way we implemented this function,
+        //      note 1: if you want you can still declare the PATHINFO_*
+        //      note 1: yourself, and then you can use:
+        //      note 1: pathinfo('/www/index.html', PATHINFO_BASENAME | PATHINFO_EXTENSION);
+        //      note 1: which makes it fully compliant with PHP syntax.
+
+
+        var basename = utils.basename;
+        var opt = '';
+        var realOpt = '';
+        var optName = '';
+        var optTemp = 0;
+        var tmpArr = {};
+        var cnt = 0;
+        var i = 0;
+        var haveBasename = false;
+        var haveExtension = false;
+        var haveFilename = false;
+
+        // Input defaulting & sanitation
+        if (!path) {
+            return false
+        }
+        if (!options) {
+            options = 'PATHINFO_ALL'
+        }
+
+        // Initialize binary arguments. Both the string & integer (constant) input is
+        // allowed
+        var OPTS = {
+            'PATHINFO_DIRNAME': 1,
+            'PATHINFO_BASENAME': 2,
+            'PATHINFO_EXTENSION': 4,
+            'PATHINFO_FILENAME': 8,
+            'PATHINFO_ALL': 0
+        };
+        // PATHINFO_ALL sums up all previously defined PATHINFOs (could just pre-calculate)
+        for (optName in OPTS) {
+            if (OPTS.hasOwnProperty(optName)) {
+                OPTS.PATHINFO_ALL = OPTS.PATHINFO_ALL | OPTS[optName]
+            }
+        }
+        if (typeof options !== 'number') {
+            // Allow for a single string or an array of string flags
+            options = [].concat(options);
+            for (i = 0; i < options.length; i++) {
+                // Resolve string input to bitwise e.g. 'PATHINFO_EXTENSION' becomes 4
+                if (OPTS[options[i]]) {
+                    optTemp = optTemp | OPTS[options[i]]
+                }
+            }
+            options = optTemp
+        }
+
+        // Internal Functions
+        var _getExt = function (path) {
+            var str = path + '';
+            var dotP = str.lastIndexOf('.') + 1;
+            return !dotP ? false : dotP !== str.length ? str.substr(dotP) : ''
+        };
+
+        // Gather path infos
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_DIRNAME) {
+            var dirName = path
+                .replace(/\\/g, '/')
+                .replace(/\/[^\/]*\/?$/, ''); // dirname
+            tmpArr.dirname = dirName === path ? '.' : dirName
+        }
+
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_BASENAME) {
+            if (haveBasename === false) {
+                haveBasename = basename(path)
+            }
+            tmpArr.basename = haveBasename
+        }
+
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_EXTENSION) {
+            if (haveBasename === false) {
+                haveBasename = basename(path)
+            }
+            if (haveExtension === false) {
+                haveExtension = _getExt(haveBasename)
+            }
+            if (haveExtension !== false) {
+                tmpArr.extension = haveExtension
+            }
+        }
+
+        //noinspection JSBitwiseOperatorUsage,JSBitwiseOperatorUsage
+        if (options & OPTS.PATHINFO_FILENAME) {
+            if (haveBasename === false) {
+                haveBasename = basename(path)
+            }
+            if (haveExtension === false) {
+                haveExtension = _getExt(haveBasename)
+            }
+            if (haveFilename === false) {
+                haveFilename = haveBasename.slice(0, haveBasename.length - (haveExtension
+                            ? haveExtension.length + 1
+                            : haveExtension === false
+                            ? 0
+                            : 1
+                    )
+                )
+            }
+
+            tmpArr.filename = haveFilename
+        }
+
+        // If array contains only 1 element: return string
+        cnt = 0;
+        for (opt in tmpArr) {
+            if (tmpArr.hasOwnProperty(opt)) {
+                cnt++;
+                realOpt = opt
+            }
+        }
+        if (cnt === 1) {
+            return tmpArr[realOpt]
+        }
+
+        // Return full-blown array
+        return tmpArr
+    };
+
+    /**
+     *
+     * @param input {string}
+     * @param allowed {string}
+     * @example
+     //   example 1: strip_tags('<p>Kevin</p> <br /><b>van</b> <i>Zonneveld</i>', '<i><b>');
+     //   returns 1: 'Kevin <b>van</b> <i>Zonneveld</i>'
+     //   example 2: strip_tags('<p>Kevin <img src="someimage.png" onmouseover="someFunction()">van <i>Zonneveld</i></p>', '<p>');
+     //   returns 2: '<p>Kevin van Zonneveld</p>'
+     //   example 3: strip_tags("<a href='http://kevin.vanzonneveld.net'>Kevin van Zonneveld</a>", "<a>");
+     //   returns 3: "<a href='http://kevin.vanzonneveld.net'>Kevin van Zonneveld</a>"
+     //   example 4: strip_tags('1 < 5 5 > 1');
+     //   returns 4: '1 < 5 5 > 1'
+     //   example 5: strip_tags('1 <br/> 1');
+     //   returns 5: '1  1'
+     //   example 6: strip_tags('1 <br/> 1', '<br>');
+     //   returns 6: '1 <br/> 1'
+     //   example 7: strip_tags('1 <br/> 1', '<br><br/>');
+     //   returns 7: '1 <br/> 1'
+     * @returns {string}
+     */
+    utils.strip_tags = function (input, allowed) {
+        //  discuss at: http://phpjs.org/functions/strip_tags/
+        allowed = (((allowed || '') + '')
+            .toLowerCase()
+            .match(/<[a-z][a-z0-9]*>/g) || [])
+            .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+            commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+        return input.replace(commentsAndPhpTags, '')
+            .replace(tags, function ($0, $1) {
+                return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+            });
+    };
+    return utils;
 });
 
 define('xide/rpc/JsonRPC',[
-    "dojo/_base/lang",
-    "dojo/_base/json",
-    "./Service",
-    "dojo/errors/RequestError"
-], function(lang,dojo,Service, RequestError){
-
+	"./Service",
+    "dojo/errors/RequestError",
+	"xide/utils/StringUtils"
+], function(Service, RequestError,utils){
 	function jsonRpcEnvelope(version){
 		return {
 			serialize: function(smd, method, data, options){
@@ -39813,18 +41373,17 @@ define('xide/rpc/JsonRPC',[
 					d.jsonrpc = version;
 				}
 				return {
-					data: dojo.toJson(d),
+					data: JSON.stringify(d),
 					handleAs:'json',
 					contentType: 'application/json',
 					transport:"POST"
 				};
 			},
-	
 			deserialize: function(obj){
 				if ('Error' == obj.name // old xhr
 					|| obj instanceof RequestError // new xhr
 				){
-					obj = dojo.fromJson(obj.responseText);
+					obj = utils.fromJson(obj.responseText);
 				}
 				if(obj.error) {
 					var e = new Error(obj.error.message || obj.error);
@@ -39840,14 +41399,14 @@ define('xide/rpc/JsonRPC',[
 		function(str){
 			return str == "JSON-RPC-1.0";
 		},
-		lang.mixin({namedParams:false}, jsonRpcEnvelope()) // 1.0 will only work with ordered params
+		utils.mixin({namedParams:false}, jsonRpcEnvelope()) // 1.0 will only work with ordered params
 	);
     Service.envelopeRegistry.register(
 		"JSON-RPC-2.0",
 		function(str){
 			return str == "JSON-RPC-2.0";
 		},
-        lang.mixin({namedParams:true }, jsonRpcEnvelope("2.0")) // 2.0 supports named params
+        utils.mixin({namedParams:true }, jsonRpcEnvelope("2.0")) // 2.0 supports named params
 	);
 
 });
@@ -40528,6 +42087,7 @@ define('xide/manager/ManagerBase',[
     dcl.chainAfter(Module,'init');
     return Module;
 });
+/** @module xide/manager/ServerActionBase */
 define('xide/manager/ServerActionBase',[
     'dcl/dcl',
     'dojo/_base/declare',
@@ -40538,9 +42098,12 @@ define('xide/manager/ServerActionBase',[
     'xide/types',
     'xide/utils'
 ], function (dcl,declare, has, Deferred, RPCService, ManagerBase, types, utils) {
-
     var Singleton = null;
-
+    /**
+     * Class dealing with JSON-RPC-2, used by most xide managers
+     * @class module:xide.manager.ServerActionBase
+     * @augments {module:xide/manager/ManagerBase}
+     */
     var Implementation = {
         declaredClass:"xide.manager.ServerActionBase",
         serviceObject: null,
@@ -40611,7 +42174,6 @@ define('xide/manager/ServerActionBase',[
          * @returns {Deferred}
          */
         runDeferred: function (serviceClassIn, method, args, options) {
-
             var deferred = new Deferred(),
                 promise;
 
@@ -40634,27 +42196,20 @@ define('xide/manager/ServerActionBase',[
                 thiz = this;
 
             var resolve = function (data,error) {
-
                 var dfd = deferred;
                 if(options.returnProm){
                     dfd = promise;
                 }
-
                 dfd._data = data;
-
                 if(error) {
-                    //dfd.reject(error,true);
-                    //throw new Error(error);
                     if(options.onError){
                         return options.onError(error);
                     }
                 }
                 dfd.resolve(data);
-
             };
 
             promise = service[serviceClass][method](args);
-
             promise.then(function (res) {
                 res = res || {};
                 var error = res.error || {};
@@ -40666,24 +42221,20 @@ define('xide/manager/ServerActionBase',[
                 }
                 //check for error messages (non-fatal) and abort
                 if (options.checkErrors) {
-
                     if (error.code == 1) {
                         thiz.onError(error,serviceClass + '::' + method);
                         deferred.reject(error);
                         return;
                     }
                 }else{
-
                     if (error.code == 1 && options.displayError) {
                         thiz.onError(error,serviceClass + '::' + method);
                     }
-
                     if (error && error.code != 0) {
                         resolve(res,error);
                         return;
                     }
                 }
-
                 //until here all is ok, tell everybody
                 if (options.omit) {
                     thiz.publish(types.EVENTS.STATUS, {
@@ -40691,21 +42242,13 @@ define('xide/manager/ServerActionBase',[
                         what: arguments
                     }, this);
                 }
-
-
-                //final delivery
                 resolve(res);
-
-
             }, function (err) {
                 thiz.onError(err);
             });
-
-
             if(options.returnProm){
                 return promise;
             }
-
             return deferred;
         },
         getService: function () {
@@ -40715,7 +42258,6 @@ define('xide/manager/ServerActionBase',[
             return serviceClassIn || this.serviceClass;
         },
         hasMethod: function (method,serviceClass) {
-
             var _service = this.getService(),
                 _serviceClass = serviceClass || this.getServiceClass();
 
@@ -40725,7 +42267,6 @@ define('xide/manager/ServerActionBase',[
                 _service[_serviceClass][method] != null;
         },
         findServiceUrl: function (declaredClass) {
-
             var config = window['xFileConfig'];
             if (config && config.mixins) {
                 for (var i = 0; i < config.mixins.length; i++) {
@@ -40741,26 +42282,15 @@ define('xide/manager/ServerActionBase',[
             this.check();
         },
         _initService: function () {
-
             var thiz = this;
-
             if(!has('host-browser')){
                 return false;
             }
-
-            if (!this.serviceClass) {
-                //console.error('have no service class : ' + this.declaredClass);
-            }
             try {
                 var obj = Singleton;
-
                 if (this.singleton) {
-
                     if (obj && obj.serviceObject) {
                         this.serviceObject = obj.serviceObject;
-                        if(this.config){
-                            this.config = this.config;
-                        }
                         return;
                     }
                 }
@@ -40773,14 +42303,13 @@ define('xide/manager/ServerActionBase',[
                     this.serviceObject = new RPCService(decodeURIComponent(this.serviceUrl),this.options);
                     this.serviceObject.runDeferred = function(){
                         return thiz.runDeferred.apply(thiz,arguments);
-                    }
+                    };
 
                     this.serviceObject.sync = this.sync;
 
                     if (this.singleton) {
                         obj.serviceObject = this.serviceObject;
                     }
-
                     if(this.config){
                         obj.serviceObject.config = this.config;
                     }
@@ -40789,20 +42318,16 @@ define('xide/manager/ServerActionBase',[
                 console.error('error in rpc service creation : ' + e);
                 logError(e);
             }
-
         },
         check: function () {
-
-            if (!this.serviceObject)
+            if (!this.serviceObject) {
                 this._initService();
+            }
         },
         onError: function (err,suffix) {
-
             if (err) {
                 if (err.code === 1) {
-
                     if (err.message && _.isArray(err.message)) {
-
                         this.publish(types.EVENTS.ERROR, {message: err.message.join('<br/>')});
                         return;
                     }
@@ -40810,19 +42335,14 @@ define('xide/manager/ServerActionBase',[
                     this.publish(types.EVENTS.STATUS, 'Ok');
                 }
             }
-
             if(suffix){
                 err.message = suffix +  ' -> ' + err.message;
             }
-
-            var struct = {
+            this.publish(types.EVENTS.ERROR, {
                 error:err
-            };
-            this.publish(types.EVENTS.ERROR, struct, this);
+            }, this);
         },
-
         checkCall: function (serviceClass, method, omit) {
-
             serviceClass = this.getServiceClass(serviceClass);
             if (!this.getService()) {
                 return false;
@@ -40834,33 +42354,25 @@ define('xide/manager/ServerActionBase',[
                 });
                 return false;
             }
-
             return true;
         },
         prepareCall: function () {
             var params = {};
-            /**
-             * Mixin mandatory fields
-             */
+            //Mixin mandatory fields
             if (this.config && this.config.RPC_PARAMS) {
                 params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
                 this.serviceObject.extraArgs = params;
-
                 if (this.config.RPC_PARAMS.rpcUserField) {
                     params[this.config.RPC_PARAMS.rpcUserField] = this.config.RPC_PARAMS.rpcUserValue;
-
                     this.serviceObject.signatureField = this.config.RPC_PARAMS.rpcSignatureField;
                     this.serviceObject.signatureToken = this.config.RPC_PARAMS.rpcSignatureToken;
                 }
             }
         },
         callMethodEx: function (serviceClassIn, method, args, readyCB, omitError) {
-
             serviceClassIn = serviceClassIn || this.serviceClass;
             if (!serviceClassIn) {
                 console.error('have no service class! ' + this.declaredClass,this);
-
             }
             //init smd
             this.check();
@@ -40871,35 +42383,20 @@ define('xide/manager/ServerActionBase',[
             }
             //setup signing in serviceObject
             this.prepareCall();
-
             var thiz = this;
-            var _sClass = this.getServiceClass(serviceClassIn);
-            if (!_sClass) {
-                debugger;
-            }
-            var ob = this.serviceObject[this.getServiceClass(serviceClassIn)];
-
-            if (!ob || !ob[method]) {
-                debugger;
-            }
-            var promise = this.serviceObject[this.getServiceClass(serviceClassIn)][method](args).then(function (res) {
-
-
+            return this.serviceObject[this.getServiceClass(serviceClassIn)][method](args).then(function (res) {
                 try {
                     if (readyCB) {
                         readyCB(res);
                     }
                 } catch (e) {
-
                     console.error('bad news : callback for method ' + method + ' caused a crash in service class ' + serviceClassIn);
                     logError(e,'server method failed '+e);
 
                 }
-
+                //rpc batch results
                 if (res && res.error && res.error.code == 3) {
-                    setTimeout(function () {
-                        thiz.onMessages(res.error);
-                    }, 50);
+                    thiz.onMessages(res.error);
                 }
 
                 if (res && res.error && res.error && res.error.code != 0) {
@@ -40907,10 +42404,7 @@ define('xide/manager/ServerActionBase',[
                     return;
                 }
                 if (omitError == true) {
-                    var struct = {
-                        message: 'Ok!'
-                    };
-                    thiz.publish(types.EVENTS.STATUS, struct, this);
+                    thiz.publish(types.EVENTS.STATUS, {message: 'Ok!'}, this);
                 }
 
             }, function (err) {
@@ -40918,30 +42412,21 @@ define('xide/manager/ServerActionBase',[
             });
         },
         callMethodEx2: function (serverClassIn, method, args, readyCB, omitError) {
-
-            /***
-             * Check we the RPC method is in the SMD
-             */
             this.check();
-
             //check this method exists
             if (!this.checkCall(serverClassIn, method, omitError)) {
                 return;
             }
             //setup signing in serviceObject
             this.prepareCall();
-
             return this.serviceObject[this.getServiceClass(serverClassIn)][method](args);
         },
         callMethod: function (method, args, readyCB, omitError) {
-
             args = args || [[]];
-            /***
-             * Check we the RPC method is in the SMD
-             */
             var serviceClass = this.serviceClass;
             try {
                 var thiz = this;
+                //method not listed in SMD
                 if (this.serviceObject[serviceClass][method] == null) {
                     if (omitError === true) {
                         this.onError({
@@ -40956,8 +42441,6 @@ define('xide/manager/ServerActionBase',[
                  */
                 var params = {};
                 params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
-
                 /**
                  * Mixin mandatory fields
                  */
@@ -40966,51 +42449,40 @@ define('xide/manager/ServerActionBase',[
                 this.serviceObject.signatureField = this.config.RPC_PARAMS.rpcSignatureField;
                 this.serviceObject.signatureToken = this.config.RPC_PARAMS.rpcSignatureToken;
                 this.serviceObject[this.serviceClass][method](args).then(function (res) {
-
                     try {
                         if (readyCB) {
                             readyCB(res);
                         }
                     } catch (e) {
-                        console.error('crashed in ' + method);
-                        console.dir(e);
-                        debugger;
+                        logError(e,"Error calling RPC method");
                     }
-
+                    //rpc batch call
                     if (res && res.error && res.error.code == 3) {
-                        setTimeout(function () {
-                            thiz.onMessages(res.error);
-                        }, 50);
+                        this.onMessages(res.error);
                     }
-
                     if (res && res.error && res.error && res.error.code == 1) {
-                        thiz.onError(res.error);
+                        this.onError(res.error);
                         return;
                     }
-
                     if (omitError !== false) {
                         var struct = {
                             message: 'Ok!'
                         };
-                        thiz.publish(types.EVENTS.STATUS, struct, this);
+                        this.publish(types.EVENTS.STATUS, struct, this);
                     }
-
-                }, function (err) {
-                    thiz.onError(err);
-                });
+                }.bind(this), function (err) {
+                    this.onError(err);
+                }.bind(this));
             } catch (e) {
-                console.error('crash! ' + e);
                 thiz.onError(e);
+                logError(e,"Error calling RPC method");
             }
         }
     };
 
     var Module = dcl(ManagerBase, Implementation);
-
     Module.declare = declare(null,Implementation);
-
     Singleton = Module;
-
     return Module;
 });
 define('dstore/Cache',[
@@ -41216,32 +42688,27 @@ define('xfile/model/File',[
     "xide/data/Model",
     "xide/utils",
     "xide/types"
-], function(declare,Model,utils,types){
+], function (declare, Model, utils, types) {
     /**
      * @class module:xfile/model/File
      */
-    return declare('xfile.model.File',[Model],{
-        getFolder:function(){
+    return declare('xfile.model.File', [Model], {
+        getFolder: function () {
             var path = this.getPath();
-            if(this.directory){
+            if (this.directory) {
                 return path;
             }
-            return utils.pathinfo(path,types.PATH_PARTS.ALL).dirname;
+            return utils.pathinfo(path, types.PATH_PARTS.ALL).dirname;
         },
-        getChildren:function(){
+        getChildren: function () {
             return this.children;
-            var store = this.getStore() || this._S;
-            var q = {};
-            q[store.parentField] = this[store.idProperty];
-            return store.query(q);
         },
-        getParent:function(){
+        getParent: function () {
             //current folder:
             var store = this.getStore() || this._S;
-            var _parent = store.getParent(this);
-            return _parent;
+            return store.getParent(this);
         },
-        getStore:function(){
+        getStore: function () {
             return this._store || this._S;
         }
     });
@@ -41264,20 +42731,9 @@ define('xfile/data/Store',[
     'xide/data/TreeMemory',
     'dstore/Trackable',
     'xide/data/ObservableStore',
-    'xfile/model/File'
-], function (declare,lang,Deferred,ReloadMixin,ServerActionBase,Cache,QueryResults,types,utils,when,TreeMemory,Trackable,ObservableStore,File) {
-
-    function promised() {
-        return function() {
-            var deferred = new Deferred();
-            try {
-                deferred.resolve(arguments);
-            } catch (error) {
-                deferred.reject(error);
-            }
-            return deferred;
-        };
-    }
+    'xfile/model/File',
+    'xide/lodash'
+], function (declare, lang, Deferred, ReloadMixin, ServerActionBase, Cache, QueryResults, types, utils, when, TreeMemory, Trackable, ObservableStore, File,_) {
     var _debug = false;
     /**
      * Constants
@@ -41325,13 +42781,18 @@ define('xfile/data/Store',[
     function Implementation() {
         return {
             addDot: true,
-            rootSegment:".",
+            /**
+             * 'recursive' will tell the server to run the directory listing recursive for server method 'ls'
+             * @type {boolean}
+             */
+            recursive:false,
+            rootSegment: ".",
             Model: File,
             /**
              * @member idProperty {string} sets the unique identifier for store items is set to the 'path' of a file.
              * @public
              */
-            idProperty: 'path',
+            idProperty: "path",
             parentField: 'parent',
             /**
              * @member mount {string} sets the 'mount' prefix for a VFS. This is needed to simplify the work
@@ -41397,7 +42858,7 @@ define('xfile/data/Store',[
              */
             serviceClass: null,
             /**
-             * @member singleton {bool} sets the ServerActionBase as 'Singleton' at the time of the construction. If there
+             * @member singleton {boolean} Sets the ServerActionBase as 'Singleton' at the time of the construction. If there
              * is any other ServerActionBase subclass with the same service url, this will avoid additional requests to
              * fetch a SMD, furthermore, you can call other methods on the server through this here
              * as well: this.serviceObject.SERVER_CLASS.SERVER_METHOD(args)
@@ -41431,11 +42892,6 @@ define('xfile/data/Store',[
                     return false;
                 }
                 return object.directory === true;
-            },
-            getChildren: function (item) {
-                //console.log('FILESTORE::getChildren',arguments);
-                var _p = this.inherited(arguments);
-                return _p;
             },
             /////////////////////////////////////////////////////////////////////////////
             //
@@ -41474,25 +42930,16 @@ define('xfile/data/Store',[
             constructor: function () {
                 this.id = utils.createUUID();
             },
-            sort: function () {
-                var result = this.inherited(arguments);
-
-                return result;
-            },
             onSorted: function (sorted, data) {
-
                 if (sorted.length == 1 && sorted[0].property === 'name') {
-
                     var upperCaseFirst = true,
                         directoriesFirst = true,
                         descending = sorted[0].descending;
 
                     if (directoriesFirst) {
-
                         function _sort(item) {
                             return upperCaseFirst ? item.name : item.name.toLowerCase();
-                        };
-
+                        }
                         var grouped = _.groupBy(data, function (item) {
                             return item.directory === true;
                         }, this);
@@ -41516,22 +42963,22 @@ define('xfile/data/Store',[
 
                 return data;
             },
-            onAfterSort:function(data){
+            onAfterSort: function (data) {
                 var micromatch = this.micromatch;
-
-                if(typeof mm !=='undefined' && micromatch && data && data[0]) {
-
+                if (typeof mm !== 'undefined' && micromatch && data && data[0]) {
                     var what = data[0].realPath ? 'realPath' : 'path';
                     what = 'name';
                     var _items = _.pluck(data, what);
-                    //'*.sql|*.txt|!(*.*)'
-                    var matching = mm(_items,micromatch);
+                    var matching = mm(_items, micromatch);
                     data = data.filter(function (item) {
                         if (matching.indexOf(item[what]) === -1) {
                             return null;
                         }
                         return item;
                     });
+                    if(this._onAfterSort){
+                        data = this._onAfterSort(data);
+                    }
                 }
                 return data;
             },
@@ -41548,34 +42995,22 @@ define('xfile/data/Store',[
              * @private
              */
             _createSortQuerier: function (sorted) {
-
                 var thiz = this;
-
                 return function (data) {
                     data = data.slice();
                     data.sort(typeof sorted == 'function' ? sorted : function (a, b) {
-
                         for (var i = 0; i < sorted.length; i++) {
-
                             var comparison;
-
                             if (typeof sorted[i] == 'function') {
-
                                 comparison = sorted[i](a, b);
-
                             } else {
-
                                 var property = sorted[i].property;
-
                                 if (thiz._extraSortProperties[property]) {
-                                    lang.mixin(sorted[i], thiz._extraSortProperties[property]);
+                                    utils.mixin(sorted[i], thiz._extraSortProperties[property]);
                                 }
-
                                 var descending = sorted[i].descending;
-
                                 var aValue = a.get ? a.get(property) : a[property];
                                 var bValue = b.get ? b.get(property) : b[property];
-
                                 var ignoreCase = !!sorted[i].ignoreCase;
                                 aValue != null && (aValue = aValue.valueOf());
                                 bValue != null && (bValue = bValue.valueOf());
@@ -41584,13 +43019,8 @@ define('xfile/data/Store',[
                                     aValue.toUpperCase && ( aValue = aValue.toUpperCase() );
                                     bValue.toUpperCase && ( bValue = bValue.toUpperCase() );
                                 }
-
-                                comparison = aValue === bValue
-                                    ? 0
-                                    : (!!descending === (aValue === null || aValue > bValue) ? -1 : 1);
-
+                                comparison = aValue === bValue ? 0 : (!!descending === (aValue === null || aValue > bValue) ? -1 : 1);
                             }
-
                             if (comparison !== 0) {
                                 return comparison;
                             }
@@ -41608,7 +43038,6 @@ define('xfile/data/Store',[
             _getItem: function (path, allowNonLoaded) {
                 //try instant and return when loaded
                 var item = this.getSync(path) || this.getSync('./' + path);
-
                 if (item && (this.isItemLoaded(item) || allowNonLoaded == true)) {
                     return item;
                 }
@@ -41617,7 +43046,6 @@ define('xfile/data/Store',[
                 }
                 return null;
             },
-
             /**
              * Returns a promise or a store item. This works recursively for any path and
              * results in one request per path segment or a single request when batch-requests
@@ -41631,12 +43059,10 @@ define('xfile/data/Store',[
              */
             getItem: function (path, load) {
                 if (load == false) {
-
                     return this._getItem(path);
 
                 } else if (load == true) {
-
-                    //at this point we have to load recursivly
+                    //at this point we have to load recursively
                     var parts = path.split('/'),
                         thiz = this,
                         partsToLoad = [],
@@ -41645,73 +43071,45 @@ define('xfile/data/Store',[
                     if (!item) {
                         item = thiz.getSync(path.replace('./', ''));
                     }
-
                     if (item && this.isItemLoaded(item)) {
                         return item;
                     }
 
                     //new head promise for all underlying this.getItem calls
                     var deferred = new Deferred();
-
                     var _loadNext = function () {
-
                         //no additional lodash or array stuff please, keep it simple
                         var isFinish = !_.find(partsToLoad, {loaded: false});
                         if (isFinish) {
-
                             deferred.resolve(thiz.getItem(path, false));
-
                         } else {
-
                             for (var i = 0; i < partsToLoad.length; i++) {
-
                                 if (!partsToLoad[i].loaded) {
-
                                     var _item = thiz.getSync(partsToLoad[i].path);
-
                                     if (_item) {
-
                                         if (_item.directory === true && thiz.isItemLoaded(_item)) {
                                             partsToLoad[i].loaded = true;
                                             continue;
                                         } else if (_item.directory == null) {
-
-
                                             deferred.resolve(_item);
-                                            break;
-
-                                            when(thiz.getItem(partsToLoad[i - 1].path, false), function (_item) {
-                                                deferred.resolve(_item);
-                                            });
                                             break;
                                         }
                                     }
-
                                     thiz._loadPath(partsToLoad[i].path).then(function (items) {
-
                                         partsToLoad[i].loaded = true;
-
                                         _loadNext();
-
                                     }, function (err) {
-
-
                                         var _i = Math.abs(Math.min(0, i - 1));
                                         var nextPart = partsToLoad[_i];
                                         var parts = partsToLoad;
                                         if (!nextPart) {
                                             _i = partsToLoad.length - 1;
-                                            //console.error('nada!',parts);
                                             nextPart = partsToLoad[_i];
                                         }
-
                                         var _item = thiz.getItem(nextPart.path);
-
                                         when(thiz.getItem(partsToLoad[_i].path, false), function (_item) {
                                             deferred.resolve(_item, partsToLoad[_i].path);
                                         });
-                                        return;
-
                                     });
                                     break;
                                 }
@@ -41722,24 +43120,19 @@ define('xfile/data/Store',[
                     //prepare process array
                     var itemStr = '.';
                     for (var i = 0; i < parts.length; i++) {
-
                         if (parts[i] == '.') {
                             continue;
                         }
                         if (parts.length > 0) {
-                            itemStr += '/'
+                            itemStr += '/';
                         }
-
                         itemStr += parts[i];
                         partsToLoad.push({path: itemStr, loaded: false});
                     }
                     //fire
                     _loadNext();
-
                     return deferred;
                 }
-
-
                 if (path === '.') {
                     return this.getRootItem();
                 }
@@ -41762,7 +43155,7 @@ define('xfile/data/Store',[
                     getPath: function () {
                         return this.path;
                     }
-                }
+                };
             },
             /**
              * back compat, trash
@@ -41815,8 +43208,8 @@ define('xfile/data/Store',[
                 return this._loadItem(item, force);
             },
             /**
-             * Fix an incoming item for our nneds, adds the _S(this) attribute and
-             * a function to savely return a its path since there are items with fake paths as: './myPath_back_'
+             * Fix an incoming item for our needs, adds the _S(this) attribute and
+             * a function to safely return a its path since there are items with fake paths as: './myPath_back_'
              * @param item
              * @private
              */
@@ -41824,26 +43217,24 @@ define('xfile/data/Store',[
                 item._S = this;
 
                 if (!_.isEmpty(item.children)) {
+
                     _.each(item.children, function (_item) {
                         _item.parent = item.path;
                         this._parse(_item);
                     }, this);
+
+                    item._EX = true;
+                    item.children = this.addItems(item.children);
                 }
                 item.getPath = function () {
                     return this.path;
-                }
+                };
             },
             /////////////////////////////////////////////////////////////////////////////
             //
             //  True store impl.
             //
             /////////////////////////////////////////////////////////////////////////////
-            /**
-             * Trash
-             * @private
-             */
-            _itemReloaded: function () {
-            },
             /**
              * Here to load an item forcefully (reload/refresh)
              * @param path
@@ -41852,43 +43243,25 @@ define('xfile/data/Store',[
              * @private
              */
             _loadPath: function (path, force) {
-
-                var _item = this.getSync(path),
-                    thiz = this;
-
-                if (_item && _item.directory !== true) {
-                    //shouldn't happen
-                    //console.error('is file! ' + path);
-                    debugger;
-                }
-
-                var prom = this._request(path).then(function (items) {
-
+                var thiz = this;
+                return this._request(path).then(function (items) {
                     var _item = thiz._getItem(path, true);
                     if (_item) {
-
                         if (force) {
                             if (!_.isEmpty(_item.children)) {
                                 thiz.removeItems(_item.children);
                             }
                         }
-
                         _item._EX = true;
                         thiz.addItems(items, force);
                         _item.children = items;
                         return items;
                     } else {
-
                         throw new Error('cant get item at ' + path);
                     }
-                    return items;
-
-                }, function (err) {
+                }.bind(this), function (err) {
                     console.error('error in load');
                 });
-
-                return prom;
-
             },
             /**
              * Creates an object, throws an error if the object already exists.
@@ -41918,11 +43291,8 @@ define('xfile/data/Store',[
                 }
                 if (force) {
                     //special case on root
-
                     if (item.path === '.') {
-
                         thiz.setInitiated(false);
-                        //console.error('thiz.initiated = false');
                         thiz.fetchRange().then(function (items) {
                             deferred.resolve({
                                 store: thiz,
@@ -41931,18 +43301,15 @@ define('xfile/data/Store',[
                             });
                         });
                     } else {
-
-                        var loadProm = this._loadPath(item.path, true).then(function (items) {
+                        this._loadPath(item.path, true).then(function (items) {
                             deferred.resolve(item);
                         }, function (err) {
                             console.error('error occured whilst loading items');
                             deferred.reject(err);
                         });
-
                     }
                 }
                 return deferred;
-
             },
             _normalize: function (response) {
                 if (response && response.items) {
@@ -41954,69 +43321,56 @@ define('xfile/data/Store',[
                 return item && item[C_ITEM_EXPANDED] === true;
             },
             fetch: function () {
-                //console.error('FILESTORE::fetch',arguments);
+
             },
             put: function () {
-                //console.error('FILESTORE::put',arguments);
+
             },
             add: function (item) {
-
-                // console.error('FILESTORE::add',arguments);
                 var _item = this.getSync(item.path);
-                if (_item) {
-                    // console.error('have already ' + item.getPath());
-                } else {
+                if (!_item){
                     _item = this.addSync(item);
                     _item._S = this;
                     _item.getPath = function () {
                         return this.path;
-                    }
+                    };
                 }
                 return _item;
             },
             removeItems: function (items) {
                 _.each(items, function (item) {
-
                     if (this.getSync(item.path)) {
-                        //     console.log('remove ' +item.path);
                         this.removeSync(item.path);
-                    } else {
-                        console.log('tried to remove item which already exists : ', item);
                     }
                 }, this);
             },
-            addItems: function (items, overwrite) {
+            addItems: function (items) {
+                var result = [];
                 _.each(items, function (item) {
                     var storeItem = this.getSync(item.path);
                     if (storeItem) {
                         this.removeSync(item.path);
                     }
-                    this.add(item);
+                    result.push(this.add(item));
                 }, this);
+                return result;
             },
             open: function (item) {
                 var thiz = this;
-
                 function update() {
                     thiz.emit('update', {
                         target: item
                     });
                 }
-
                 if (!this._isLoaded(item)) {
-
                     item.isLoading = true;
-                    // update();
-                    var prom = thiz._request(item.path).then(function (items) {
+                    return thiz._request(item.path).then(function (items) {
                         item.isLoading = false;
-                        //update();
                         item._EX = true;
                         thiz.addItems(items);
                         item.children = items;
                         return items;
                     });
-
-                    return prom;
                 } else {
                     var deferred = new Deferred();
                     thiz.resetQueryLog();
@@ -42024,93 +43378,56 @@ define('xfile/data/Store',[
                     return deferred;
                 }
             },
-            onReloaded: function () {
-                //console.log('reloaded');
-            },
             getDefaultSort: function () {
                 return [{property: 'name', descending: false, ignoreCase: true}];
             },
-            lastOpenedPath: function () {
-                var path = this._state.path;
-                if (path) {
-
-                    var item = this.getSync(path);
-
-                    if (item) {
-                        item = this.getParent(item.getPath());
-                        if (item) {
-                            //console.log('last path : ',item);
-                            return item.getPath();
-                        }
-                    }
-                }
-
-                return null;
-            },
             filter: function (data) {
-                _debug && console.log('filter : ', this._state);
                 if (data.parent) {
                     this._state.path = data.parent;
                 }
-
                 var item = this.getSync(data.parent);
-
                 if (item) {
                     if (!this.isItemLoaded(item)) {
                         this._state.filterDef = this._loadPath(item.path);
                     } else {
+                        /*
+                        if(item.children) {
+                            var total = new Deferred();
+                            total.resolve(item.children);
+                            this._state.filterDef = total;
+                            this._state.filter = data;
+                        }
+                        */
                         this._state.filterDef = null;
                     }
                 }
-
+                delete this._state.filter;
                 this._state.filter = data;
-
-                var _def = this.inherited(arguments);
-
-                return _def;
+                return this.inherited(arguments);
             },
-            /**
-             *
-             * @param path
-             * @param parent
-             * @returns {*}
-             * @private
-             */
             _request: function (path) {
-                _debug && console.log('__request ' + path);
+                var collection = this;
+                return this.runDeferred(null, 'ls', {
+                        path: path,
+                        mount: this.mount,
+                        options: this.options,
+                        recursive:this.recursive
+                    },
+                    {
+                        checkErrors: false,
+                        displayError: true
 
-                var collection = this,
-                    prom = this.runDeferred(null, 'ls', {
-                            path: path,
-                            mount: this.mount,
-                            options: this.options
-                        },
-                        {
-                            checkErrors: false,
-                            displayError: true
-
-                        }).then(function (response) {
-                        var results = collection._normalize(response);
-                        collection._parse(results);
-                        // support items in the results
-                        results = results.children || results;
-                        return results;
-                    }, function (e) {
-                        console.error('error in FileStore : ' + this.mount + ' :' + e, e);
-                    });
-
-                return prom;
+                    }).then(function (response) {
+                    var results = collection._normalize(response);
+                    collection._parse(results);
+                    // support items in the results
+                    results = results.children || results;
+                    return results;
+                }, function (e) {
+                    logError(e,'error in FileStore : ' + this.mount + ' :' + e);
+                });
             },
-            fetchSync: function () {
-                _debug && console.log('fetSync: ', this._state);
-                var data = this.inherited(arguments),
-                    directoriesFirst = true,
-                    upperCaseFirst = true,//ala MC style
-                    result;
-
-                return data;
-            },
-            fetchRangeSync: function (kwArgs) {
+            fetchRangeSync: function () {
                 var data = this.fetchSync();
                 var total = new Deferred();
                 total.resolve(data.length);
@@ -42129,7 +43446,6 @@ define('xfile/data/Store',[
             fetchRange: function () {
                 // dstore/Memory#fetchRange always uses fetchSync, which we aren't extending,
                 // so we need to extend this as well.
-                _debug && console.log('fetchRange : ', this._state);
                 var results = this._fetchRange();
                 return new QueryResults(results.then(function (data) {
                     return data;
@@ -42142,37 +43458,24 @@ define('xfile/data/Store',[
             initRoot: function () {
                 //first time load
                 var _path = '.';
-                var collection = this,
-                    thiz = this;
-
+                var thiz = this;
                 //business as usual, root is loaded
                 if (!this.isInitiated()) {
-                    var prom = thiz._request(_path).then(function (data) {
+                    return thiz._request(_path).then(function (data) {
                         if (!thiz.isInitiated()) {
-                            _.each(data, function (item) {
-                                thiz._parse(item);
-                            });
+                            _.each(data, thiz._parse,thiz);
                             thiz.setData(data);
                             thiz.setInitiated(true);
                             thiz.emit('loaded');
                         }
                         return thiz.fetchRangeSync(arguments);
                     }.bind(this));
-                    return prom;
                 }
-
                 var dfd = new Deferred();
                 dfd.resolve();
                 return dfd;
             },
             _fetchRange: function () {
-
-                _debug && console.log('_fetchRange : ', this._state);
-
-
-                if (!this.isInitiated()) {
-                }
-
                 //special case for trees
                 if (this._state.filter) {
                     var def = this._state.filterDef;
@@ -42184,21 +43487,11 @@ define('xfile/data/Store',[
                             }
                         }.bind(this));
                         return def;
-                    } else {
-
-                        var _item = this.getSync(this._state.filter.parent);
-                        if (_item) {
-
-                        }
-                        //return;
                     }
                 }
-
                 //first time load
                 var _path = '.';
-                var collection = this,
-                    thiz = this;
-
+                var thiz = this;
                 //business as usual, root is loaded
                 if (this.isInitiated()) {
                     var _def = thiz.fetchRangeSync(arguments);
@@ -42210,29 +43503,17 @@ define('xfile/data/Store',[
                     return new QueryResults(resultsDeferred, {
                         totalLength: _def.totalLength
                     });
-                    return _def;
-
                 }
-
-                var prom = thiz._request(_path).then(function (data) {
+                return thiz._request(_path).then(function (data) {
                     if (!thiz.isInitiated()) {
-                        _.each(data, function (item) {
-                            thiz._parse(item);
-                        });
+                        _.each(data, thiz._parse,thiz);
                         thiz.setData(data);
                         thiz.setInitiated(true);
                         thiz.emit('loaded');
                     }
                     return thiz.fetchRangeSync(arguments);
                 }.bind(this));
-                return prom;
             },
-            /**
-             *
-             * @param path
-             * @param store
-             * @returns {*}
-             */
             getDefaultCollection: function (path) {
                 var _sort = this.getDefaultSort();
                 if (!path) {
@@ -42240,13 +43521,12 @@ define('xfile/data/Store',[
                 } else {
                     return this.filter({
                         parent: path
-                    }).sort(_sort)
+                    }).sort(_sort);
                 }
             }
         };
     }
-
-    var Module = declare("xfile/data/Store", [TreeMemory,Cache,Trackable,ObservableStore,ServerActionBase.declare,ReloadMixin],Implementation());
+    var Module = declare("xfile/data/Store", [TreeMemory, Cache, Trackable, ObservableStore, ServerActionBase.declare, ReloadMixin], Implementation());
     Module.Implementation = Implementation;
     return Module;
 });
@@ -42255,10 +43535,7 @@ define('xfile/factory/Store',[
     'xide/factory',
     'xide/utils',
     'xfile/data/Store'
-
 ], function (types, factory,utils,Store){
-
-
     /**
      *
      * @param mount
@@ -42269,15 +43546,13 @@ define('xfile/factory/Store',[
      * @returns {*}
      */
     factory.createFileStore = function (mount,options,config,optionsMixin,ctx){
-
         var storeClass = Store;
-
         options = options || {
             fields:
             types.FIELDS.SHOW_ISDIR |
             types.FIELDS.SHOW_OWNER |
             types.FIELDS.SHOW_SIZE |
-            types.FIELDS.SHOW_FOLDER_SIZE |
+            //types.FIELDS.SHOW_FOLDER_SIZE |
             types.FIELDS.SHOW_MIME |
             types.FIELDS.SHOW_PERMISSIONS |
             types.FIELDS.SHOW_TIME |
@@ -42285,7 +43560,6 @@ define('xfile/factory/Store',[
         };
 
         utils.mixin(options,optionsMixin);
-
         var store = new storeClass({
             data:[],
             ctx:ctx,
@@ -42296,22 +43570,17 @@ define('xfile/factory/Store',[
             mount:mount,
             options:options
         });
-
         store._state = {
             initiated:false,
             filter:null,
             filterDef:null
         };
-
         store.reset();
         store.setData([]);
         store.init();
 
         ctx && ctx.getFileManager().addStore(store);
-
-
         return store;
-
     };
     return factory;
 
@@ -42892,13 +44161,13 @@ define('xfile/manager/FileManagerActions',[
     'dcl/dcl',
     'xide/types',
     'xide/utils'
-], function (dcl,types,utils) {
+], function (dcl, types, utils) {
     /**
      * @class xfile.manager.FileManager
      * @augments module:xfile.manager.FileManager
      */
     return dcl(null, {
-        declaredClass:"xfile/manager/FileManagerActions",
+        declaredClass: "xfile/manager/FileManagerActions",
         /**
          * Publish a file's operations progress event
          * @param event
@@ -42925,7 +44194,7 @@ define('xfile/manager/FileManagerActions',[
          * @param items
          * @returns {*}
          */
-        doOperation: function (operation, args, terminator, items, extra,dfdOptions) {
+        doOperation: function (operation, args, terminator, items, extra, dfdOptions) {
             var thiz = this,
                 operationCapitalized = operation.substring(0, 1).toUpperCase() + operation.substring(1),
                 beginEvent = 'on' + operationCapitalized + 'Begin', //will evaluate for operation 'delete' to 'onDeleteBegin'
@@ -42933,21 +44202,21 @@ define('xfile/manager/FileManagerActions',[
 
             thiz._publishProgress(beginEvent, terminator, items, false, extra);
 
-            var rpcPromise = this.runDeferred(null, operation, args,dfdOptions).then(function () {
+            var rpcPromise = this.runDeferred(null, operation, args, dfdOptions).then(function () {
                 thiz._publishProgress(endEvent, terminator, items, false, extra);
             }, function (err) {
                 thiz._publishProgress(endEvent, terminator, items, true, extra);
             });
             return rpcPromise;
         },
-        deleteItems: function (selection, options,dfdOptions) {
-            return this.doOperation(types.OPERATION.DELETE, [selection, options, true], selection,selection,null,dfdOptions);
+        deleteItems: function (selection, options, dfdOptions) {
+            return this.doOperation(types.OPERATION.DELETE, [selection, options, true], selection, selection, null, dfdOptions);
         },
-        copyItem: function (selection, dst, options,dfdOptions) {
-            return this.doOperation(types.OPERATION.COPY, [selection, dst, options, false], selection, selection, {dst: dst},dfdOptions);
+        copyItem: function (selection, dst, options, dfdOptions) {
+            return this.doOperation(types.OPERATION.COPY, [selection, dst, options, false], selection, selection, {dst: dst}, dfdOptions);
         },
-        mkdir: function (mount, path,dfdOptions) {
-            return this.doOperation(types.OPERATION.NEW_DIRECTORY, [mount, path], path,null,null,dfdOptions);
+        mkdir: function (mount, path, dfdOptions) {
+            return this.doOperation(types.OPERATION.NEW_DIRECTORY, [mount, path], path, null, null, dfdOptions);
         },
         mkfile: function (mount, path, content) {
             return this.doOperation(types.OPERATION.NEW_FILE, [mount, path], path);
@@ -42956,7 +44225,7 @@ define('xfile/manager/FileManagerActions',[
             return this.doOperation(types.OPERATION.RENAME, [mount, src, dst], src);
         },
         moveItem: function (src, dst, include, exclude, mode, dfdOptions) {
-            return this.doOperation(types.OPERATION.MOVE, [src, dst, include, exclude, mode], src,null,null,dfdOptions);
+            return this.doOperation(types.OPERATION.MOVE, [src, dst, include, exclude, mode], src, null, null, dfdOptions);
         },
         compressItem: function (mount, src, type, readyCB) {
             return this.doOperation(types.OPERATION.COMPRESS, [mount, src, type], src);
@@ -42970,7 +44239,7 @@ define('xfile/manager/FileManagerActions',[
 /** @module xfile/manager/FileManager */
 define('xfile/manager/FileManager',[
     'dcl/dcl',
-    'dojo/_base/lang',
+    'dojo/_base/kernel',
     'xide/manager/ServerActionBase',
     'xide/types',
     'xfile/types',
@@ -42982,8 +44251,9 @@ define('xfile/manager/FileManager',[
     'xfile/manager/FileManagerActions',
     'require',
     'xfile/factory/Store',
+    "xide/lodash",
     'xdojo/has!electron?xfile/manager/Electron'
-], function (dcl,lang, ServerActionBase, types, fTypes, utils, SHA1, RPCService, Deferred,has,FileManagerActions,require,StoreFactory,Electron) {
+], function (dcl,dojo,ServerActionBase, types, fTypes, utils, SHA1, RPCService, Deferred,has,FileManagerActions,require,StoreFactory,_,Electron) {
     var bases = [ServerActionBase, FileManagerActions];
     if(has('electronx') && Electron){
         bases.push(Electron);
@@ -43036,11 +44306,9 @@ define('xfile/manager/FileManager',[
         settingsStore: null,
         stores:[],
         getStore:function(mount,cache){
-
             var store =  _.find(this.stores,{
                 mount:mount
             });
-
             if(store){
                 return store;
             }
@@ -43075,20 +44343,14 @@ define('xfile/manager/FileManager',[
             var serviceClass = this.serviceClass || 'XCOM_Directory_Service';
             var path = utils.buildPath(src.mount, src.path, true);
             path = this.serviceObject.base64_encode(path);
-
             downloadUrl += 'service=' + serviceClass + '.get&path=' + path + '&callback=asdf';
-
             if (this.config.DOWNLOAD_URL) {
                 downloadUrl = '' + this.config.DOWNLOAD_URL;
                 downloadUrl += '&path=' + path + '&callback=asdf';
             }
-
             downloadUrl += '&raw=html';
             downloadUrl += '&attachment=1';
-            //downloadUrl += '&send=1';
-
             var aParams = utils.getUrlArgs(location.href);
-
             utils.mixin(aParams, {
                 "service": serviceClass + ".get",
                 "path": path,
@@ -43097,22 +44359,16 @@ define('xfile/manager/FileManager',[
                 "attachment": "1",
                 "send": "1"
             });
-
             delete  aParams['theme'];
             delete  aParams['debug'];
             delete  aParams['width'];
             delete  aParams['attachment'];
             delete  aParams['send'];
-            var pStr = dojo.toJson(aParams);
+            var pStr = dojo.toJson(JSON.string(aParams));
             var signature = SHA1._hmac(pStr, this.config.RPC_PARAMS.rpcSignatureToken, 1);
-            //console.error('sign ' + pStr + ' with ' + this.config.RPC_PARAMS.rpcSignatureToken + ' to ' + signature,aParams);
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcUserField + '=' + this.config.RPC_PARAMS.rpcUserValue;
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcSignatureField + '=' + signature;
-
             window.open(downloadUrl);
-            //http://localhost/projects/x4mm/Code/test2.php?view=smdCall&debug=true&service=XCOM_Directory_Service.get&path=cm9vdCUzQSUyRiUyRnR1dG9yaWFscy5tZA==&callback=asdf&raw=html&attachment=1&user=21232f297a57a5a743894a0e4a801fc3&sig=81102d7ee14b546b9cd2d5ae3ec69de0c52d9c23
-            // http://localhost/projects/x4mm/Code/test2.php?view=smdCall&debug=true&service=XCOM_Directory_Service.get&path=cm9vdCUzQSUyRiUyRnR1dG9yaWFscy5tZA==&callback=asdf&raw=html&attachment=1&user=21232f297a57a5a743894a0e4a801fc3&sig=81102d7ee14b546b9cd2d5ae3ec69de0c52d9c23
-
         },
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -43120,11 +44376,6 @@ define('xfile/manager/FileManager',[
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         getImageUrl: function (src, preventCache, extraParams) {
-
-            if (!src) {
-                console.error('invalid item!');
-            }
-            var thiz = this;
             preventCache = location.href.indexOf('noImageCache') != -1 || preventCache === true || src.dirty === true;
             var downloadUrl = decodeURIComponent(this.serviceUrl);
             downloadUrl = downloadUrl.replace('view=rpc', 'view=smdCall');
@@ -43152,23 +44403,12 @@ define('xfile/manager/FileManager',[
                 "callback": "asdf",
                 "raw": "html"
             });
-
-
-
             utils.mixin(aParams, extraParams);
-
             delete  aParams['theme'];
             delete  aParams['debug'];
             delete  aParams['width'];
-
-            //{"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRm1hcmFudHoucG5n","callback":"asdf","raw":"html","attachment":"0","send":"1","width":448} with 6ae3c21684c50742b7fce2e17a97657a to 1da8648ace2aaedfb49d4d1fd6be6c09d7996ef4
-            //{"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRm1hcmFudHoucG5n","callback":"asdf","raw":"html","attachment":"0","send":"1","width":"448"} with 6ae3c21684c50742b7fce2e17a97657a  to 7c3421b2ca35a106c6cae9f4c78a560beb711979
             var pStr = dojo.toJson(aParams);
             var signature = SHA1._hmac(pStr, this.config.RPC_PARAMS.rpcSignatureToken, 1);
-            //http://192.168.1.37/projects/xbox-app/index.php?view=rpc&service=XCOM_Directory_Service.get
-            //console.log('sign ' + pStr + ' with ' + this.config.RPC_PARAMS.rpcSignatureToken + ' to ' + signature,aParams);
-            //server {"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRlNlbGVjdGlvbl8xNjQucG5n","callback":"asdf","raw":"html"}
-            //client {"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRlNlbGVjdGlvbl8xNjQucG5n","callback":"asdf","raw":"html","attachment":"0","send":"1","width":448}
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcUserField + '=' + this.config.RPC_PARAMS.rpcUserValue;
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcSignatureField + '=' + signature;
             if (preventCache) {
@@ -43198,6 +44438,7 @@ define('xfile/manager/FileManager',[
         onFileUploaded: function (item) {
             var thiz = this,
                 eventKeys = types.EVENTS;
+
             setTimeout(function () {
                 var struct1 = {
                     message: '' + item.file.name + ' uploaded to ' + item.dstDir,
@@ -43210,7 +44451,6 @@ define('xfile/manager/FileManager',[
                 thiz.filesToUpload.remove(item);
                 thiz.publish(eventKeys.ON_UPLOAD_FINISH, {item: item});
             }, 500);
-
         },
         getUploadUrl: function () {
             var url = '' + decodeURIComponent(this.serviceUrl);
@@ -43225,15 +44465,11 @@ define('xfile/manager/FileManager',[
             var xhr = new XMLHttpRequest();
             var uploadUrl = this.getUploadUrl();
             var uri = '' + uploadUrl;
-
             uri += '&mount=' + encodeURIComponent(mount);
             uri += '&dstDir=' + encodeURIComponent(dstDir);
-
             var thiz = this;
             var upload = xhr.upload;
-
             upload.addEventListener("progress", function (e) {
-
                 if (!e.lengthComputable) {
                     thiz.onFileUploaded(item);
                 } else {
@@ -43256,7 +44492,7 @@ define('xfile/manager/FileManager',[
                                 code: 1
                             };
                         }
-                        if (error && error.result && lang.isArray(error.result) && error.result.length > 0) {
+                        if (error && error.result && _.isArray(error.result) && error.result.length > 0) {
                             var _message = null;
                             for (var i = 0; i < error.result.length; i++) {
                                 thiz.publish(types.EVENTS.ERROR, 'Error uploading : ' + item.name + ' ' + error.result[i], thiz);
@@ -43278,7 +44514,6 @@ define('xfile/manager/FileManager',[
                     thiz.submitNext();
                 }
             }.bind(this);
-
             upload.onerror = function () {
                 thiz.publish(types.EVENTS.ERROR, 'Error uploading : ' + item.name, thiz);
             };
@@ -43305,9 +44540,7 @@ define('xfile/manager/FileManager',[
         upload: function (files, mount, path, callee, view) {
             var dfds = [];
             for (var i = 0; i < files.length; i++) {
-                var file = files[i];
                 var uploadStruct = {
-
                     file: files[i],
                     dstDir: '' + path,
                     mount: '' + mount,
@@ -43330,12 +44563,10 @@ define('xfile/manager/FileManager',[
             var auto_rename = false;
             item.status = 'loading';
             var xhr = this.initXHRUpload(item, (auto_rename ? "auto_rename=true" : ""), item['dstDir'], item['mount']);
-            //var file = item.file;
-            var struct = {
+            this.publish(types.EVENTS.ON_UPLOAD_BEGIN,{
                 item: item,
                 name: item.name
-            };
-            this.publish(types.EVENTS.ON_UPLOAD_BEGIN, struct, this);
+            }, this);
             if (window.FormData) {
                 this.sendFileUsingFormData(xhr, item);
             }
@@ -43360,12 +44591,9 @@ define('xfile/manager/FileManager',[
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         onError: function (err) {
-
             if (err) {
                 if (err.code === 1) {
-
-                    if (err.message && lang.isArray(err.message)) {
-
+                    if (err.message && _.isArray(err.message)) {
                         this.publish(types.EVENTS.ERROR, err.message.join('<br/>'), this);
                         return;
                     }
@@ -43373,11 +44601,9 @@ define('xfile/manager/FileManager',[
                     this.publish(types.EVENTS.STATUS, 'Ok', this);
                 }
             }
-
-            var struct = {
+            this.publish(types.EVENTS.ERROR, {
                 error: err
-            };
-            this.publish(types.EVENTS.ERROR, struct, this);
+            }, this);
         },
         addError: function (def) {
             var thiz = this;
@@ -43398,7 +44624,6 @@ define('xfile/manager/FileManager',[
             if (dstItem) {
                 var thiz = this;
                 var _cb = function (result) {
-
                     var _failed = false;
                     if (result && result.error && result.error.code == 1) {
                         _failed = true;
@@ -43410,7 +44635,6 @@ define('xfile/manager/FileManager',[
 
                     readyCB(arguments);
                 };
-
                 thiz.publish(types.EVENTS.ON_DOWNLOAD_TO_BEGIN, {
                     dst: dstItem,
                     url: url,
@@ -43419,7 +44643,6 @@ define('xfile/manager/FileManager',[
             } else {
                 console.log('download from remote url have no dest item');
             }
-
             return this.callMethod(types.OPERATION.DOWNLOAD_TO, [url, mount, dst], _cb, true);
         },
         find: function (mount, conf, readyCB) {
@@ -43440,7 +44663,7 @@ define('xfile/manager/FileManager',[
                 var _path = this.serviceObject.base64_encode(utils.buildPath(mount, path, true));
                 return this.callMethod(types.OPERATION.GET_CONTENT, [_path, false, false], readyCB, false);
             }else{
-                var def = this._getText(require.toUrl(mount).replace('main.js','') + '/' + path,{
+                return this._getText(require.toUrl(mount).replace('main.js','') + '/' + path,{
                     sync: false,
                     handleAs: 'text'
                 }).then(function(res){
@@ -43452,39 +44675,33 @@ define('xfile/manager/FileManager',[
                         logError(e, 'error running RPC');
                     }
                 });
-                return def;
             }
         },
         setContent: function (mount, path, content, readyCB) {
-            
             this.publish(types.EVENTS.ON_CHANGED_CONTENT, {
                 'mount': mount,
                 'path': path,
                 'content': content
             });
-
             this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
                 text: "Did save file : " + mount + '://' + path
             });
-
             if(this.setContentE){
                 var res = this.setContentE.apply(this,arguments);
                 if(res){
                     return res;
                 }
             }
-            
             return this.callMethod(types.OPERATION.SET_CONTENT, [mount, path, content], readyCB, true);
         },
         onMessages: function (res) {
             var events = utils.getJson(res.events);
-            if (events && lang.isArray(events)) {
+            if (events && _.isArray(events)) {
                 for (var i = 0; i < events.length; i++) {
-
                     var struct = {
                         path: events[i].relPath
                     };
-                    lang.mixin(struct, events[i]);
+                    utils.mixin(struct, events[i]);
                     this.publish(events[i].clientEvent, struct, this);
                 }
             }
@@ -43517,8 +44734,7 @@ define('xfile/manager/FileManager',[
              * Build signature
              */
             var params = {};
-            params = lang.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
+            params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
             /**
              * Mixin mandatory fields
              */
@@ -43527,16 +44743,13 @@ define('xfile/manager/FileManager',[
             this.serviceObject.signatureField = this.config.RPC_PARAMS.rpcSignatureField;
             this.serviceObject.signatureToken = this.config.RPC_PARAMS.rpcSignatureToken;
             this.serviceObject[serviceClass][method](args).then(function (res) {
-
                 try {
                     if (readyCB) {
-
                         readyCB(res);
                     }
                 } catch (e) {
                     console.error('bad news : callback for method ' + method + ' caused a crash in service class ' + serviceClass);
                 }
-
                 if (res && res.error && res.error.code == 3) {
                     setTimeout(function () {
                         thiz.onMessages(res.error);
@@ -43565,7 +44778,6 @@ define('xfile/manager/FileManager',[
              */
             var serviceClass = this.serviceClass;
             try {
-
                 if (!this.serviceObject[serviceClass][method]) {
                     if (omitError === true) {
                         this.onError({
@@ -43579,9 +44791,7 @@ define('xfile/manager/FileManager',[
                  * Build signature
                  */
                 var params = {};
-                params = lang.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
-
+                params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
                 /**
                  * Mixin mandatory fields
                  */
@@ -43591,7 +44801,6 @@ define('xfile/manager/FileManager',[
                 this.serviceObject.signatureToken = this.config.RPC_PARAMS.rpcSignatureToken;
                 var dfd = this.serviceObject[this.serviceClass][method](args);
                 dfd.then(function (res) {
-
                     try {
                         if (readyCB) {
                             readyCB(res);
@@ -43601,7 +44810,7 @@ define('xfile/manager/FileManager',[
                         logError(e, 'error running RPC');
 
                     }
-
+                    //@TODO: batch, still needed?
                     if (res && res.error && res.error.code == 3) {
                         setTimeout(function () {
                             thiz.onMessages(res.error);
@@ -43612,20 +44821,16 @@ define('xfile/manager/FileManager',[
                         thiz.onError(res.error);
                         return;
                     }
-
                     if (omitError !== false) {
                         var struct = {
                             message: 'Ok!'
                         };
                         thiz.publish(types.EVENTS.STATUS, struct, this);
                     }
-
                 }, function (err) {
                     thiz.onError(err);
                 });
-
                 return dfd;
-
             } catch (e) {
                 console.error('crash calling method' + e,arguments);
                 thiz.onError(e);
@@ -43638,8 +44843,6 @@ define('xfile/manager/FileManager',[
                 if(this.serviceUrl) {
                     this.serviceObject = new RPCService(decodeURIComponent(this.serviceUrl));
                     this.serviceObject.config = this.config;
-                }else{
-                    console.warn('FileManager : Have no service url');
                 }
             }
         }
@@ -43716,31 +44919,22 @@ define('xide/manager/ResourceManager',[
         }
     });
 });
-define('xide/views/CIActionDialog',[
-    "dojo/_base/declare"
-
-], function (declare) {
-    return declare('noob',null,{});
-});
 define('xfile/manager/MountManager',[
     'dcl/dcl',
-    "xdojo/has",
     "dojo/_base/lang",
-    'dojo/dom-class',
     "xide/manager/ResourceManager",
     "xide/mixins/ReloadMixin",
     "xide/mixins/EventedMixin",
     "xide/types",
-    'dojo/aspect',
-    'xide/utils',
-    'xide/views/CIActionDialog'
-], function (dcl, has, lang, domClass, ResourceManager, ReloadMixin, EventedMixin, types, aspect, utils, CIActionDialog) {
+    'xide/utils'
+], function (dcl, lang, ResourceManager, ReloadMixin, EventedMixin, types, utils) {
     return dcl([ResourceManager, EventedMixin.dcl, ReloadMixin.dcl], {
         declaredClass: "xfile.manager.MountManager",
         serviceClass: "XApp_Resource_Service",
         mountData: null,
         didReload: false,
         editMount: function (mount) {
+            /*
             if (!mount) {
                 return;
             }
@@ -43763,8 +44957,10 @@ define('xfile/manager/MountManager',[
                     }
                 }
             }
+            */
         },
         removeMount: function (mount) {
+            /*
             if (!mount) {
                 return;
             }
@@ -43804,18 +45000,10 @@ define('xfile/manager/MountManager',[
             setTimeout(function () {
                 dlg.resize();
             }, 1000);
+            */
         },
         getMounts: function () {
             return this.mountData;
-        },
-        _patchMenu: function (widget) {
-            var thiz = this;
-            aspect.after(widget, 'onOpen', function () {
-                if (this._popupWrapper && this._popupWrapper) {
-                    var dst = this._popupWrapper;
-                    domClass.add(dst, 'ui-widget ui-widget-content');
-                }
-            });
         },
         _onDialogOk: function (dlg, data, mount) {
             var options = utils.toOptions(data);
@@ -43860,8 +45048,6 @@ define('xfile/manager/MountManager',[
             } else if (resourceObject.config.type === 'REMOTE_FILE_PROXY') {
                 resourceObject.path = resourceObject.name + '://';//VFS Remote adjustment
             }
-
-
             var _cb = function () {
                 thiz.ls(function (data) {
                     thiz.onMountDataReady(data)
@@ -43875,7 +45061,7 @@ define('xfile/manager/MountManager',[
 
         },
         registerLocalMount: function (mount) {
-
+/*
             var name = mount ? mount.name : '';
             var path = mount ? mount.path : '';
             if (mount && mount.config && mount.config.path) {
@@ -43908,10 +45094,10 @@ define('xfile/manager/MountManager',[
                 ]
             });
             actionDialog.show();
-
+            */
         },
         registerFTP: function (mount) {
-
+/*
             mount = mount || {};
             var config = mount.config || {};
 
@@ -44001,9 +45187,10 @@ define('xfile/manager/MountManager',[
                 ]
             });
             actionDialog.show();
+            */
         },
         registerSFTP: function (mount) {
-
+            /*
             mount = mount || {};
             var config = mount.config || {};
 
@@ -44077,8 +45264,10 @@ define('xfile/manager/MountManager',[
                 ]
             });
             actionDialog.show();
+            */
         },
         registerDropbox: function (mount) {
+            /*
             var thiz = this;
             var actionDialog = new CIActionDialog({
                 title: 'New Dropbox',
@@ -44131,8 +45320,10 @@ define('xfile/manager/MountManager',[
                 ]
             });
             actionDialog.show();
+            */
         },
         registerWebDav: function () {
+            /*
             var thiz = this;
             var actionDialog = new CIActionDialog({
                 title: 'New Webdav',
@@ -44178,76 +45369,11 @@ define('xfile/manager/MountManager',[
                 ]
             });
             actionDialog.show();
-        },
-        onSourceMenuOpened: function (evt) {
-
-            var menu = evt['menu'];
-
-            if (this.config.ALLOWED_ACTIONS[types.OPERATION_INT.ADD_MOUNT]) {
-
-                if (!menu['mountMenu']) {
-
-                    //sub menu main
-                    var pSubMenu = new Menu({parentMenu: menu});
-                    this._patchMenu(pSubMenu);//patch for jquery-ui
-
-                    //local
-                    var local = new MenuItem({
-                        label: "Local",
-                        onClick: lang.hitch(this, 'registerLocalMount'),
-                        'iconClass': 'el-icon-folder-open'
-                    });
-                    pSubMenu.addChild(local);
-
-                    if (has('remote-vfs')) {
-                        //dropbox
-                        var db = new MenuItem({
-                            label: "Dropbox",
-                            onClick: lang.hitch(this, 'registerDropbox'),
-                            'iconClass': 'fa-dropbox'
-                        });
-                        pSubMenu.addChild(db);
-
-                        //dav
-                        var webdav = new MenuItem({
-                            label: "WEB DAV",
-                            onClick: lang.hitch(this, 'registerWebDav'),
-                            'iconClass': 'fa-cloud'
-                        });
-                        pSubMenu.addChild(webdav);
-
-
-                        var ftp = new MenuItem({
-                            label: "FTP",
-                            onClick: lang.hitch(this, 'registerFTP'),
-                            'iconClass': 'fa-cloud'
-                        });
-                        pSubMenu.addChild(ftp);
-
-                        var sftp = new MenuItem({
-                            label: "SFTP",
-                            onClick: lang.hitch(this, 'registerSFTP'),
-                            'iconClass': 'fa-cloud'
-                        });
-                        pSubMenu.addChild(sftp);
-                    }
-                    menu.addChild(new PopupMenuItem({
-                        label: "Add",
-                        popup: pSubMenu,
-                        iconClass: 'el-icon-plus'
-                    }));
-                    menu['mountMenu'] = pSubMenu;
-                }
-            }
-        },
-        onReloaded: function () {
-            console.log('mount manager reloaded');
+            */
         },
         onMountDataReady: function (data) {
-
             this.mountData = data;
             this.publish(types.EVENTS.ON_MOUNT_DATA_READY, {data: data});
-
             var thiz = this;
             setTimeout(function () {
                 thiz.publish(types.EVENTS.ON_MOUNT_DATA_READY, {data: data});
@@ -44261,19 +45387,9 @@ define('xfile/manager/MountManager',[
          * Callback when context initializes us
          */
         init: function () {
-
             if (this.ctx.getFileManager()) {
                 this.serviceObject = this.ctx.getFileManager().serviceObject;
             }
-
-            var thiz = this;
-
-            /*
-            return this.ls(function (data) {
-                thiz.onMountDataReady(data)
-            });
-            */
-
         },
         /////////////////////////////////////////////////////////////////////////////////
         //
@@ -44307,24 +45423,21 @@ define('xfile/manager/MountManager',[
 define('xfile/data/DriverStore',[
     "dojo/_base/declare",
     'dojo/Deferred',
-    'dstore/Trackable',
     'xide/data/ObservableStore',
     'xide/data/TreeMemory',
     "xfile/data/Store",
-    'dstore/Cache',
     "xide/manager/ServerActionBase",
     "xide/utils"
-], function (declare,Deferred,Trackable,ObservableStore,TreeMemory,Store,Cache,ServerActionBase,utils) {
-    
+], function (declare, Deferred, ObservableStore, TreeMemory, Store, ServerActionBase, utils) {
     var Implementation = Store.Implementation;
-    
-    return declare('driverFileStore', [TreeMemory,ObservableStore,ServerActionBase.declare], utils.mixin(Implementation(),{
+
+    return declare('driverFileStore', [TreeMemory, ObservableStore, ServerActionBase.declare], utils.mixin(Implementation(), {
         driver: null,
         addDot: false,
-        rootSegment:"/",
+        rootSegment: "/",
         getRootItem: function () {
             var root = this._root;
-            if(root){
+            if (root) {
                 return root;
             }
             this._root = {
@@ -44338,16 +45451,15 @@ define('xfile/data/DriverStore',[
                 getPath: function () {
                     return this.path;
                 }
-            }
+            };
             return this._root;
         },
-        _filter:function(items){
+        _filter: function (items) {
             return items;
         },
         _request: function (path) {
             var collection = this;
             var self = this;
-            //console.log('request : '+path);
             if (path === '.' || path === '/') {
                 var result = new Deferred();
                 var dfd = self.driver.callCommand('LSProg', {
@@ -44357,13 +45469,10 @@ define('xfile/data/DriverStore',[
                 });
                 dfd.then(function (data) {
                     var files = data.files;
-
                     _.each(files, function (file) {
                         file.parent = ".";
                     });
-
                     files = self._filter(files);
-
                     var response = {
                         items: [{
                             mount: "root",
@@ -44378,13 +45487,11 @@ define('xfile/data/DriverStore',[
                     self._parse(results);
                     results = results.children || results;
                     result.resolve(results);
-                    //console.log('got files root : '+path,results);
                 });
                 return result;
             } else {
-
                 var result = new Deferred();
-                var arg = path + ( self.glob  || "/*");
+                var arg = path + ( self.glob || "/*");
                 var dfd = self.driver.callCommand('LSProg', {
                     override: {
                         args: [arg]
@@ -44395,9 +45502,7 @@ define('xfile/data/DriverStore',[
                     _.each(files, function (file) {
                         file.parent = path;
                     });
-
                     files = self._filter(files);
-                    
                     var response = {
                         items: [{
                             mount: "root",
@@ -44410,7 +45515,6 @@ define('xfile/data/DriverStore',[
                     self._parse(results);
                     results = results.children || results;
                     result.resolve(results);
-                    //console.log('got files root : '+path,results);
                 });
                 return result;
             }

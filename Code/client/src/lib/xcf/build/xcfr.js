@@ -1,11 +1,7 @@
 define('xcf/types',[
     'dojo/_base/declare'
 ],function(declare){
-
-    return declare("xcf.types", null,
-    {
-
-    });
+    return declare("xcf.types", null,{});
 });
 
 
@@ -13,8 +9,41 @@ define('xcf/types/Types',[
     'xaction/types',
     'xide/types/Types',
     'xide/types',
-    'xide/utils/ObjectUtils'
-], function (aTypes,cTypes,types,utils) {
+    'xide/utils/ObjectUtils',
+    'xide/utils',
+    'xide/utils/HexUtils'
+], function (aTypes,cTypes,types,ObjectUtils,utils,HexUtils) {
+    if(!String.prototype.setBytes) {
+        String.prototype.setBytes = function (bytes) {
+            this.bytes = bytes;
+        };
+    }
+    if(!String.prototype.getBytes){
+        String.prototype.getBytes = function() {
+            if(this.bytes){
+                return this.bytes;
+            }else{
+                return HexUtils.stringToBuffer(this);
+            }
+        };
+    }
+    if (!String.prototype.getString) {
+        String.prototype.getString = function () {
+            return this.string;
+        };
+    }
+    if (!String.prototype.setString) {
+        String.prototype.setString = function (string) {
+            this.string = string;
+        };
+    }
+
+    if(!String.prototype.hexString){
+        String.prototype.hexString= function() {
+            var bytes = this.getBytes();
+            return HexUtils.bufferToHexString(bytes);
+        };
+    }
 
     /**
      * Variable Flags
@@ -25,7 +54,6 @@ define('xcf/types/Types',[
     types.VARIABLE_FLAGS = {
         PUBLISH:0x00000002,
         PUBLISH_IF_SERVER:0x00000004
-        
     };
     /**
      * Flags to define logging outputs per device or view
@@ -179,7 +207,7 @@ define('xcf/types/Types',[
         ON_CLIENT_LOG_MESSAGE: 'onClientLogMessage',
         ON_DEVICE_SERVER_CONNECTED:'onDeviceServerConnected',
         ON_RUN_CLASS_EVENT: 'onRunClassEvent'
-    }
+    };
     
     utils.mixin(types.EVENTS,Events);
 
@@ -278,13 +306,13 @@ define('xcf/types/Types',[
         RESPONSE:'Response',
         SEND_COMMAND:'Send Command',
         DEVICE_ERROR:'Device Error'       
-    }
+    };
 
     /**
      * @enum {int} DEFAULT_DEVICE_LOGGING_FLAGS
      * @global
      */
-    types.DEFAULT_DEVICE_LOGGING_FLAGS = {}
+    types.DEFAULT_DEVICE_LOGGING_FLAGS = {};
 
     var LOGGING_FLAGS = types.LOGGING_FLAGS;
     
@@ -391,8 +419,6 @@ define('xcf/types/Types',[
         WRITE_LOG_MESSAGE:'Write_Log_Message',
         INIT_DEVICES:'INIT_DEVICES'
     };
-
-
     return types;
 });
 
@@ -1988,7 +2014,6 @@ define('requirejs-dplugins/has',["module"], function (module) {
 /** @module xcf/manager/BeanManager **/
 define('xcf/manager/BeanManager',[
     'dcl/dcl',
-    "xdojo/declare",
     "dojo/_base/lang",
     'xide/types',
     'xide/utils',
@@ -1997,37 +2022,35 @@ define('xcf/manager/BeanManager',[
     'xdojo/has!xcf-ui?xide/views/ActionDialog',
     'xdojo/has!xcf-ui?xide/views/CIActionDialog',
     'xdojo/has!xcf-ui?xide/views/CIGroupedSettingsView'
-], function (dcl,declare,lang,types, utils, BeanManager,Deferred,registry,ActionDialog, CIActionDialog, CIGroupedSettingsView){
+], function (dcl, lang, types, utils, BeanManager, Deferred, registry, ActionDialog, CIActionDialog, CIGroupedSettingsView) {
     /**
      * @class module:xcf/manager/BeanManager
-     * @extends module:xide/manager/BeanManager
+     * @extends {module:xide/manager/BeanManager}
      */
     return dcl(BeanManager, {
-        declaredClass:"xcf.manager.BeanManager",
-        setStore:function(scope,store){
+        declaredClass: "xcf.manager.BeanManager",
+        setStore: function (scope, store) {
             var current = this.stores[scope];
-            if(current){
+            if (current) {
                 current.destroy();
                 delete this.stores[scope];
             }
-
             this.stores[scope] = store;
-
             return store;
         },
         /**
-         * 
+         *
          * @param bean
          * @returns {*}
          */
-        getFile:function(bean){
+        getFile: function (bean) {
             var dfd = new Deferred();
             var ctx = this.ctx;
             var fileManager = ctx.getFileManager();
             var fileStore = fileManager.getStore(bean.scope);
-            fileStore.initRoot().then(function(){
-                fileStore._loadPath('.',true).then(function(){
-                    fileStore.getItem(bean.path,true).then(function (item) {
+            fileStore.initRoot().then(function () {
+                fileStore._loadPath('.', true).then(function () {
+                    fileStore.getItem(bean.path, true).then(function (item) {
                         dfd.resolve(item);
                     });
                 });
@@ -2043,8 +2066,7 @@ define('xcf/manager/BeanManager',[
          * @param prefix
          * @returns {*}
          */
-        toUrl:function(device, driver, block, prefix) {
-
+        toUrl: function (device, driver, block, prefix) {
             prefix = prefix || '';
             var pattern = prefix + "deviceScope={deviceScope}&device={deviceId}&driver={driverId}&driverScope={driverScope}&block={block}";
             var url = lang.replace(
@@ -2068,12 +2090,9 @@ define('xcf/manager/BeanManager',[
          * @param item
          * @returns {xide.views.CIGroupedSettingsView|null}
          */
-        openItemSettings: function (item,device) {
-
+        openItemSettings: function (item, device) {
             //1. sanity check
             var userData = item.user;
-
-
             if (!userData || !userData.inputs) {
                 return null;
             }
@@ -2104,15 +2123,15 @@ define('xcf/manager/BeanManager',[
 
             //@Todo:driver, store device temporarly in Commands CI
             var commandsCI = utils.getCIByChainAndName(userData, 0, types.DRIVER_PROPERTY.CF_DRIVER_COMMANDS);
-            if(commandsCI){
+            if (commandsCI) {
                 commandsCI.device = device;
             }
 
-            if(item.blockScope && !item.blockScope.serviceObject){
+            if (item.blockScope && !item.blockScope.serviceObject) {
                 item.blockScope.serviceObject = this.serviceObject;
 
             }
-            return utils.addWidget(CIGroupedSettingsView,{
+            return utils.addWidget(CIGroupedSettingsView, {
                 cis: userData.inputs,
                 storeItem: item,
                 iconClass: this.beanIconClass,
@@ -2120,11 +2139,11 @@ define('xcf/manager/BeanManager',[
                 delegate: this,
                 storeDelegate: this,
                 blockManager: this.ctx.getBlockManager(),
-                options:{
+                options: {
                     groupOrder: {
                         'General': 1,
                         'Settings': 2,
-                        'Visual':3
+                        'Visual': 3
                     }
                 }
             }, this, parent, true);
@@ -2139,13 +2158,12 @@ define('xcf/manager/BeanManager',[
          * Creates new group item dialog
          */
         newGroup: function () {
-
             var thiz = this,
                 currentItem = this.getItem(),
                 parent = currentItem ? currentItem.isDir === true ? currentItem.path : '' : '';
 
             var actionDialog = new CIActionDialog({
-                title: 'New '  + this.groupType,
+                title: 'New ' + this.groupType,
                 delegate: {
                     onOk: function (dlg, data) {
 
@@ -2153,8 +2171,7 @@ define('xcf/manager/BeanManager',[
                         var scope = utils.getCIInputValueByName(data, 'Scope');
                         var _final = parent + '/' + title;
 
-                        thiz.createGroup(scope, _final, function (response) {
-
+                        thiz.createGroup(scope, _final, function () {
                             var newItem = thiz.createNewGroupItem(title, scope, parent);
                             thiz.store.putSync(newItem);
                             thiz.publish(types.EVENTS.ON_STORE_CHANGED, {
@@ -2192,24 +2209,21 @@ define('xcf/manager/BeanManager',[
         onDeleteItem: function (item) {
 
             var isDir = utils.toBoolean(item.isDir) === true;
-            //pick the right service function
             var removeFn = isDir ? 'removeGroup' : 'removeItem';
             var thiz = this;
             var actionDialog = new ActionDialog({
-                title: 'Remove ' + this.beanName +   (isDir ? ' Group' : '') + ' ' + "\"" + item.name + "\"  ",
+                title: 'Remove ' + this.beanName + (isDir ? ' Group' : '') + ' ' + "\"" + item.name + "\"  ",
                 style: 'max-width:400px',
                 titleBarClass: 'text-danger',
                 delegate: {
                     isRemoving: false,
-                    onOk: function (dlg) {
+                    onOk: function () {
                         thiz[removeFn](
                             utils.toString(item.scope),
                             utils.toString(item.path),
                             utils.toString(item.name),
                             function () {
-
                                 thiz.onItemDeleted(item);
-
                                 thiz.publish(types.EVENTS.ON_STORE_CHANGED, {
                                     owner: thiz,
                                     store: thiz.store,
@@ -2235,7 +2249,7 @@ define('xcf/manager/BeanManager',[
             //delete subs
             this.store.removeSync(item.path);
 
-            if(item == this.currentItem) {
+            if (item == this.currentItem) {
                 this.currentItem = null;
             }
             if (item) {
@@ -2282,7 +2296,7 @@ define('xcf/manager/BeanManager',[
         //  Server methods (PHP)
         //
         /////////////////////////////////////////////////////////////////////////////////////
-        createItem: function (scope, path, title, meta,code) {
+        createItem: function (scope, path, title, meta, code) {
             return this.runDeferred(null, 'createItem', [scope, path, title, meta, code]);
         },
         /***
@@ -2302,19 +2316,17 @@ define('xcf/manager/BeanManager',[
                         store: this.store,
                         type: this.itemType
                     });
-                }catch(e){
-                    logError(e,'error ls');
+                } catch (e) {
+                    logError(e, 'error ls');
                 }
             }.bind(this));
         }
-        
     });
 });
 
-define('xcf/manager/DeviceManager_Server',["dcl/dcl"], function(dcl){
-    return dcl(null,{});
+define('xcf/manager/DeviceManager_Server',["dcl/dcl"], function (dcl) {
+    return dcl(null, {});
 });
-
 
 /** @module xcf/manager/DeviceManager_DeviceServer */
 define('xcf/manager/DeviceManager_DeviceServer',[
@@ -2329,74 +2341,23 @@ define('xcf/manager/DeviceManager_DeviceServer',[
     'xide/mixins/EventedMixin',
     'require',
     'xcf/model/Variable',
+    'xide/utils/HexUtils',
     'xdojo/has!host-node?nxapp/utils/_console'
-], function (dcl,MD5,
-             types, utils, factory, has,
-             Deferred,ReloadMixin,EventedMixin,require,Variable,_console) {
+], function (dcl, MD5, types, utils, factory, has, Deferred, ReloadMixin, EventedMixin, require, Variable,HexUtils,_console) {
 
     var console = typeof window !== 'undefined' ? window.console : typeof global !== 'undefined' ? global.console : _console;
-    if(_console){
+    if (_console) {
         console = _console;
     }
     var isServer = has('host-node'),
         isIDE = has('xcf-ui'),
         runDrivers = true;
-
-    if(!String.prototype.setBytes) {
-        String.prototype.setBytes = function (bytes) {
-            this.bytes = bytes;
-        };
-    }
-    if(!String.prototype.getString) {
-        String.prototype.getString = function () {
-            return this.string;
-        };
-    }
-    if(!String.prototype.setString) {
-        String.prototype.setString = function (string) {
-            this.string = string;
-        };
-    }
-
-    if(!String.prototype.getBytes){
-        String.prototype.getBytes = function() {
-            if(this.bytes){
-                return this.bytes;
-            }else{
-                return utils.stringToBuffer(this);
-            }
-        };
-    }
-
-    if(!String.prototype.hexString){
-        String.prototype.hexString= function() {
-            var bytes = this.getBytes();
-            return utils.bufferToHexString(bytes);
-        };
-    }
-    if(!Array.prototype.shuffle){
-        Array.prototype.shuffle = function(){
-            var counter = this.length, temp, index;
-
-            // While there are elements in the array
-            while (counter > 0) {
-                // Pick a random index
-                index = (Math.random() * counter--) | 0;
-
-                // And swap the last element with it
-                temp = this[counter];
-                this[counter] = this[index];
-                this[index] = temp;
-            }
-        };
-    }
-
     /*
-    var console = typeof window !== 'undefined' ? window.console : console;
-    if(_console && _console.error && _console.warn){
-        //console = _console;
-    }
-    */
+     var console = typeof window !== 'undefined' ? window.console : console;
+     if(_console && _console.error && _console.warn){
+     //console = _console;
+     }
+     */
 
     //debug mqtt activity
     var _debugMQTT = false;
@@ -2411,15 +2372,11 @@ define('xcf/manager/DeviceManager_DeviceServer',[
     var debugServerMessages = false;
     var debugByteMessages = false;
 
-    if(typeof sctx !=='undefined' && sctx){
-
-
+    if (typeof sctx !== 'undefined' && sctx) {
         var id = utils.createUUID();
         var rm = sctx.getResourceManager();
 
-
         var application = sctx.getApplication();
-
         return;
 
         console.clear();
@@ -2435,7 +2392,6 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 driver = thiz.getSelectedItem(),
                 protocolMgr = thiz.ctx.getProtocolManager(),
                 store = protocolMgr.getStore();
-
 
 
             return;
@@ -2476,8 +2432,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         }
                     }
 
-                }, protocolMgr, wizard, true, null, [WizardPaneBase]).
-                _on(types.EVENTS.ON_ITEM_SELECTED, function (evt) {
+                }, protocolMgr, wizard, true, null, [WizardPaneBase])._on(types.EVENTS.ON_ITEM_SELECTED, function (evt) {
                     selectedItem = evt.item;
                     wizard.adjustWizardButton('next', selectView.isGroup(evt.item));
 
@@ -2550,8 +2505,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         });
                         return _res;
                     }
-                }).
-                _on(types.EVENTS.ON_ITEM_SELECTED, function (evt) {
+                })._on(types.EVENTS.ON_ITEM_SELECTED, function (evt) {
                     selectedItems = selectItemsView.getSelection();
                     wizard.adjustWizardButton('done', selectedItems.length === 0);
 
@@ -2566,16 +2520,16 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             });
         };
 
-        console.log('root : '+rm.getVariable('ROOT'));
-        console.log('user : '+rm.getVariable('USER_DIRECTORY'));
-        console.log('system : '+rm.getVariable('SYSTEM'));
+        console.log('root : ' + rm.getVariable('ROOT'));
+        console.log('user : ' + rm.getVariable('USER_DIRECTORY'));
+        console.log('system : ' + rm.getVariable('SYSTEM'));
 
 
         var ROOT = rm.getVariable('ROOT');
         var USER = rm.getVariable('USER_DIRECTORY');
         var SYSTEM = rm.getVariable('SYSTEM');
-        var DIST = ROOT+'/server/nodejs/dist/';
-        var TARGET = ROOT+'/claycenter/';
+        var DIST = ROOT + '/server/nodejs/dist/';
+        var TARGET = ROOT + '/claycenter/';
         var linux32 = 'false';
         var linux64 = 'true';
         var osx = 'false';
@@ -2583,37 +2537,37 @@ define('xcf/manager/DeviceManager_DeviceServer',[
         var windows = 'false';
 
         var nginxOptions = {
-            port:10002
+            port: 10002
         };
 
         var options = {
-            linux32:linux32,
-            linux64:linux64,
-            osx:osx,
-            arm:arm,
-            windows:windows,
-            root:ROOT,
-            data:SYSTEM,
-            user:USER + '/claycenter',
-            dist:DIST,
-            target:TARGET,
-            nginxOptions:nginxOptions
+            linux32: linux32,
+            linux64: linux64,
+            osx: osx,
+            arm: arm,
+            windows: windows,
+            root: ROOT,
+            data: SYSTEM,
+            user: USER + '/claycenter',
+            dist: DIST,
+            target: TARGET,
+            nginxOptions: nginxOptions
         };
 
         var delegate = {
-            onError:function(e){
-                console.error('have error : ',e);
+            onError: function (e) {
+                console.error('have error : ', e);
             },
-            onProgress:function(e){
-                console.error('have progress: ',e);
+            onProgress: function (e) {
+                console.error('have progress: ', e);
             },
-            onFinish:function(e){
-                console.error('have finish: ',e);
+            onFinish: function (e) {
+                console.error('have finish: ', e);
             }
         };
-        sctx.getDeviceManager().runClass('nxapp/manager/ExportManager',{
-            options:options
-        },delegate);
+        sctx.getDeviceManager().runClass('nxapp/manager/ExportManager', {
+            options: options
+        }, delegate);
     }
 
     /***
@@ -2634,9 +2588,9 @@ define('xcf/manager/DeviceManager_DeviceServer',[
      * @augments module:xcf/manager/DeviceManager
      * @augments module:xide/mixins/EventedMixin
      */
-    return dcl(null,{
-        declaredClass:"xcf.manager.DeviceManager_DeviceServer",
-        running:null,
+    return dcl(null, {
+        declaredClass: "xcf.manager.DeviceManager_DeviceServer",
+        running: null,
         /**
          * Callback when we are connected to a device.
          * We use this to fire all looping blocks
@@ -2655,7 +2609,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 serverSide = info.serverSide,
                 _isServer = info.isServer;
 
-            debugConnect && console.log('onDeviceStarted ' + info.toString(),driverInstance.id );
+            debugConnect && console.log('onDeviceStarted ' + info.toString(), driverInstance.id);
             /**
              * Post work :
              * 1. Start all commands with the 'startup' flag!
@@ -2666,12 +2620,11 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 //1. fire startup blocks
             var blockScope = driverInstance.blockScope;
 
-            if(((isServer && (serverSide || _isServer)) || (!serverSide && !_isServer))) {
+            if (((isServer && (serverSide || _isServer)) || (!serverSide && !_isServer))) {
                 blockScope.start();
             }
             //important to set this before publishing the connected event, otherwise it runs an infity loop
             driverInstance.__didStartBlocks = true;
-
             this.publish(types.EVENTS.ON_DEVICE_DRIVER_INSTANCE_READY, {
                 device: deviceStoreItem,
                 instance: driverInstance,
@@ -2684,31 +2637,31 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 driver: driver,
                 blockScope: blockScope
             });
-            this.ctx.getDriverManager().addDeviceInstance(deviceStoreItem,driver);
+            this.ctx.getDriverManager().addDeviceInstance(deviceStoreItem, driver);
         },
         /***
          *
          * @param driverInstance
          * @param data
          */
-        runClass: function (_class,args,delegate) {
+        runClass: function (_class, args, delegate) {
             this.checkDeviceServerConnection();
-            if(this.deviceServerClient) {
+            if (this.deviceServerClient) {
                 var id = utils.createUUID();
                 args.id = id;
                 var dataOut = {
-                    "class":_class,
+                    "class": _class,
                     args: args,
                     manager_command: types.SOCKET_SERVER_COMMANDS.RUN_CLASS
                 };
                 !this.running && (this.running = {});
                 this.running[id] = {
-                    "class":_class,
+                    "class": _class,
                     args: args,
-                    delegate:delegate
+                    delegate: delegate
                 };
                 this.deviceServerClient.emit(null, dataOut, types.SOCKET_SERVER_COMMANDS.RUN_CLASS);
-            }else{
+            } else {
                 this.onHaveNoDeviceServer();
             }
         },
@@ -2718,9 +2671,9 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param force
          * @param conn {module:nxapp/model/ClientConnection}
          */
-        startDevice: function (device,force,conn) {
+        startDevice: function (device, force, conn) {
             var thiz = this;
-            if(!device){
+            if (!device) {
                 console.error('start device invalid item');
                 return null;
             }
@@ -2728,63 +2681,63 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             device.check();
             debugDevice = true;
             var dfd = new Deferred();
-            if(device._startDfd && !device._startDfd.isResolved()){
-                if(!isServer) {
+            if (device._startDfd && !device._startDfd.isResolved()) {
+                if (!isServer) {
                     debugDevice && console.error('already starting ' + device.toString());
                     return device._startDfd;
                 }
-            }else{
+            } else {
                 !device.driverInstance && device.reset();//fresh
             }
 
-            force===true && device.setMetaValue(types.DEVICE_PROPERTY.CF_DEVICE_ENABLED,true,false);
+            force === true && device.setMetaValue(types.DEVICE_PROPERTY.CF_DEVICE_ENABLED, true, false);
             var enabled = device.getMetaValue(types.DEVICE_PROPERTY.CF_DEVICE_ENABLED);
-            if(!enabled && force!==true && !isServer){
+            if (!enabled && force !== true && !isServer) {
                 debugDevice && console.error('---abort start device : device is not enabled!' + device.toString());
-                this.publish(types.EVENTS.ON_STATUS_MESSAGE,{
-                    text:'Can`t start device because its not enabled! ' + device.toString(),
-                    type:'error'
+                this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
+                    text: 'Can`t start device because its not enabled! ' + device.toString(),
+                    type: 'error'
                 });
-                setTimeout(function(){
+                setTimeout(function () {
                     dfd.reject();
-                },10);
+                }, 10);
                 return dfd;
             }
 
             var cInfo = this.toDeviceControlInfo(device);
-            if(!cInfo){
+            if (!cInfo) {
                 console.error('invalid client info, assuming no driver found');
                 dfd.reject('invalid client info, assuming no driver found');
                 return dfd;
             }
 
             if (!cInfo) {
-                console.error('couldnt start device, invalid control info '+ cInfo.toString());
+                console.error('couldnt start device, invalid control info ' + cInfo.toString());
                 dfd.reject();
                 return dfd;
             }
 
             var hash = cInfo.hash;
             var state = device.state;
-            var wasLost = state===types.DEVICE_STATE.LOST_DEVICE_SERVER;
-            if (this.deviceInstances[hash] && wasLost!==true) {
+            var wasLost = state === types.DEVICE_STATE.LOST_DEVICE_SERVER;
+            if (this.deviceInstances[hash] && wasLost !== true) {
                 debugDevice && console.warn('device already started : ' + cInfo.toString());
                 dfd.resolve(this.deviceInstances[hash]);
                 return dfd;
             }
 
-            function buildMQTTParams(cInfo,driverInstance,deviceItem,driverItem){
-                if(!driverInstance){
+            function buildMQTTParams(cInfo, driverInstance, deviceItem, driverItem) {
+                if (!driverInstance) {
                     console.warn('buildMQTTParams:have no driver instance');
                 }
                 return {
-                    driverScopeId:driverInstance && driverInstance.blockScope ? driverInstance.blockScope.id : 'have no driver instance',
-                    driverId:driverInstance ? driverInstance.driver.id : 'have no driver id',
-                    deviceId:device.path
+                    driverScopeId: driverInstance && driverInstance.blockScope ? driverInstance.blockScope.id : 'have no driver instance',
+                    driverId: driverInstance ? driverInstance.driver.id : 'have no driver id',
+                    deviceId: device.path
                 };
             }
 
-            if(wasLost && this.deviceInstances[hash]){
+            if (wasLost && this.deviceInstances[hash]) {
                 thiz.publish(types.EVENTS.ON_STATUS_MESSAGE, {
                     text: 'Trying to re-connect to ' + cInfo.toString(),
                     type: 'info'
@@ -2797,7 +2750,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             }
 
             device.setState(types.DEVICE_STATE.CONNECTING);
-            device._userStopped=null;
+            device._userStopped = null;
             device._startDfd = dfd;
             var baseDriverPrefix = this.driverScopes['system_drivers'],
                 baseDriverRequire = baseDriverPrefix + 'DriverBase';
@@ -2806,44 +2759,44 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 require([baseDriverRequire], function (baseDriver) {
                     baseDriver.prototype.declaredClass = baseDriverRequire;
                     var sub = thiz.createDriverInstance(cInfo, baseDriver, device).then(function (driverInstance) {
-                        if(!driverInstance.id){
+                        if (!driverInstance.id) {
                             driverInstance.id = utils.createUUID();
                         }
-                        debugCreateInstance && console.info('created driver instance for '+ cInfo.toString());                        
+                        debugCreateInstance && console.info('created driver instance for ' + cInfo.toString());
                         cInfo.mqtt = buildMQTTParams(cInfo, driverInstance, device);
                         thiz.publish(types.EVENTS.ON_STATUS_MESSAGE, {
                             text: 'Trying to connect to ' + cInfo.toString(),
                             type: 'info'
                         });
 
-                        if(!isServer) {
-                            if(!device.isServerSide() && !device.isServer()) {
+                        if (!isServer) {
+                            if (!device.isServerSide() && !device.isServer()) {
                                 thiz.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.CREATE_CONNECTION, cInfo);
-                            }else{
+                            } else {
                                 thiz.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.START_DEVICE, cInfo);
                             }
-                        }else{
+                        } else {
                             //we're already starting
-                            if(device._startDfd && !device._startDfd.isResolved()){
+                            if (device._startDfd && !device._startDfd.isResolved()) {
                                 thiz.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.CREATE_CONNECTION, cInfo);
-                            }else{
+                            } else {
                                 thiz.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.START_DEVICE, cInfo);
                             }
                         }
                         dfd.resolve(thiz.deviceInstances[hash]);
                         delete cInfo.mqtt;
                     });
-                    sub.then(function(){
+                    sub.then(function () {
 
-                    },function(e){
-                        debugCreateInstance && console.error('DeviceManager_DeviceServer::createDriverInstance error ',e);
+                    }, function (e) {
+                        debugCreateInstance && console.error('DeviceManager_DeviceServer::createDriverInstance error ', e);
                         dfd.resolve(null);
                     });
-                },function(e){
+                }, function (e) {
                     console.error(e);
                 });
-            }catch(e){
-                logError(e,'DeviceManager::startDevice: requiring base driver at ' + baseDriverRequire + ' failed! Base Driver - Prefix : ' + baseDriverPrefix);
+            } catch (e) {
+                logError(e, 'DeviceManager::startDevice: requiring base driver at ' + baseDriverRequire + ' failed! Base Driver - Prefix : ' + baseDriverPrefix);
             }
 
             return dfd;
@@ -2860,10 +2813,10 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 isRequireJS = !require.cache,
                 packageUrl = require.toUrl(driverPrefix);
 
-            packageUrl = utils.removeURLParameter(packageUrl,'bust');
+            packageUrl = utils.removeURLParameter(packageUrl, 'bust');
 
-            if(isRequireJS){
-                packageUrl = packageUrl.replace('/.js','/');
+            if (isRequireJS) {
+                packageUrl = packageUrl.replace('/.js', '/');
             }
 
             var requirePath = decodeURIComponent(packageUrl) + deviceInfo.driver;
@@ -2879,37 +2832,37 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 enabled = device.getMetaValue(types.DEVICE_PROPERTY.CF_DEVICE_ENABLED),
                 serverSide = deviceInfo.serverSide;
 
-            debugCreateInstance && console.log('create driver instance : ' + device.path +":"+device.scope + ' from ' + requirePath,{
-                driver:driver,
-                device:device,
-                deviceInfo:deviceInfo
+            debugCreateInstance && console.log('create driver instance : ' + device.path + ":" + device.scope + ' from ' + requirePath, {
+                driver: driver,
+                device: device,
+                deviceInfo: deviceInfo
             });
 
-            if(device.isEnabled()===false && !isServer){
+            if (device.isEnabled() === false && !isServer) {
                 debugConnect && console.warn('device not enabled, abort ' + deviceInfo.toString());
-                setTimeout(function(){
+                setTimeout(function () {
                     dfd.reject('device not enabled, abort ' + deviceInfo.toString());
                 });
                 return dfd;
             }
 
-            if(isServer && (!device.isServerSide() && !device.isServer() && !deviceInfo.isServer && !deviceInfo.serverSide)  ){
+            if (isServer && (!device.isServerSide() && !device.isServer() && !deviceInfo.isServer && !deviceInfo.serverSide)) {
                 dfd.reject('DeviceManager_DeviceServer: wont create driver instance! I am server and device isnt server side : ' + deviceInfo.title);
                 return dfd;
             }
 
 
-            debugCreateInstance && console.info('------create driver instance with DriverBase at '+requirePath + ' with driver prefix : ' + driverPrefix,this.driverScopes);
+            debugCreateInstance && console.info('------create driver instance with DriverBase at ' + requirePath + ' with driver prefix : ' + driverPrefix, this.driverScopes);
 
             try {
-                driverManager.getDriverModule(driver).then(function(driverModule){
+                driverManager.getDriverModule(driver).then(function (driverModule) {
                     var baseClass = driverBase;
-                    var driverProto = dcl([baseClass, EventedMixin.dcl, ReloadMixin.dcl,driverModule],{});
+                    var driverProto = dcl([baseClass, EventedMixin.dcl, ReloadMixin.dcl, driverModule], {});
                     var driverInstance = new driverProto();
                     driverInstance.declaredClass = requirePath;
                     driverInstance.options = deviceInfo;
                     driverInstance.baseClass = baseClass.prototype.declaredClass;
-                    driverInstance.modulePath = utils.replaceAll('//', '/', driverPrefix + deviceInfo.driver).replace('.js','');
+                    driverInstance.modulePath = utils.replaceAll('//', '/', driverPrefix + deviceInfo.driver).replace('.js', '');
                     driverInstance.delegate = thiz;
                     driverInstance.driver = driver;
                     driverInstance.serverSide = deviceInfo.serverSide;
@@ -2918,10 +2871,10 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                     driverInstance.device = device;
                     driverInstance.Module = driverModule;
                     driverInstance.id = utils.createUUID();
-                    driverInstance.getDevice = function(){
+                    driverInstance.getDevice = function () {
                         return this.device;
                     };
-                    driverInstance.getDeviceInfo = function(){
+                    driverInstance.getDeviceInfo = function () {
                         return this.getDevice().info;
                     };
                     var meta = driver['user'];
@@ -2939,16 +2892,10 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         driverInstance.initReload();
                     } catch (e) {
                         console.error('crash in driver instance startup! ' + device.toString());
-                        logError(e,'crash in driver instance startup!');
+                        logError(e, 'crash in driver instance startup!');
                     }
 
                     thiz.deviceInstances[hash] = driverInstance;
-
-                    //console.error('created driver instance ' + hash);
-
-
-                    // Build an id basing on : driver id + driver path
-                    // "235eb680-cb87-11e3-9c1a-....ab5_Marantz/Marantz.20.meta.json"
                     //var scopeId = driverId + '_' + hash + '_' + device.path;
                     if (!driver.blox || !driver.blox.blocks) {
                         debugConnect && console.warn('Attention : INVALID driver, have no blocks', deviceInfo.toString());
@@ -2956,44 +2903,17 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                             blocks: []
                         };
                     }
-                    /*
-                    if (isServer && driver.blockPath) {
-                        utils.getJson(utils.readFile(driver.blockPath));
-                        driver.blox = utils.getJson(utils.readFile(driver.blockPath));
-                    }
-
-                    var scope = ctx.getBlockManager().createScope({
-                        id: scopeId,
-                        device: device,
-                        driver: driver,
-                        instance: driverInstance,
-                        serviceObject: thiz.serviceObject,
-                        ctx: ctx,
-                        serverSide: serverSide,
-                        getContext: function () {
-                            return this.instance;
-                        }
-                    }, utils.clone(driver.blox.blocks),function(error){
-                        if(error){
-                            console.error(error  + ' : in '+driver.name + ' Resave Driver! in scope id ' +scopeId);
-                        }
-                    });
-
-                    //important:
-                    driverInstance.blockScope = scope;
-                    device.blockScope = scope;
-                    */
                     device.driverInstance = driverInstance;
                     thiz.getDriverInstance(deviceInfo, true);//triggers to resolve settings
                     //add variable && command functions:
                     //isIDE && thiz.completeDriverInstance(driver, driverInstance, device);
-                    driverInstance._id= utils.createUUID();
+                    driverInstance._id = utils.createUUID();
                     dfd.resolve(driverInstance);
                     return driverInstance;
 
                 });
-            }catch(e){
-                console.error('DeviceManager::createDriverInstance:: requiring base driver at ' + requirePath + ' failed ' +e.message,utils.inspect(deviceInfo));
+            } catch (e) {
+                console.error('DeviceManager::createDriverInstance:: requiring base driver at ' + requirePath + ' failed ' + e.message, utils.inspect(deviceInfo));
             }
             return dfd;
         },
@@ -3003,10 +2923,10 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 isRequireJS = !require.cache,
                 packageUrl = require.toUrl(driverPrefix);
 
-            packageUrl = utils.removeURLParameter(packageUrl,'bust');
+            packageUrl = utils.removeURLParameter(packageUrl, 'bust');
 
-            if(isRequireJS){
-                packageUrl = packageUrl.replace('/.js','/');
+            if (isRequireJS) {
+                packageUrl = packageUrl.replace('/.js', '/');
             }
 
             var requirePath = decodeURIComponent(packageUrl) + deviceInfo.driver;
@@ -3022,36 +2942,36 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 enabled = device.getMetaValue(types.DEVICE_PROPERTY.CF_DEVICE_ENABLED),
                 serverSide = deviceInfo.serverSide;
 
-            debugCreateInstance && console.log('create driver instance : ' + device.path +":"+device.scope + ' from ' + requirePath,{
-                driver:driver,
-                device:device,
-                deviceInfo:deviceInfo
+            debugCreateInstance && console.log('create driver instance : ' + device.path + ":" + device.scope + ' from ' + requirePath, {
+                driver: driver,
+                device: device,
+                deviceInfo: deviceInfo
             });
 
-            if(device.isEnabled()===false){
+            if (device.isEnabled() === false) {
                 debugConnect && console.warn('device not enabled, abort ' + deviceInfo.toString());
-                setTimeout(function(){
+                setTimeout(function () {
                     dfd.reject();
                 });
                 return dfd;
             }
 
-            if(isServer && !device.isServerSide()){
+            if (isServer && !device.isServerSide()) {
                 dfd.reject('DeviceManager_DeviceServer: wont create driver instance! I am server and device isnt server side : ' + deviceInfo.title);
                 return dfd;
             }
-            debugCreateInstance && console.info('------create driver instance with DriverBase at '+requirePath + ' with driver prefix : ' + driverPrefix,this.driverScopes);
+            debugCreateInstance && console.info('------create driver instance with DriverBase at ' + requirePath + ' with driver prefix : ' + driverPrefix, this.driverScopes);
             try {
                 require([requirePath], function (driverProtoInstance) {
 
                     var baseClass = driverBase;
-                    var driverProto = dcl([baseClass, EventedMixin.dcl, ReloadMixin.dcl,driverProtoInstance],{});
+                    var driverProto = dcl([baseClass, EventedMixin.dcl, ReloadMixin.dcl, driverProtoInstance], {});
                     var driverInstance = new driverProto();
                     driverInstance.declaredClass = requirePath;
                     driverInstance.options = deviceInfo;
                     driverInstance.baseClass = baseClass.prototype.declaredClass;
                     //driverInstance.modulePath = utils.replaceAll('//', '/', requirePath);
-                    driverInstance.modulePath = utils.replaceAll('//', '/', driverPrefix + deviceInfo.driver).replace('.js','');
+                    driverInstance.modulePath = utils.replaceAll('//', '/', driverPrefix + deviceInfo.driver).replace('.js', '');
                     driverInstance.delegate = thiz;
                     driverInstance.driver = driver;
                     driverInstance.serverSide = deviceInfo.serverSide;
@@ -3060,10 +2980,10 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                     driverInstance.device = device;
                     driverInstance.Module = driverProtoInstance;
 
-                    driverInstance.getDevice = function(){
+                    driverInstance.getDevice = function () {
                         return this.device;
                     };
-                    driverInstance.getDeviceInfo = function(){
+                    driverInstance.getDeviceInfo = function () {
                         return this.getDevice().info;
                     };
 
@@ -3083,11 +3003,10 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         driverInstance.initReload();
                     } catch (e) {
                         console.error('crash in driver instance startup! ' + device.toString());
-                        logError(e,'crash in driver instance startup!');
+                        logError(e, 'crash in driver instance startup!');
                     }
 
                     thiz.deviceInstances[hash] = driverInstance;
-
                     // Build an id basing on : driver id + driver path
                     // "235eb680-cb87-11e3-9c1a-....ab5_Marantz/Marantz.20.meta.json"
                     var scopeId = driverId + '_' + hash + '_' + device.path;
@@ -3097,46 +3016,17 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                             blocks: []
                         };
                     }
-
-                    /*
-                     if (isServer && driver.blockPath) {
-                     utils.getJson(utils.readFile(driver.blockPath));
-                     driver.blox = utils.getJson(utils.readFile(driver.blockPath));
-                     }
-
-                     var scope = ctx.getBlockManager().createScope({
-                     id: scopeId,
-                     device: device,
-                     driver: driver,
-                     instance: driverInstance,
-                     serviceObject: thiz.serviceObject,
-                     ctx: ctx,
-                     serverSide: serverSide,
-                     getContext: function () {
-                     return this.instance;
-                     }
-                     }, utils.clone(driver.blox.blocks),function(error){
-                     if(error){
-                     console.error(error  + ' : in '+driver.name + ' Resave Driver! in scope id ' +scopeId);
-                     }
-                     });
-
-                     //important:
-                     driverInstance.blockScope = scope;
-                     device.blockScope = scope;
-                     */
                     device.driverInstance = driverInstance;
-
                     thiz.getDriverInstance(deviceInfo, true);//triggers to resolve settings
                     //add variable && command functions:
                     //isIDE && thiz.completeDriverInstance(driver, driverInstance, device);
-                    driverInstance._id= utils.createUUID();
+                    driverInstance._id = utils.createUUID();
                     dfd.resolve(driverInstance);
                     return driverInstance;
 
                 });
-            }catch(e){
-                console.error('DeviceManager::createDriverInstance:: requiring base driver at ' + requirePath + ' failed ' +e.message,utils.inspect(deviceInfo));
+            } catch (e) {
+                console.error('DeviceManager::createDriverInstance:: requiring base driver at ' + requirePath + ' failed ' + e.message, utils.inspect(deviceInfo));
             }
             return dfd;
         },
@@ -3145,17 +3035,15 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param data.device {module:xide/types~DeviceInfo}
          * @param data
          */
-        onSetDeviceServerVariables:function(data){
-            //utils.stack();
-            //console.log('onSetDeviceServerVariables :' + _.keys(this.deviceInstances).length);
+        onSetDeviceServerVariables: function (data) {
             var instance = this.getDriverInstance(data.device, true);
             var device = this.getDeviceStoreItem(data.device);
-            if(!device){
-                debugDevice && console.log('did set device server variables failed, have no device',data);
+            if (!device) {
+                debugDevice && console.log('did set device server variables failed, have no device', data);
                 return;
             }
 
-            if(!instance.blockScope) {
+            if (!instance.blockScope) {
                 var deviceInfo = device.info;
                 var hash = deviceInfo.hash;
                 var driver = instance.driver;
@@ -3196,19 +3084,19 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 isIDE && this.completeDriverInstance(driver, instance, device);
             }
 
-            if(instance){
+            if (instance) {
                 var variables = data.variables,
                     _scope = instance.blockScope;
                 device.serverVariables = data.variables;
-                _.each(variables,function(variable){
+                _.each(variables, function (variable) {
                     var _var = _scope.getVariable(variable.name);
-                    if(_var){
+                    if (_var) {
                         _var.value = variable.value;
                     }
                 });
             }
 
-            this.onDeviceConnected(data,false);
+            this.onDeviceConnected(data, false);
             device.setState(types.DEVICE_STATE.SYNCHRONIZING);
             device.setState(types.DEVICE_STATE.READY);
             device._startDfd && device._startDfd.resolve(device.driverInstance);
@@ -3222,8 +3110,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param device {module:xcf/model/Device}
          * @param driverInstance
          */
-        getDeviceServerVariables:function(device,driverInstance){
-            //console.log('getDeviceServerVariables' + _.keys(this.deviceInstances).length);
+        getDeviceServerVariables: function (device, driverInstance) {
             var driver = driverInstance.driver;
             if (!driver.blox || !driver.blox.blocks) {
                 debugConnect && console.warn('Attention : INVALID driver, have no blocks', device.toString());
@@ -3232,52 +3119,23 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 };
             }
             var blocks = driver.blox.blocks;
-
             var basicVariables = [];
-
-            _.each(blocks,function(block){
+            _.each(blocks, function (block) {
                 block.group === types.BLOCK_GROUPS.CF_DRIVER_BASIC_VARIABLES && basicVariables.push(block);
             });
-
-            /*
-             var basicVariables = _.find(blocks,{
-             group:types.BLOCK_GROUPS.CF_DRIVER_BASIC_VARIABLES
-             }) || [];
-             */
-
-            //basicVariables = _.isObject(basicVariables) ? [basicVariables] : basicVariables;
-
-
-            /*
-             var scope = driverInstance.blockScope;
-             if(!scope){
-             console.error(' have no block scope');
-             return;
-             }
-
-             console.log('variables: ');
-             var basicVariables = scope.getVariables({
-             group: types.BLOCK_GROUPS.CF_DRIVER_BASIC_VARIABLES
-             });
-             */
             var out = [];
             for (var i = 0; i < basicVariables.length; i++) {
                 out.push({
-                    name:basicVariables[i].name,
-                    value:basicVariables[i].value,
-                    initial:basicVariables[i].value
+                    name: basicVariables[i].name,
+                    value: basicVariables[i].value,
+                    initial: basicVariables[i].value
                 });
             }
-
-            device.setState(types.DEVICE_STATE.SYNCHRONIZING);/*
-            if(isServer && device.isServerSide()){
-                console.error('abort');
-            }else {*/
-                this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.GET_DEVICE_VARIABLES, {
-                    device: this.toDeviceControlInfo(device),
-                    variables: out
-                });
-  //          }
+            device.setState(types.DEVICE_STATE.SYNCHRONIZING);
+            this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.GET_DEVICE_VARIABLES, {
+                device: this.toDeviceControlInfo(device),
+                variables: out
+            });
         },
         /**
          *
@@ -3285,20 +3143,20 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param data.device {module:xide/types~DeviceInfo}
          * @returns {*}
          */
-        onDeviceConnected:function(data,setReadyState){
+        onDeviceConnected: function (data, setReadyState) {
             var deviceStoreItem = this.getDeviceStoreItem(data.device);
-            if(data.isReplay && deviceStoreItem && deviceStoreItem.state ===types.DEVICE_STATE.READY){
+            if (data.isReplay && deviceStoreItem && deviceStoreItem.state === types.DEVICE_STATE.READY) {
                 deviceStoreItem.setState(types.DEVICE_STATE.READY);
                 return;
             }
-            
+
             var instance = this.getDriverInstance(data.device, true) || data.instance;
-            if(!instance){
-                debugStrangers && !isServer && console.error('--cant find device instance',this.deviceInstances);
+            if (!instance) {
+                debugStrangers && !isServer && console.error('--cant find device instance', this.deviceInstances);
                 deviceStoreItem && deviceStoreItem.setState(types.DEVICE_STATE.DISCONNECTED);
                 return;
             }
-            if(!deviceStoreItem){
+            if (!deviceStoreItem) {
                 debugDevice && console.error('onDeviceConnected:: deviceStoreItem is null');
                 return;
             }
@@ -3306,18 +3164,18 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             //console.error('weird '+data.device.id + ' ' + data.device.state + ' ' + deviceStoreItem.isServerSide());
 
             var cInfo = this.toDeviceControlInfo(deviceStoreItem);
-            if(!cInfo){
+            if (!cInfo) {
                 debugDevice && console.error('onDeviceConnected:: device info  is null');
                 return;
             }
 
-            if(isServer && !cInfo.serverSide){
+            if (isServer && !cInfo.serverSide) {
                 debugDevice && console.error('onDeviceConnected:: device info is not server side, abort');
             }
 
-            if(instance && !deviceStoreItem.serverVariables){
+            if (instance && !deviceStoreItem.serverVariables) {
                 deviceStoreItem.setState(types.DEVICE_STATE.CONNECTED);
-                this.getDeviceServerVariables(deviceStoreItem,instance);
+                this.getDeviceServerVariables(deviceStoreItem, instance);
                 return;
             }
             if (!cInfo) {
@@ -3328,13 +3186,13 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             var hash = cInfo.hash;
 
             if (this.deviceInstances[hash]) {
-                if(!instance.__didStartBlocks){
-                    this.onDeviceStarted(instance,deviceStoreItem,instance.driver);
+                if (!instance.__didStartBlocks) {
+                    this.onDeviceStarted(instance, deviceStoreItem, instance.driver);
                 }
                 deviceStoreItem.setState(types.DEVICE_STATE.READY);
-                this.publish(types.EVENTS.ON_STATUS_MESSAGE,{
-                    text:'Device is Ready <span class="text-success">'+ cInfo.host+':'+cInfo.port + '</span>',
-                    type:'success'
+                this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
+                    text: 'Device is Ready <span class="text-success">' + cInfo.host + ':' + cInfo.port + '</span>',
+                    type: 'success'
                 });
 
                 return this.deviceInstances[hash];
@@ -3349,8 +3207,8 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                     baseDriver.prototype.declaredClass = baseDriverRequire;
                     thiz.createDriverInstance(cInfo, baseDriver, deviceStoreItem);
                 });
-            }catch(e){
-                console.error('requiring base driver at ' + baseDriverRequire + ' failed',e);
+            } catch (e) {
+                console.error('requiring base driver at ' + baseDriverRequire + ' failed', e);
             }
 
         },
@@ -3359,24 +3217,24 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             if (data && data.device) {
                 var error = data.error;
 
-                var code = error && error.code ? error.code :  error || '';
+                var code = error && error.code ? error.code : error || '';
                 var deviceStoreItem = this.getDeviceStoreItem(data.device);
-                if(!deviceStoreItem){
+                if (!deviceStoreItem) {
                     debugDevice && isIDE && console.error('deviceStoreItem is null');
                     return;
                 }
-                if(data.stopped===true){
+                if (data.stopped === true) {
                     this.stopDevice(deviceStoreItem);
                     return;
                 }
 
-                this.publish(types.EVENTS.ON_STATUS_MESSAGE,{
-                    text:'Device has been disconnected ' +'<span class="text-warning">'+ data.device.host+':'+data.device.port + '</span>' + ' :  ' + '<span class="text-danger">' + code + '</span>',
-                    type:'info'
+                this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
+                    text: 'Device has been disconnected ' + '<span class="text-warning">' + data.device.host + ':' + data.device.port + '</span>' + ' :  ' + '<span class="text-danger">' + code + '</span>',
+                    type: 'info'
                 });
 
                 var info = this.toDeviceControlInfo(deviceStoreItem);
-                if(info && isServer && !info.serverSide){
+                if (info && isServer && !info.serverSide) {
                     return;
                 }
 
@@ -3396,12 +3254,12 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 deviceStoreItem.lastError = error;
                 deviceStoreItem.refresh();
 
-                function shouldRecconect(item){
-                    if(item._userStopped || item.state === types.DEVICE_STATE.DISABLED){
+                function shouldRecconect(item) {
+                    if (item._userStopped || item.state === types.DEVICE_STATE.DISABLED) {
                         return false;
                     }
                     var enabled = thiz.getMetaValue(item, types.DEVICE_PROPERTY.CF_DEVICE_ENABLED);
-                    if(!enabled){
+                    if (!enabled) {
                         return false;
                     }
                     return true;
@@ -3409,26 +3267,26 @@ define('xcf/manager/DeviceManager_DeviceServer',[
 
                 var serverSide = info.serverSide;
 
-                if( (isServer && serverSide) || (!serverSide && !isServer)) {
+                if ((isServer && serverSide) || (!serverSide && !isServer)) {
                     if (deviceStoreItem) {
                         var thiz = this;
                         if (deviceStoreItem.reconnectTimer) {
                             return;
                         }
                         deviceStoreItem.isReconnecting = true;
-                        if(!deviceStoreItem.lastReconnectTime){
+                        if (!deviceStoreItem.lastReconnectTime) {
                             deviceStoreItem.lastReconnectTime = thiz.reconnectDevice;
-                        }else if(deviceStoreItem.lastReconnectTime>3600){
+                        } else if (deviceStoreItem.lastReconnectTime > 3600) {
                             deviceStoreItem.lastReconnectTime = 3600;
                         }
-                        if(!deviceStoreItem.reconnectRetry){
+                        if (!deviceStoreItem.reconnectRetry) {
                             deviceStoreItem.reconnectRetry = 0;
                         }
 
                         deviceStoreItem.reconnectTimer = setTimeout(function () {
                             deviceStoreItem.reconnectTimer = null;
-                            deviceStoreItem.lastReconnectTime *=2;
-                            deviceStoreItem.reconnectRetry +=1;
+                            deviceStoreItem.lastReconnectTime *= 2;
+                            deviceStoreItem.reconnectRetry += 1;
                             if (deviceStoreItem.shouldReconnect()) {
                                 if (info) {
                                     deviceStoreItem.setState(types.DEVICE_STATE.CONNECTING);
@@ -3442,78 +3300,78 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             }
         },
 
-        onCommandFinish:function(deviceData,message){
+        onCommandFinish: function (deviceData, message) {
             var driverInstance = this.getDriverInstance(deviceData, true);
             if (!driverInstance) {
                 return;
             }
 
             var params = message.params || {};
-            if(params.src && params.id){
+            if (params.src && params.id) {
                 var scope = driverInstance.blockScope;
                 var block = scope.getBlockById(params.src);
-                if(block && block.onCommandFinish){
+                if (block && block.onCommandFinish) {
                     block.onCommandFinish(message);
                 }
             }
         },
-        onCommandProgress:function(deviceData,message){
+        onCommandProgress: function (deviceData, message) {
             var driverInstance = this.getDriverInstance(deviceData, true);
             if (!driverInstance) {
                 return;
             }
             var params = message.params || {};
-            if(params.src && params.id){
+            if (params.src && params.id) {
                 var scope = driverInstance.blockScope;
-                if(scope) {
+                if (scope) {
                     var block = scope.getBlockById(params.src);
                     if (block && block.onCommandProgress) {
                         block.onCommandProgress(message);
                     }
-                }else{
+                } else {
                     debugServerMessages && console.warn('onCommandProgress: have no blockscope');
                 }
 
             }
         },
-        onCommandPaused:function(deviceData,message){
+        onCommandPaused: function (deviceData, message) {
             var driverInstance = this.getDriverInstance(deviceData, true);
             if (!driverInstance) {
                 return;
             }
             var params = message.params || {};
-            if(params.src && params.id){
+            if (params.src && params.id) {
                 var scope = driverInstance.blockScope;
                 var block = scope.getBlockById(params.src);
-                if(block && block.onCommandPaused){
+                if (block && block.onCommandPaused) {
                     block.onCommandPaused(message);
                 }
             }
         },
-        onCommandStopped:function(deviceData,message){
+        onCommandStopped: function (deviceData, message) {
             var driverInstance = this.getDriverInstance(deviceData, true);
             if (!driverInstance) {
                 return;
             }
             var params = message.params || {};
-            if(params.src && params.id){
+            if (params.src && params.id) {
                 var scope = driverInstance.blockScope;
                 var block = scope.getBlockById(params.src);
-                if(block && block.onCommandStopped){
+                if (block && block.onCommandStopped) {
                     block.onCommandStopped(message);
                 }
             }
         },
-        onCommandError:function(deviceData,message){
+        onCommandError: function (deviceData, message) {
             var driverInstance = this.getDriverInstance(deviceData, true);
             if (!driverInstance) {
                 return;
             }
             var params = message.params || {};
-            if(params.src && params.id){
+            if (params.src && params.id) {
                 var scope = driverInstance.blockScope;
                 var block = scope.getBlockById(params.src);
-                if(block && block.onCommandError){
+                if (block && block.onCommandError) {
                     block.onCommandError(message);
                 }
             }
@@ -3528,40 +3386,28 @@ define('xcf/manager/DeviceManager_DeviceServer',[
         onDeviceServerMessage: function (evt) {
             var dataIn = evt['data'];
             var deviceMessageData = null;
-            if (_.isString(dataIn) && dataIn.indexOf('{') !=-1){
+            if (_.isString(dataIn) && dataIn.indexOf('{') != -1) {
                 try {
-                    deviceMessageData = dojo.fromJson(dataIn);
-                    //at this point "deviceMessageData" is:
-                    /*
-                    var data ={
-                        data:{
-                            bytes:"",
-                            device:device,
-                            deviceMessage:"mssg"
-                        },
-                        event:""
-                    }
-                    */
-
+                    deviceMessageData = utils.fromJson(dataIn);
                 } catch (e) {
                     console.error('error parsing device message', evt);
                     return;
                 }
-            }else if(_.isObject(dataIn) && dataIn.data){
+            } else if (_.isObject(dataIn) && dataIn.data) {
                 //emulated
                 deviceMessageData = dataIn;
             }
 
             if (!deviceMessageData || !deviceMessageData.data || !deviceMessageData.data.device) {
-                debug && console.error('bad device message : ',deviceMessageData);
+                debug && console.error('bad device message : ', deviceMessageData);
                 return;
             }
-            var deviceInfo  = deviceMessageData.data.device;
-            if(!deviceInfo){
+            var deviceInfo = deviceMessageData.data.device;
+            if (!deviceInfo) {
                 debug && console.error('onDeviceServerMessage: cant get device info');
                 return;
             }
-            if(isServer && !deviceInfo.serverSide){
+            if (isServer && !deviceInfo.serverSide) {
                 return;
             }
 
@@ -3576,20 +3422,21 @@ define('xcf/manager/DeviceManager_DeviceServer',[
 
             var device = this.getDeviceStoreItem(deviceInfo);
 
-            if(!device){
-                debugStrangers && console.error('cant find device : ',deviceInfo.toString());
+            if (!device) {
+                debugStrangers && console.error('cant find device : ', deviceInfo.toString());
                 return;
             }
 
             //important: use our info now
             deviceInfo = device.info;
-            if(!deviceInfo){
-                console.error('invalid device : '+device.toString());
+            if (!deviceInfo) {
+                console.error('invalid device : ' + device.toString());
             }
 
             var state = device.get('state');
             var serverSide = deviceInfo.serverSide;
-            function clear(message){
+
+            function clear(message) {
                 delete message['resposeSettings'];
                 delete message['driver'];
                 delete message['lastResponse'];
@@ -3603,10 +3450,14 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             }
 
             var message = deviceMessageData.data.deviceMessage;
+            if(message==null){
+                debugStrangers && console.warn('onDeviceServerMessage: abort, no message data');
+                return;
+            }
             var messages = [];
             if (_.isString(message)) {
                 messages = driverInstance.split(message);
-            }else if(_.isObject(message)){
+            } else if (_.isObject(message)) {
                 clear(message);
                 messages = [message];
             }
@@ -3615,11 +3466,11 @@ define('xcf/manager/DeviceManager_DeviceServer',[
 
             var _messages = driverInstance.onMessageRaw({
                 device: deviceMessageData.data.device,
-                message:message,
-                bytes:deviceMessageData.data.bytes
+                message: message,
+                bytes: deviceMessageData.data.bytes
             });
 
-            if(_messages && !_messages.length){
+            if (_messages && !_messages.length) {
                 _messages = null;
             }
 
@@ -3629,7 +3480,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 bytes.push(utils.stringToBuffer(messages[i]));
             }
 
-            if(_messages && _messages.length){
+            if (_messages && _messages.length) {
                 messages = [];
                 bytes = [];
                 for (var j = 0; j < _messages.length; j++) {
@@ -3637,10 +3488,9 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                     messages.push(msg.string);
                     bytes.push(msg.bytes);
                 }
-                //console.log('got messages split',_messages);
             }
             //replay on driver code instance
-            if(messages && messages.length) {
+            if (messages && messages.length) {
                 for (var k = 0; k < messages.length; k++) {
                     var _message = messages[k];
                     //driver replay as individual message
@@ -3648,7 +3498,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         device: deviceMessageData.data.device,
                         message: _message,
                         raw: message,
-                        bytes:bytes[k]
+                        bytes: bytes[k]
                     });
 
 
@@ -3657,40 +3507,13 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         device: deviceMessageData.data.device,
                         message: _message,
                         raw: message,
-                        bytes:bytes[k]
+                        bytes: bytes[k]
                     });
 
                 }
             }
-
-            /*
-            TypeError: Cannot read property 'Module' of undefined
-            at eval (eval at <anonymous> (eval at undefined), <anonymous>:1:9)
-            at t.evaluate (eval at undefined, <anonymous>:165:98)
-            at DebugCommandProcessor.t.processDebugJSONRequest (eval at undefined, <anonymous>:458:15)
-            at dcl.getDriverModule (/PMaster/projects/x4mm/Code/client/src/lib/xcf/model/Command.js:468:13)
-            at dcl._resolve (/PMaster/projects/x4mm/Code/client/src/lib/xcf/model/Command.js:312:37)
-            at dcl.solve (/PMaster/projects/x4mm/Code/client/src/lib/xcf/model/Command.js:375:36)
-            at dcl.start (/PMaster/projects/x4mm/Code/client/src/lib/xcf/model/Command.js:458:22)
-            at dcl.start (/PMaster/projects/x4mm/Code/client/src/lib/xblox/model/Scope.js:96:27)
-            at dcl.onDeviceStarted (/PMaster/projects/x4mm/Code/client/src/lib/xcf/manager/DeviceManager_DeviceServer.js:352:28)
-            at dcl.onDeviceConnected (/PMaster/projects/x4mm/Code/client/src/lib/xcf/manager/DeviceManager_DeviceServer.js:1014:26)
-            at dcl.onSetDeviceServerVariables (/PMaster/projects/x4mm/Code/client/src/lib/xcf/manager/DeviceManager_DeviceServer.js:893:18)
-            at dcl.write (nxapp/manager/DeviceServerContext.js:132:29)
-            at dcl.sendClientMessage (nxapp/server/DeviceServer.js:263:24)
-            at dcl.getVariables (nxapp/server/DeviceServer.js:290:26)
-            at dcl.handleManagerCommand (nxapp/server/DeviceServer.js:96:33)
-            at dcl.sendManagerCommand (nxapp/manager/DeviceManager.js:242:30)
-            at dcl.getDeviceServerVariables (/PMaster/projects/x4mm/Code/client/src/lib/xcf/manager/DeviceManager_DeviceServer.js:958:22)
-            at dcl.onDeviceConnected (/PMaster/projects/x4mm/Code/client/src/lib/xcf/manager/DeviceManager_DeviceServer.js:1002:22)
-            at Object.lang.hitch (dojo/_base/lang.js:375:55)
-            at Object.target.(anonymous function).dispatcher [as ononDeviceConnected] (dojo/aspect.js:98:38)
-            at Function.on.emit (dojo/on.js:285:37)
-            at Object.Evented.emit (dojo/Evented.js:32:19)
-            */
-
-            if(state !==types.DEVICE_STATE.READY){
-                device.set('state',types.DEVICE_STATE.READY);
+            if (state !== types.DEVICE_STATE.READY) {
+                device.set('state', types.DEVICE_STATE.READY);
             }
             var debugDevice = device.isDebug();
             //system replay:
@@ -3721,7 +3544,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             }
 
 
-            if(has('xcf-ui')) {
+            if (has('xcf-ui')) {
 
                 //console replay
                 var hash = deviceInfo.hash,
@@ -3729,9 +3552,9 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                     messagesNew = [],
                     consoleViews = this.consoles[viewId];
 
-                debug && console.log('on_device message '+hash,driverInstance.options);
+                debug && console.log('on_device message ' + hash, driverInstance.options);
                 //device.setState(types.DEVICE_STATE.READY);
-                if(debugDevice) {
+                if (debugDevice) {
                     var text = deviceMessageData.data.deviceMessage;
                     if (_.isObject(text)) {
 
@@ -3749,7 +3572,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 }
                 //var message = deviceMessageData.data.deviceMessage;
 
-                if(consoleViews) {
+                if (consoleViews) {
                     for (var h = 0; h < consoleViews.length; h++) {
                         var consoleView = consoleViews[h];
                         if (consoleView) {
@@ -3762,7 +3585,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                                 hex = _consoleEditor.getAction("Console/Settings/HEX").value;
                             }
 
-                            if(!split && hex){
+                            if (!split && hex) {
 
                                 var hexStr = utils.bufferToHexString(deviceMessageData.data.bytes);
                                 consoleView.log(hexStr, split, false, types.LOG_OUTPUT.RESPONSE);
@@ -3791,13 +3614,13 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                     }
                 }
 
-                if(messages && messages.length) {
+                if (messages && messages.length) {
                     this.publish(types.EVENTS.ON_DEVICE_MESSAGE_EXT, {
                         device: device,
                         deviceInfo: deviceInfo,
                         raw: message,
                         messages: messages,
-                        bytes:deviceMessageData.data.bytes
+                        bytes: deviceMessageData.data.bytes
                     });
                 }
             }
@@ -3815,7 +3638,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 });
 
                 var responseVariable = scope.getVariable('value');
-                if (responseVariable){
+                if (responseVariable) {
 
                 } else {
                     responseVariable = new Variable({
@@ -3844,7 +3667,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         owner: this,
                         save: false,                         //dont save it
                         source: types.MESSAGE_SOURCE.DEVICE,  //for prioritizing
-                        publishMQTT:false //just for local processing
+                        publishMQTT: false //just for local processing
                     });
                     //now run each top-variabl block in 'conditional process'
                     for (var o = 0; o < responseVariables.length; o++) {
@@ -3876,15 +3699,15 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         }
                     }
 
-                    if( (isServer && serverSide) || (!serverSide && !isServer)) {
+                    if ((isServer && serverSide) || (!serverSide && !isServer)) {
 
                         for (var m = 0; m < messages.length; m++) {
                             var __message = messages[m];
-                            if(_.isObject(__message)) {
+                            if (_.isObject(__message)) {
                                 if (__message.src) {
 
                                     var block = scope.getBlockById(__message.src);
-                                    if(block && block.onData){
+                                    if (block && block.onData) {
                                         block.onData(__message);
                                     }
                                 }
@@ -3892,7 +3715,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                         }
 
 
-                        if(!runDrivers){
+                        if (!runDrivers) {
                             return;
                         }
                         //now run each top-level block in 'conditional process'
@@ -3909,7 +3732,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                                     highlight: isServer ? false : true
                                 });
                             } catch (e) {
-                                logError(e,'----solving response block crashed ');
+                                logError(e, '----solving response block crashed ');
                                 debug && console.trace();
                             }
                         }
@@ -3929,12 +3752,12 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 manager_command: cmd
             };
             utils.mixin(dataOut, data);
-            if(this.deviceServerClient) {
+            if (this.deviceServerClient) {
                 var res = this.deviceServerClient.emit(null, dataOut, cmd);
-                debugServerCommands && console.log('send manager command ' + cmd,[dataOut,res]);
+                debugServerCommands && console.log('send manager command ' + cmd, [dataOut, res]);
                 return res;
-            }else{
-                console.error('Send Manager Command ' + cmd +' failed, have no  device Server client');
+            } else {
+                console.error('Send Manager Command ' + cmd + ' failed, have no  device Server client');
                 this.onHaveNoDeviceServer();
             }
         },
@@ -3949,44 +3772,44 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param stop
          * @param pause
          */
-        sendDeviceCommand: function (driverInstance, data,src,id,print,wait,stop,pause) {
+        sendDeviceCommand: function (driverInstance, data, src, id, print, wait, stop, pause) {
             this.checkDeviceServerConnection();
             var options = driverInstance.getDeviceInfo();
             utils.mixin({
-                src:src
-            },options);
+                src: src
+            }, options);
 
             var dataOut = {
                 command: data,
                 device_command: 'Device_Send',
-                options:options
+                options: options
 
             };
-            utils.mixin(dataOut.options,{
-                params:{
-                    src:src,
-                    id:id,
-                    wait:wait,
-                    stop:stop,
-                    pause:pause
+            utils.mixin(dataOut.options, {
+                params: {
+                    src: src,
+                    id: id,
+                    wait: wait,
+                    stop: stop,
+                    pause: pause
                 }
             });
 
-            debug && console.log("Device.Manager.Send.Message : " + dataOut.command.substr(0,30) + ' = hex = ' + utils.stringToHex(dataOut.command) + ' l = ' + dataOut.command.length, dataOut);//sending device message
+            debug && console.log("Device.Manager.Send.Message : " + dataOut.command.substr(0, 30) + ' = hex = ' + utils.stringToHex(dataOut.command) + ' l = ' + dataOut.command.length, dataOut);//sending device message
             var device = this.getDevice(options.id);
-            if(!device || !_.isObject(device)){
+            if (!device || !_.isObject(device)) {
                 console.error('invalid device');
                 return;
             }
 
-            if(device._userStopped){
+            if (device._userStopped) {
                 return;
             }
 
-            if(device && (device.state === types.DEVICE_STATE.DISABLED ||
-                device.state === types.DEVICE_STATE.DISCONNECTED ||
-                device.state === types.DEVICE_STATE.CONNECTING
-                )){
+            if (device && (device.state === types.DEVICE_STATE.DISABLED ||
+                    device.state === types.DEVICE_STATE.DISCONNECTED ||
+                    device.state === types.DEVICE_STATE.CONNECTING
+                )) {
                 debug && console.error('send command when disconnected');
                 return;
             }
@@ -3994,7 +3817,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             var message = utils.stringFromDecString(dataOut.command);
 
 
-            if(device.isDebug()) {
+            if (device.isDebug()) {
                 this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
                     text: "Did send message : " + '<span class="text-warnin">' + message.substr(0, 30) + '</span>' + " to " + '<span class="text-info">' + options.host + ":" + options.port + "@" + options.protocol + '</span>'
                 });
@@ -4003,29 +3826,29 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             //console replay
             var hash = MD5(JSON.stringify(driverInstance.options), 1);
             var viewId = hash + '-Console';
-            if(this.deviceServerClient) {
+            if (this.deviceServerClient) {
                 this.deviceServerClient.emit(null, dataOut, 'Device_Send');
-                if(has('xcf-ui') && print!==false) {
+                if (has('xcf-ui') && print !== false) {
                     var consoleViews = this.consoles[viewId];
-                    _.each(consoleViews,function(view){
+                    _.each(consoleViews, function (view) {
                         var text = '<span class="text-info"><b>' + dataOut.command + '</span>';
-                        view.printCommand(text,'');
+                        view.printCommand(text, '');
                     });
                 }
-            }else{
+            } else {
                 this.onHaveNoDeviceServer();
                 console.error('this.deviceServerClient is null');
-                console.error(' Send Device Command ' + data +'failed, have no  device Server client');
+                console.error(' Send Device Command ' + data + 'failed, have no  device Server client');
             }
-            if(!driverInstance.blockScope){
+            if (!driverInstance.blockScope) {
                 return;
             }
             var command = driverInstance.blockScope.getBlockById(src);
-            this.publish(types.EVENTS.ON_DEVICE_COMMAND,{
-                device:device,
-                command:utils.stringFromDecString(data),
-                deviceInfo:this.toDeviceControlInfo(device),
-                name:command ? command.name : ""
+            this.publish(types.EVENTS.ON_DEVICE_COMMAND, {
+                device: device,
+                command: utils.stringFromDecString(data),
+                deviceInfo: this.toDeviceControlInfo(device),
+                name: command ? command.name : ""
             });
         },
         /**
@@ -4033,7 +3856,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param path {string} Absolute path to devices
          */
         loadDevices: function (path) {
-            this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.INIT_DEVICES,{
+            this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.INIT_DEVICES, {
                 path: path
             });
         },
@@ -4045,22 +3868,22 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param src
          * @param id
          */
-        callMethod: function (driverInstance,method,args,src,id) {
+        callMethod: function (driverInstance, method, args, src, id) {
             this.checkDeviceServerConnection();
             var sendOptions = {
-                id:id,
-                src:src
+                id: id,
+                src: src
             };
             var dataOut = {
                 method: method,
                 args: args,
                 device_command: types.SOCKET_SERVER_COMMANDS.CALL_METHOD,
                 params: sendOptions,
-                options:driverInstance.options
+                options: driverInstance.options
             };
-            if(this.deviceServerClient) {
+            if (this.deviceServerClient) {
                 this.deviceServerClient.emit(null, dataOut, types.SOCKET_SERVER_COMMANDS.CALL_METHOD);
-            }else{
+            } else {
                 this.onHaveNoDeviceServer();
             }
         },
@@ -4072,12 +3895,12 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param src
          * @param id
          */
-        runShell: function (driverInstance,cmd,args,src,id) {
+        runShell: function (driverInstance, cmd, args, src, id) {
             var options = driverInstance.getDeviceInfo();
-            this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.RUN_SHELL,{
+            this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.RUN_SHELL, {
                 cmd: cmd,
-                args:args,
-                options:utils.mixin(options,{
+                args: args,
+                options: utils.mixin(options, {
                     params: {
                         id: id,
                         src: src
@@ -4085,56 +3908,56 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                 })
             });
             /*
-            this.checkDeviceServerConnection();
-            var options = driverInstance.options,
-                sendOptions = {
-                    id:id,
-                    src:src
-                },
-                dataOut = {
-                    method:method,
-                    args: args,
-                    manager_command: 'Run_Shell',
-                    host: options.host,
-                    port: options.port,
-                    protocol: options.protocol,
-                    options:sendOptions
-                };
-            if(this.deviceServerClient) {
-                this.deviceServerClient.emit(null, dataOut, 'Run_Shell');
-            }else{
-                this.onHaveNoDeviceServer();
-            }*/
+             this.checkDeviceServerConnection();
+             var options = driverInstance.options,
+             sendOptions = {
+             id:id,
+             src:src
+             },
+             dataOut = {
+             method:method,
+             args: args,
+             manager_command: 'Run_Shell',
+             host: options.host,
+             port: options.port,
+             protocol: options.protocol,
+             options:sendOptions
+             };
+             if(this.deviceServerClient) {
+             this.deviceServerClient.emit(null, dataOut, 'Run_Shell');
+             }else{
+             this.onHaveNoDeviceServer();
+             }*/
         },
         /**
-         * 
+         *
          * @param path
          */
-        watchDirectory: function (path,watch) {            
+        watchDirectory: function (path, watch) {
             this.checkDeviceServerConnection();
             var dataOut = {
-                    path:path,
-                    watch:watch,
-                    manager_command: types.SOCKET_SERVER_COMMANDS.WATCH
-                };
-            if(this.deviceServerClient) {
+                path: path,
+                watch: watch,
+                manager_command: types.SOCKET_SERVER_COMMANDS.WATCH
+            };
+            if (this.deviceServerClient) {
                 this.deviceServerClient.emit(null, dataOut, types.SOCKET_SERVER_COMMANDS.WATCH);
-            }else{
+            } else {
                 this.onHaveNoDeviceServer();
             }
         },
-        createDeviceServerClient:function(store){
+        createDeviceServerClient: function (store) {
             var thiz = this;
             var dfd = new Deferred();
             this.deviceServerClient = null;
             this.deviceServerClient = factory.createClientWithStore(store, 'Device Control Server', {
                 delegate: {
-                    onConnected:function(){
+                    onConnected: function () {
                         thiz.onDeviceServerConnected();
                         dfd.resolve();
                         thiz.publish(types.EVENTS.ON_DEVICE_SERVER_CONNECTED);
 
-                        if(isIDE) {
+                        if (isIDE) {
                             thiz.ctx.getNotificationManager().postMessage({
                                 message: 'Connected to Device Server',
                                 type: 'success',
@@ -4142,7 +3965,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                             });
                         }
                     },
-                    onLostConnection: function(){
+                    onLostConnection: function () {
                         thiz.onDeviceServerConnectionLost();
                     },
                     onServerResponse: function (data) {
@@ -4157,30 +3980,30 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                             }
 
 
-                            debug && !msg && console.error('invalid incoming message',data);
+                            debug && !msg && console.error('invalid incoming message', data);
 
                             msg = msg || {};
 
 
                             if (msg && msg.data && msg.data.deviceMessage && msg.data.deviceMessage.event === types.EVENTS.ON_COMMAND_FINISH) {
-                                thiz.onCommandFinish(msg.data.device,msg.data.deviceMessage);
+                                thiz.onCommandFinish(msg.data.device, msg.data.deviceMessage);
                                 return;
                             }
                             if (msg && msg.data && msg.data.deviceMessage && msg.data.deviceMessage.event === types.EVENTS.ON_COMMAND_PROGRESS) {
-                                thiz.onCommandProgress(msg.data.device,msg.data.deviceMessage);
+                                thiz.onCommandProgress(msg.data.device, msg.data.deviceMessage);
                                 return;
                             }
                             if (msg && msg.data && msg.data.deviceMessage && msg.data.deviceMessage.event === types.EVENTS.ON_COMMAND_PAUSED) {
-                                thiz.onCommandPaused(msg.data.device,msg.data.deviceMessage);
+                                thiz.onCommandPaused(msg.data.device, msg.data.deviceMessage);
                                 return;
                             }
 
                             if (msg && msg.data && msg.data.deviceMessage && msg.data.deviceMessage.event === types.EVENTS.ON_COMMAND_STOPPED) {
-                                thiz.onCommandStopped(msg.data.device,msg.data.deviceMessage);
+                                thiz.onCommandStopped(msg.data.device, msg.data.deviceMessage);
                                 return;
                             }
                             if (msg.data && msg.data.deviceMessage && msg.data.deviceMessage.event === types.EVENTS.ON_COMMAND_ERROR) {
-                                thiz.onCommandError(msg.data.device,msg.data.deviceMessage);
+                                thiz.onCommandError(msg.data.device, msg.data.deviceMessage);
                                 return;
                             }
                             if (msg.event === types.EVENTS.ON_DEVICE_DISCONNECTED) {
@@ -4213,7 +4036,7 @@ define('xcf/manager/DeviceManager_DeviceServer',[
                             }
 
                             if (msg.event === types.EVENTS.ON_FILE_CHANGED) {
-                                return thiz.ctx.onXIDEMessage(dojo.fromJson(data.data));
+                                return thiz.ctx.onXIDEMessage(utils.fromJson(data.data));
                             }
 
                         }
@@ -4305,35 +4128,35 @@ define('xcf/manager/DeviceManager',[
     'dojo/promise/all'
     //'xdojo/has!host-node?nxapp/utils/_console',
     //"xdojo/has!host-node?nxapp/utils"
-], function (dcl,declare, lang, MD5,
+], function (dcl, declare, lang, MD5,
              types, utils, factory, BeanManager, ReloadMixin, EventedMixin,
-             DeviceManager_Server, DeviceManager_DeviceServer,TreeMemory,has,
-             ObservableStore,Trackable,Device,Deferred,ServerActionBase,Reference,StringUtils,
+             DeviceManager_Server, DeviceManager_DeviceServer, TreeMemory, has,
+             ObservableStore, Trackable, Device, Deferred, ServerActionBase, Reference, StringUtils,
              LogMixin,
-             DeviceManager_UI,Expression,all,_console,xUtils) {
-  /*  
-    var console = typeof window !== 'undefined' ? window.console : console;
-    if(_console && _console.error && _console.warn){
-        console = _console;
-    }
-*/
+             DeviceManager_UI, Expression, all, _console, xUtils) {
+    /*
+     var console = typeof window !== 'undefined' ? window.console : console;
+     if(_console && _console.error && _console.warn){
+     console = _console;
+     }
+     */
     var bases = [
-        ServerActionBase,
-        BeanManager,
-        DeviceManager_Server,
-        DeviceManager_DeviceServer,
-        ReloadMixin.dcl,
-        LogMixin
-    ],
-    _debugMQTT = false,
-    _debug = false,
-    _debugLogging = false,
-    _debugConnect = false,
-    isServer = !has('host-browser'),
-    isIDE = has('xcf-ui'),
-    DEVICE_PROPERTY = types.DEVICE_PROPERTY,
-    runDrivers = has('runDrivers'),
-    EVENTS = types.EVENTS;
+            ServerActionBase,
+            BeanManager,
+            DeviceManager_Server,
+            DeviceManager_DeviceServer,
+            ReloadMixin.dcl,
+            LogMixin
+        ],
+        _debugMQTT = false,
+        _debug = false,
+        _debugLogging = false,
+        _debugConnect = false,
+        isServer = !has('host-browser'),
+        isIDE = has('xcf-ui'),
+        DEVICE_PROPERTY = types.DEVICE_PROPERTY,
+        runDrivers = has('runDrivers'),
+        EVENTS = types.EVENTS;
     has('xcf-ui') && bases.push(DeviceManager_UI);
     /**
      * Common base class, for server and client.
@@ -4343,8 +4166,8 @@ define('xcf/manager/DeviceManager',[
      * @extends module:xide/mixins/ReloadMixin
      * @extends module:xcf/manager/DeviceManager_DeviceServer
      */
-    return dcl(bases,{
-        declaredClass:"xcf.manager.DeviceManager",
+    return dcl(bases, {
+        declaredClass: "xcf.manager.DeviceManager",
         /***
          * The Bean-Manager needs a unique name of the bean:
          * @private
@@ -4360,42 +4183,42 @@ define('xcf/manager/DeviceManager',[
          * the icon class for bean edit views
          * @private
          */
-        beanIconClass:'fa-sliders',
+        beanIconClass: 'fa-sliders',
         /**
          * Bean group type
          * @private
          */
-        groupType:types.ITEM_TYPE.DEVICE_GROUP,
+        groupType: types.ITEM_TYPE.DEVICE_GROUP,
         /**
          * Bean item type
          * @private
          */
-        itemType:types.ITEM_TYPE.DEVICE,
+        itemType: types.ITEM_TYPE.DEVICE,
         /**
          * The name of the CI in the meta database for the title or name.
          * @private
          */
-        itemMetaTitleField:DEVICE_PROPERTY.CF_DEVICE_TITLE,
+        itemMetaTitleField: DEVICE_PROPERTY.CF_DEVICE_TITLE,
         /**
          * Name of the system scope
          * @private
          */
-        systemScope:'system_devices',
+        systemScope: 'system_devices',
         /**
          * Name of the user scope
          * @private
          */
-        userScope:'user_devices',
+        userScope: 'user_devices',
         /**
          * Name of the app scope
          * @private
          */
-        appScope:'app_devices',
+        appScope: 'app_devices',
         /**
          * Name of the default scope for new created items
          * @private
          */
-        defaultScope:'system_devices',
+        defaultScope: 'system_devices',
         /***
          * The RPC server class:
          * @private
@@ -4461,41 +4284,41 @@ define('xcf/manager/DeviceManager',[
         //  Device-Related
         //
         /////////////////////////////////////////////////////////////////////////////////////
-        onRunClassEvent:function (data) {
+        onRunClassEvent: function (data) {
             var id = data.args.id;
-            if(this.running && this.running[id]){
+            if (this.running && this.running[id]) {
                 var runData = this.running[id];
                 var delegate = runData.delegate;
-                if(!delegate){
+                if (!delegate) {
                     return;
                 }
-                if(data.error){
-                    if(delegate.onError){
+                if (data.error) {
+                    if (delegate.onError) {
                         delegate.onError(data.error);
                     }
                 }
-                if(data.finish){
-                    if(delegate.onFinish){
+                if (data.finish) {
+                    if (delegate.onFinish) {
                         delegate.onFinish(data.finish);
                     }
                 }
-                if(data.progress){
-                    if(delegate.onProgress){
+                if (data.progress) {
+                    if (delegate.onProgress) {
                         delegate.onProgress(data.progress);
                     }
                 }
             }
         },
-        getInstanceByName:function(name){
+        getInstanceByName: function (name) {
             var instances = this.deviceInstances;
             var self = this;
-            for(var instance in instances){
+            for (var instance in instances) {
                 var device = instances[instance].device;
-                if(!device){
+                if (!device) {
                     continue;
                 }
                 var title = self.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_TITLE);
-                if(title ===name){
+                if (title === name) {
                     return instances[instance];
                 }
             }
@@ -4505,30 +4328,30 @@ define('xcf/manager/DeviceManager',[
          * @param device
          * @returns {module:xfile/model/File}
          */
-        getFile:function(device){
+        getFile: function (device) {
             var dfd = new Deferred();
             var ctx = this.ctx;
             var fileManager = ctx.getFileManager();
             var fileStore = fileManager.getStore(device.scope);
-            fileStore.initRoot().then(function(){
-                fileStore._loadPath('.',true).then(function(){
-                    fileStore.getItem(device.path,true).then(function (item) {
+            fileStore.initRoot().then(function () {
+                fileStore._loadPath('.', true).then(function () {
+                    fileStore.getItem(device.path, true).then(function (item) {
                         dfd.resolve(item);
                     });
                 });
             });
             return dfd;
         },
-        getSourceHash:function () {
+        getSourceHash: function () {
             var userDirectory = this.ctx.getUserDirectory();
             return userDirectory || "no_user_directory";
         },
         /**
          * Make sure we've a connection to our device-server
-         * @private
+         * @public
          */
         checkDeviceServerConnection: function () {
-            if(!this.ctx.getNodeServiceManager){
+            if (!this.ctx.getNodeServiceManager) {
                 return true;
             }
             if (!this.deviceServerClient && this.ctx.getNodeServiceManager) {
@@ -4588,9 +4411,9 @@ define('xcf/manager/DeviceManager',[
                     data: data,
                     level: level || 'info',
                     message: message,
-                    details:oriData
+                    details: oriData
                 });
-            }
+            };
         },
         /**
          * An instance of a driver class has been created.
@@ -4600,7 +4423,7 @@ define('xcf/manager/DeviceManager',[
          * @param device
          * @private
          */
-        completeDriverInstance: function (driver, instance,device) {
+        completeDriverInstance: function (driver, instance, device) {
             _debug && console.info('complete driver instance');
             var thiz = this,
                 scope = instance.blockScope,
@@ -4609,65 +4432,65 @@ define('xcf/manager/DeviceManager',[
                 commandsRoot = parentId + '_commands',
                 variablesRoot = parentId + '_variables';
 
-            
-            store.on('delete',function(evt){
-                var _isVariable = evt.target.declaredClass.indexOf('Variable') !==-1,
-                    _parent = _isVariable  ? variablesRoot : commandsRoot,
+
+            store.on('delete', function (evt) {
+                var _isVariable = evt.target.declaredClass.indexOf('Variable') !== -1,
+                    _parent = _isVariable ? variablesRoot : commandsRoot,
                     referenceParent = device._store.getSync(_parent);
 
-                if(referenceParent){
+                if (referenceParent) {
                     referenceParent.refresh();
                 }
 
-                var referenceId = _parent + '_reference_'+evt.target.id,
-                    reference  = device._store.getSync(referenceId);
+                var referenceId = _parent + '_reference_' + evt.target.id,
+                    reference = device._store.getSync(referenceId);
 
-                if(reference){
+                if (reference) {
                     reference.refresh();
                 }
             });
 
-            function createReference(block,driver,title,icon){
-                var _isVariable = block.declaredClass.indexOf('Variable') !==-1;
-                var _parent = _isVariable  ? variablesRoot : commandsRoot;
-                if(block.declaredClass.indexOf( _isVariable? 'Variable' : 'Command')==-1){
+            function createReference(block, driver, title, icon) {
+                var _isVariable = block.declaredClass.indexOf('Variable') !== -1;
+                var _parent = _isVariable ? variablesRoot : commandsRoot;
+                if (block.declaredClass.indexOf(_isVariable ? 'Variable' : 'Command') == -1) {
                     return;
                 }
 
-                var reference  = new Reference({
-                    enabled:true,
-                    path: _parent + '_reference_'+block.id,
+                var reference = new Reference({
+                    enabled: true,
+                    path: _parent + '_reference_' + block.id,
                     name: title,
                     id: block.id,
                     parentId: _parent,
                     _mayHaveChildren: false,
                     virtual: true,
                     tooltip: true,
-                    icon:icon,
+                    icon: icon,
                     ref: {
                         driver: driver,
                         item: block,
-                        device:device
+                        device: device
                     },
                     type: types.ITEM_TYPE.BLOCK
                 });
 
                 reference = device._store.putSync(reference);
 
-                block.addReference(reference,{
+                block.addReference(reference, {
                     properties: {
-                        "name":true,
-                        "enabled":true,
-                        "value":true
+                        "name": true,
+                        "enabled": true,
+                        "value": true
                     },
-                    onDelete:true
-                },true);
+                    onDelete: true
+                }, true);
 
                 reference.refresh();
             }
 
-            store.on('added',function(block){
-                createReference(block,driver,block.name,block.icon || 'fa-exclamation');
+            store.on('added', function (block) {
+                createReference(block, driver, block.name, block.icon || 'fa-exclamation');
             });
 
             /**
@@ -4675,26 +4498,26 @@ define('xcf/manager/DeviceManager',[
              * @param title
              */
             /*
-            instance.callCommand = function (title) {
-                var _block = this.blockScope.getBlockByName(title);
-                if (_block) {
-                    return _block.solve(this.blockScope,settings);
-                }
-            };
-            */
-            instance.setVariable = function (title, value, save, publish,highlight) {
+             instance.callCommand = function (title) {
+             var _block = this.blockScope.getBlockByName(title);
+             if (_block) {
+             return _block.solve(this.blockScope,settings);
+             }
+             };
+             */
+            instance.setVariable = function (title, value, save, publish, highlight) {
                 var _variable = this.blockScope.getVariable(title);
                 if (_variable) {
                     _variable.value = value;
-                    if(highlight===false){
+                    if (highlight === false) {
                         _variable.__ignoreChangeMark = true;
                     }
-                    _variable.set('value',value,save,publish,highlight);
-                    if(highlight===false){
+                    _variable.set('value', value, save, publish, highlight);
+                    if (highlight === false) {
                         _variable.__ignoreChangeMark = false;
                     }
                 } else {
-                    _debug &&  console.log('no such variable : ' + title);
+                    _debug && console.log('no such variable : ' + title);
                     return;
                 }
                 thiz.publish(types.EVENTS.ON_DRIVER_VARIABLE_CHANGED, {
@@ -4703,7 +4526,7 @@ define('xcf/manager/DeviceManager',[
                     driver: driver,
                     owner: thiz,
                     save: save === true,
-                    publish : publish
+                    publish: publish
                 });
             };
             /**
@@ -4713,7 +4536,7 @@ define('xcf/manager/DeviceManager',[
             instance.getVariable = function (title) {
                 var _variable = this.blockScope.getVariable(title);
                 if (_variable) {
-                    return _variable._getArg(_variable.value,false);
+                    return _variable._getArg(_variable.value, false);
                 }
                 return '';
             };
@@ -4737,7 +4560,7 @@ define('xcf/manager/DeviceManager',[
                     data: data,
                     level: level || 'info',
                     message: message,
-                    details:oriData
+                    details: oriData
                 });
             };
 
@@ -4764,15 +4587,15 @@ define('xcf/manager/DeviceManager',[
             }
         },
 
-        getDevice:function(mixed){
+        getDevice: function (mixed) {
             var result = mixed;
-            if(_.isString(mixed)){                
+            if (_.isString(mixed)) {
                 var byId = this.getItemById(mixed);
-                if(byId){
+                if (byId) {
                     result = byId;
-                }else{
+                } else {
                     var byPath = this.getItemByPath(mixed);
-                    if(byPath) {
+                    if (byPath) {
                         result = byPath;
                     }
                 }
@@ -4785,49 +4608,46 @@ define('xcf/manager/DeviceManager',[
          */
         stopDevice: function (_item) {
             var device = this.getDevice(_item) || _item;
-            if(!device){
-                console.error('cant find device '+_item);
+            if (!device) {
+                console.error('cant find device ' + _item);
                 return;
             }
             this.checkDeviceServerConnection();
             device._userStopped = true;
             var cInfo = this.toDeviceControlInfo(device);
-            if(!cInfo){
-                _debugConnect && console.error('cant find device::no device info',device.toString && device.toString());
+            if (!cInfo) {
+                _debugConnect && console.error('cant find device::no device info', device.toString && device.toString());
                 return;
             }
-            if(isServer && (!cInfo.serverSide && !device.isServer())){
+            if (isServer && (!cInfo.serverSide && !device.isServer())) {
                 return;
             }
 
 
             var hash = cInfo.hash;
             if (this.deviceInstances[hash]) {
-                this._removeInstance(this.deviceInstances[hash], hash,device);
+                this._removeInstance(this.deviceInstances[hash], hash, device);
                 delete this.deviceInstances[hash];
-                _debugConnect && console.log('-- stop device ' + hash,this.deviceInstances);
-            }else {
+                _debugConnect && console.log('-- stop device ' + hash, this.deviceInstances);
+            } else {
                 _debugConnect && console.log('cant find instance ' + hash);
                 return;
             }
             this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.MANAGER_STOP_DRIVER, cInfo);
             //this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.STOP_DEVICE, cInfo);
         },
-        getStores:function(){
-            return this.stores;
-        },
         /**
          * @TODO: remove back compat
          * @param scope
          * @returns {*}
          */
-        getStore:function(scope){
+        getStore: function (scope) {
             scope = scope || 'system_devices';
             var store = this.stores[scope];
-            if(store){
+            if (store) {
                 return store;
             }
-            if(scope){
+            if (scope) {
                 return this.ls(scope);
             }
         },
@@ -4837,9 +4657,9 @@ define('xcf/manager/DeviceManager',[
          * @param addDriver
          * @returns {module:xcf/model/Device[]}
          */
-        getDevices: function (enabledOnly,addDriver) {
+        getDevices: function (enabledOnly, addDriver) {
             var store = this.getStore();
-            if(!store){
+            if (!store) {
                 return [];
             }
             var items = utils.queryStore(store, {
@@ -4852,19 +4672,19 @@ define('xcf/manager/DeviceManager',[
             var result = [];
             for (var i = 0; i < items.length; i++) {
 
-                var device = items[i];                
+                var device = items[i];
                 var enabled = this.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_ENABLED);
 
                 if ((enabledOnly === true && enabled == true || enabled == null) || enabledOnly === false) {
                     result.push(device);
-                    if(addDriver==true) {
+                    if (addDriver == true) {
                         var driverId = this.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_DRIVER);
                         if (!driverId) {
                             _debug && console.error('device has no driver id!');
                             continue;
                         }
                         var driver = this.ctx.getDriverManager().getItemById(driverId);
-                        if (driver){
+                        if (driver) {
                             device['driver'] = driver;
                         }
                     }
@@ -4872,21 +4692,20 @@ define('xcf/manager/DeviceManager',[
             }
             return result;
         },
-        getStores:function(){
-
+        getStores: function () {
             var stores = [];
-            for(var scope in this.stores){
+            for (var scope in this.stores) {
                 var store = this.stores[scope];
-                if(store){
+                if (store) {
                     stores.push(store);
                 }
             }
             return stores;
         },
-        getStorePath:function(scope){
+        getStorePath: function (scope) {
             var ctx = this.getContext();
             var resourceManager = ctx.getResourceManager();
-            if(scope==='user_devices'){
+            if (scope === 'user_devices') {
                 return resourceManager.getVariable('USER_DIRECTORY');
             }
         },
@@ -4895,14 +4714,14 @@ define('xcf/manager/DeviceManager',[
          * @private
          */
         connectToAllDevices: function () {
-            if(!this.deviceServerClient){
+            if (!this.deviceServerClient) {
                 this.checkDeviceServerConnection();
                 return;
             }
             var stores = this.getStores(),
                 thiz = this;
 
-            if(!this.getStores().length){
+            if (!this.getStores().length) {
                 return;
             }
             var all = [];
@@ -4911,18 +4730,17 @@ define('xcf/manager/DeviceManager',[
                 var deviceDfd = thiz.startDevice(device);
                 all.push(deviceDfd);
                 _debugConnect && console.log('start device ' + thiz.toDeviceControlInfo(device).title);
-            };
+            }
 
-            function connect(store){
-                if(!store){
+            function connect(store) {
+                if (!store) {
                     console.error('have no device store');
                     return;
                 }
-                if(store.connected){
+                if (store.connected) {
                     return;
                 }
                 store.connected = true;
-
 
 
                 var items = utils.queryStore(store, {
@@ -4932,7 +4750,7 @@ define('xcf/manager/DeviceManager',[
                     items = [items];
                 }
 
-                if(!_.isArray(items)){
+                if (!_.isArray(items)) {
                     items = [items];
                 }
                 for (var i = 0; i < items.length; i++) {
@@ -4943,25 +4761,26 @@ define('xcf/manager/DeviceManager',[
                     }
                 }
                 /*
-                if(store.scope==='user_devices' && !isServer){
-                    var storePath = this.getStorePath(store.scope);
-                    if(storePath){
-                        this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.INIT_DEVICES,{
-                            path: storePath,
-                            scope:store.scope
-                        });
-                    }
-                }
-                */
+                 if(store.scope==='user_devices' && !isServer){
+                 var storePath = this.getStorePath(store.scope);
+                 if(storePath){
+                 this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.INIT_DEVICES,{
+                 path: storePath,
+                 scope:store.scope
+                 });
+                 }
+                 }
+                 */
 
             }
-            _.each(stores,connect,this);
+
+            _.each(stores, connect, this);
             return all;
         },
-        debug:function(){
+        debug: function () {
             console.info('Debug info stores : ');
-            _.each(this.stores,function(store){
-                console.log('have store '+store.scope);
+            _.each(this.stores, function (store) {
+                console.log('have store ' + store.scope);
             });
         },
         /**
@@ -4977,7 +4796,7 @@ define('xcf/manager/DeviceManager',[
                 console.time('parse expression');
                 var _parser = new Expression();
                 str = _parser.parse(types.EXPRESSION_PARSER.FILTREX,
-                    str, this,{
+                    str, this, {
                         variables: scope.getVariablesAsObject(),
                         delimiters: {
                             begin: '{{',
@@ -4986,9 +4805,9 @@ define('xcf/manager/DeviceManager',[
                     }
                 );
                 console.timeEnd('parse expression');
-            }else{
+            } else {
                 var _text = scope.parseExpression(expression);
-                if(_text){
+                if (_text) {
                     str = _text;
                 }
             }
@@ -5000,7 +4819,8 @@ define('xcf/manager/DeviceManager',[
          * @param device
          * @private
          */
-        runCommand: function (driver, device) {},
+        runCommand: function (driver, device) {
+        },
         /**
          * @private
          */
@@ -5018,12 +4838,12 @@ define('xcf/manager/DeviceManager',[
         onStoreReloaded: function (rawData) {
             this.completeDeviceStore();
         },
-        getInstance:function(mixed){
+        getInstance: function (mixed) {
             var deviceInfo = mixed ? mixed._store ? this.toDeviceControlInfo(mixed) : mixed : null;
-            if(!deviceInfo){
+            if (!deviceInfo) {
                 return;
             }
-            return this.getDriverInstance(deviceInfo,false);
+            return this.getDriverInstance(deviceInfo, false);
         },
         /***
          * returns driver instance!
@@ -5034,14 +4854,14 @@ define('xcf/manager/DeviceManager',[
          */
         getDriverInstance: function (deviceInfo, fillSettings) {
             if (!deviceInfo) {
-                console.error('getDriverInstance::have no device info')
+                console.error('getDriverInstance::have no device info');
                 return null;
             }
             for (var i in this.deviceInstances) {
 
                 var instance = this.deviceInstances[i];
                 var instanceOptions = instance.options;
-                if(!instanceOptions){
+                if (!instanceOptions) {
                     continue;
                 }
 
@@ -5050,7 +4870,7 @@ define('xcf/manager/DeviceManager',[
                     instanceOptions.protocol === deviceInfo.protocol &&
                     instanceOptions.isServer === deviceInfo.isServer) {
 
-                    if(fillSettings && instance.sendSettings && has('xcf-ui')){
+                    if (fillSettings && instance.sendSettings && has('xcf-ui')) {
                         fillSettings = false;
                     }
 
@@ -5070,7 +4890,7 @@ define('xcf/manager/DeviceManager',[
                                 if (responseCI && responseCI['params']) {
                                     instance.responseSettings = utils.getJson(responseCI['params']);
                                 }
-                            }else{
+                            } else {
                                 _debug && console.warn('getDriverInstance:: cant find driver');
                             }
                         }
@@ -5080,13 +4900,13 @@ define('xcf/manager/DeviceManager',[
             }
             return null;
         },
-        _reconnectServerTimer:null,
+        _reconnectServerTimer: null,
         /**
          * @private
          */
-        onDeviceServerConnectionLost:function(){
+        onDeviceServerConnectionLost: function () {
 
-            if(this.deviceServerClient && this.deviceServerClient.pageUnloaded){
+            if (this.deviceServerClient && this.deviceServerClient.pageUnloaded) {
                 return;
             }
             if (this.deviceServerClient) {
@@ -5094,11 +4914,11 @@ define('xcf/manager/DeviceManager',[
                 this.deviceServerClient = null;
             }
 
-            if(this._reconnectServerTimer){
+            if (this._reconnectServerTimer) {
                 return;
             }
             var thiz = this;
-            if(isIDE) {
+            if (isIDE) {
                 thiz.ctx.getNotificationManager().postMessage({
                     message: 'Lost connection to device server, try reconnecting in 5 seconds',
                     type: 'error',
@@ -5106,15 +4926,15 @@ define('xcf/manager/DeviceManager',[
                     duration: 1000
                 });
             }
-            this._reconnectServerTimer = setTimeout(function(){
+            this._reconnectServerTimer = setTimeout(function () {
                 thiz.checkDeviceServerConnection();
-                thiz._reconnectServerTimer=null;
-            },this.reconnectDeviceServer);
+                thiz._reconnectServerTimer = null;
+            }, this.reconnectDeviceServer);
 
             console.log('lost device server connection');
-            _.each(this.deviceInstances,function(instance){
+            _.each(this.deviceInstances, function (instance) {
 
-                if(instance && instance.device && !instance.domNode) {
+                if (instance && instance.device && !instance.domNode) {
                     var device = instance.device;
                     var driverInstance = device.driverInstance;
                     driverInstance && driverInstance.onLostServer && driverInstance.onLostServer();
@@ -5128,44 +4948,44 @@ define('xcf/manager/DeviceManager',[
          * @param msg
          * @private
          */
-        onMQTTMessage:function(msg){
+        onMQTTMessage: function (msg) {
 
-            var message=utils.getJson(msg.message);
-            var isUs=false;
+            var message = utils.getJson(msg.message);
+            var isUs = false;
             var thiz = this;
-            if(message){
+            if (message) {
                 var sourceHost = message.sourceHost;
                 var sourcePort = message.sourcePort;
                 var mqttHost = msg.host;
                 var mqttPort = msg.port;
-                if(sourceHost && sourcePort){
-                    if(sourceHost===mqttHost && sourcePort==mqttPort){
-                        isUs=true;
+                if (sourceHost && sourcePort) {
+                    if (sourceHost === mqttHost && sourcePort == mqttPort) {
+                        isUs = true;
                     }
                 }
             }
 
-            if(!isUs) {
+            if (!isUs) {
 
                 _debugMQTT && console.info('onMQTTMessage:');
                 //
-                var parts=msg.topic.split('/');
-                if(parts.length==4 && parts[2]=='Variable' && message.device){
+                var parts = msg.topic.split('/');
+                if (parts.length == 4 && parts[2] == 'Variable' && message.device) {
                     var _device = this.getDeviceStoreItem(message.device);
-                    if(_device){
+                    if (_device) {
                         _debugMQTT && console.info('\tonMQTTMessage: on mqtt variable topic ' + msg.topic);
                         var _deviceInfo = this.toDeviceControlInfo(message.device);
-                        if(_deviceInfo){
+                        if (_deviceInfo) {
                             var driverInstance = this.getDriverInstance(_deviceInfo);
-                            if(driverInstance){
+                            if (driverInstance) {
                                 var scope = driverInstance.blockScope;
                                 var _variable = scope.getVariable(parts[3]);
-                                if(_variable){
-                                    _debugMQTT && console.info('     received MQTT variable ' +_variable.name + ' = ' +message.value);
-                                    if(has('xcf-ui')) {
+                                if (_variable) {
+                                    _debugMQTT && console.info('     received MQTT variable ' + _variable.name + ' = ' + message.value);
+                                    if (has('xcf-ui')) {
                                         _variable.set('value', message.value);
                                         _variable.refresh();
-                                    }else{
+                                    } else {
                                         delete _variable.value;
                                         _variable.value = message.value;
                                     }
@@ -5174,23 +4994,23 @@ define('xcf/manager/DeviceManager',[
                                         scope: _variable.scope,
                                         owner: thiz,
                                         save: false,
-                                        publish : true,
-                                        source:'mqtt',
-                                        publishMQTT:false
+                                        publish: true,
+                                        source: 'mqtt',
+                                        publishMQTT: false
                                     });
 
                                 }
-                            }else{
-                                _debugMQTT && console.error('cant find driver instance '+msg.topic);
+                            } else {
+                                _debugMQTT && console.error('cant find driver instance ' + msg.topic);
                             }
-                        }else{
+                        } else {
                             _debugMQTT && console.error('cant find device info');
                         }
-                    }else{
+                    } else {
                         console.error('cant find device for : ' + msg.topic);
                     }
                 }
-            }else{
+            } else {
                 _debugMQTT && console.error('same source');
             }
         },
@@ -5199,14 +5019,14 @@ define('xcf/manager/DeviceManager',[
          * @param url
          * @returns {*}
          */
-        getBlock:function(url){
+        getBlock: function (url) {
             for (var id in this.deviceInstances) {
                 var instance = this.deviceInstances[id];
-                if(!instance || !instance.device){
+                if (!instance || !instance.device) {
                     continue;
                 }
                 var scope = instance.blockScope;
-                if(scope) {
+                if (scope) {
                     var block = scope.resolveBlock(url);
                     if (block) {
                         return block;
@@ -5226,7 +5046,7 @@ define('xcf/manager/DeviceManager',[
             if (this.deviceServerClient) {
                 this.deviceServerClient.destroy();
             }
-            var store = evt.store,thiz = this;
+            var store = evt.store, thiz = this;
             var client = this.createDeviceServerClient(store);
             var connect = has('drivers') && has('devices');
         },
@@ -5259,7 +5079,7 @@ define('xcf/manager/DeviceManager',[
                     instance.baseClass === modulePath) {
                     this.mergeFunctions(instance, newModule.prototype);
                     found = true;
-                    _debug && console.log('Did update driver code : ' + modulePath,newModule.prototype);
+                    _debug && console.log('Did update driver code : ' + modulePath, newModule.prototype);
                     if (instance.blockScope) {
                         instance.blockScope.expressionModel.expressionCache = {};
                     }
@@ -5274,17 +5094,17 @@ define('xcf/manager/DeviceManager',[
          * @param device
          * @private
          */
-        _removeInstance: function (instance, hash,device) {
+        _removeInstance: function (instance, hash, device) {
             if (instance.destroy) {
                 instance.destroy();
             }
             instance.blockScope && instance.blockScope._destroy();
             delete this.deviceInstances[hash];
             this.ctx.getBlockManager().removeScope(instance.options.id);
-            this.ctx.getDriverManager().removeDriverInstance(instance,device);
+            this.ctx.getDriverManager().removeDriverInstance(instance, device);
 
             device.reset();
-            if(this.completeDevice){
+            if (this.completeDevice) {
                 //this.completeDevice(null,device,instance.driver);
             }
 
@@ -5296,17 +5116,17 @@ define('xcf/manager/DeviceManager',[
          */
         removeDriverInstance: function (deviceInfo) {
             var instance = this.getDriverInstance(deviceInfo);
-            if(instance){
+            if (instance) {
                 this.ctx.getBlockManager().removeScope(instance.options.id);
-                if(instance.blockScope){
+                if (instance.blockScope) {
                     instance.blockScope.destroy();
                 }
                 instance.destroy();
-            }else{
+            } else {
                 _debugConnect && console.error('remove instance : cant find!');
             }
             for (var i in this.deviceInstances) {
-                if(instance == this.deviceInstances[i]){
+                if (instance == this.deviceInstances[i]) {
                     delete this.deviceInstances[i];
                 }
             }
@@ -5330,7 +5150,7 @@ define('xcf/manager/DeviceManager',[
          * @param port {string}
          * @returns {module:xcf/model/Device|null}
          */
-        getDeviceByHost: function (host,port) {
+        getDeviceByHost: function (host, port) {
             var items = utils.queryStore(this.getStore(), {
                 isDir: false
             });
@@ -5338,13 +5158,13 @@ define('xcf/manager/DeviceManager',[
                 var device = items[i];
                 var _host = this.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_HOST);
                 var _port = this.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_PORT);
-                if(_host ==host && _port == port){
+                if (_host == host && _port == port) {
                     return device;
                 }
             }
             return null;
         },
-        getDeviceByUrl:function(url){
+        getDeviceByUrl: function (url) {
             var parts = utils.parse_url(url);
             parts = utils.urlArgs(parts.host);
             return this.getDeviceById(parts.device.value);
@@ -5354,10 +5174,11 @@ define('xcf/manager/DeviceManager',[
          * @param id {string}
          * @returns {module:xcf/model/Device|null}
          */
-        getDeviceById: function (id,store) {
+        getDeviceById: function (id, store) {
 
             var self = this;
-            function search(_store){
+
+            function search(_store) {
                 var items = utils.queryStore(_store, {
                     isDir: false
                 });
@@ -5368,7 +5189,7 @@ define('xcf/manager/DeviceManager',[
                 for (var i = 0; i < items.length; i++) {
                     var device = items[i];
                     var _id = self.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_ID);
-                    if(_id == id){
+                    if (_id == id) {
                         return device;
                     }
                 }
@@ -5376,12 +5197,12 @@ define('xcf/manager/DeviceManager',[
             }
 
             var _store = _.isString(store) ? this.getStore(store) : null;
-            if(_store){
+            if (_store) {
                 return search(_store);
-            }else{
-                for (var scope in this.stores){
+            } else {
+                for (var scope in this.stores) {
                     var item = search(this.stores[scope]);
-                    if(item){
+                    if (item) {
                         return item;
                     }
                 }
@@ -5393,9 +5214,10 @@ define('xcf/manager/DeviceManager',[
          * @param title {string}
          * @returns {module:xcf/model/Device|null}
          */
-        getDeviceByName: function (title,store) {
+        getDeviceByName: function (title, store) {
             var self = this;
-            function search(_store){
+
+            function search(_store) {
                 var items = utils.queryStore(_store, {
                     isDir: false
                 });
@@ -5406,7 +5228,7 @@ define('xcf/manager/DeviceManager',[
                 for (var i = 0; i < items.length; i++) {
                     var device = items[i];
                     var _id = self.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_TITLE);
-                    if(_id == title){
+                    if (_id == title) {
                         return device;
                     }
                 }
@@ -5414,12 +5236,12 @@ define('xcf/manager/DeviceManager',[
             }
 
             var _store = _.isString(store) ? this.getStore(store) : null;
-            if(_store){
+            if (_store) {
                 return search(_store);
-            }else{
-                for (var scope in this.stores){
+            } else {
+                for (var scope in this.stores) {
                     var item = search(this.stores[scope]);
-                    if(item){
+                    if (item) {
                         return item;
                     }
                 }
@@ -5441,33 +5263,33 @@ define('xcf/manager/DeviceManager',[
             for (var i = 0; i < items.length; i++) {
                 var device = items[i];
                 var _id = this.getMetaValue(device, DEVICE_PROPERTY.CF_DEVICE_ID);
-                if(_id == id){
+                if (_id == id) {
                     return device;
                 }
             }
             return null;
         },
-        _cachedItems:null,
+        _cachedItems: null,
         getDeviceStoreItem: function (deviceInfo) {
-            if(!deviceInfo){
+            if (!deviceInfo) {
                 return;
             }
 
-            if(!isIDE && deviceInfo.hash && this._cachedItems){
+            if (!isIDE && deviceInfo.hash && this._cachedItems) {
                 var _cached = this._cachedItems[deviceInfo.hash];
-                if(_cached){
+                if (_cached) {
                     return _cached;
                 }
             }
 
             //already device
-            if(deviceInfo && deviceInfo._store){
+            if (deviceInfo && deviceInfo._store) {
                 //return deviceInfo;
             }
             var scope = deviceInfo.deviceScope;
             var store = this.getStore(scope);
 
-            if(!store){
+            if (!store) {
 
                 return;
             }
@@ -5475,11 +5297,11 @@ define('xcf/manager/DeviceManager',[
                 isDir: false
             });
 
-            if(!items){
+            if (!items) {
                 _debug && !isServer && console.error('store returned nothing ' + deviceInfo.deviceScope);
                 return null;
             }
-            if(items && !_.isArray(items)){
+            if (items && !_.isArray(items)) {
                 items = [items];
             }
             for (var i = 0; i < items.length; i++) {
@@ -5494,15 +5316,15 @@ define('xcf/manager/DeviceManager',[
                     host === deviceInfo.host &&
                     protocol === deviceInfo.protocol &&
                     device.isServer() === deviceInfo.isServer &&
-                    id === deviceInfo.id ) {
+                    id === deviceInfo.id) {
 
                     var deviceStoreItem = store.getSync(device.path);
-                    if(deviceStoreItem){
+                    if (deviceStoreItem) {
                         device = deviceStoreItem;
                     }
 
-                    if(!isIDE && deviceInfo.hash){
-                        if(!this._cachedItems){
+                    if (!isIDE && deviceInfo.hash) {
+                        if (!this._cachedItems) {
                             this._cachedItems = {};
                         }
                         this._cachedItems[deviceInfo.hash] = device;
@@ -5542,21 +5364,21 @@ define('xcf/manager/DeviceManager',[
         /**
          * @private
          */
-        onDeviceStateChanged: function (item,silent) {
-            if(item._userStopped !==true &&  silent!==true && item.info && item.state && item.state ==types.DEVICE_STATE.DISCONNECTED){
+        onDeviceStateChanged: function (item, silent) {
+            if (item._userStopped !== true && silent !== true && item.info && item.state && item.state == types.DEVICE_STATE.DISCONNECTED) {
                 this.ctx.getNotificationManager().postMessage({
-                    message:'Lost connection to ' + item.info.host + ', ...reconnecting',
-                    type:'error',
+                    message: 'Lost connection to ' + item.info.host + ', ...reconnecting',
+                    type: 'error',
                     showCloseButton: false,
-                    duration:1500
+                    duration: 1500
                 });
             }
-            if(silent!==true && item.info && item.state && item.state ==types.DEVICE_STATE.CONNECTED){
+            if (silent !== true && item.info && item.state && item.state == types.DEVICE_STATE.CONNECTED) {
                 this.ctx.getNotificationManager().postMessage({
-                    message:'Connected to ' + item.info.host + '',
-                    type:'success',
+                    message: 'Connected to ' + item.info.host + '',
+                    type: 'success',
                     showCloseButton: false,
-                    duration:2000
+                    duration: 2000
                 });
             }
         },
@@ -5566,8 +5388,8 @@ define('xcf/manager/DeviceManager',[
          * @returns {*}
          * @private
          */
-        connectDevice:function(item){
-            this.checkDeviceServerConnection();            
+        connectDevice: function (item) {
+            this.checkDeviceServerConnection();
             var cInfo = this.toDeviceControlInfo(item);
             if (!cInfo) {
                 console.error('couldnt start device, invalid control info');
@@ -5580,9 +5402,9 @@ define('xcf/manager/DeviceManager',[
                 return this.deviceInstances[hash];
             }
             item.setState(types.DEVICE_STATE.CONNECTING);
-            this.publish(types.EVENTS.ON_STATUS_MESSAGE,{
-                text:'Trying to connect to ' + cInfo.toString(),
-                type:'info'
+            this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
+                text: 'Trying to connect to ' + cInfo.toString(),
+                type: 'info'
             });
             this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.MANAGER_START_DRIVER, cInfo);
         },
@@ -5608,26 +5430,26 @@ define('xcf/manager/DeviceManager',[
         /**
          * @private
          */
-        onHaveNoDeviceServer:function(){
-            if(!this.ctx.getNotificationManager()){
+        onHaveNoDeviceServer: function () {
+            if (!this.ctx.getNotificationManager()) {
                 return;
             }
             var thiz = this;
             var msg = this.ctx.getNotificationManager().postMessage({
-                message:'Have no device server connection',
-                type:'error',
+                message: 'Have no device server connection',
+                type: 'error',
                 showCloseButton: true,
-                duration:1500,
+                duration: 1500,
                 actions: {
                     reconnect: {
                         label: 'Reconnect',
-                        action: function() {
+                        action: function () {
                             thiz.checkDeviceServerConnection();
                             return msg.update({
                                 message: 'Reconnecting...',
                                 type: 'success',
                                 actions: false,
-                                duration:1500
+                                duration: 1500
                             });
                         }
                     }
@@ -5663,15 +5485,15 @@ define('xcf/manager/DeviceManager',[
         getDriverScriptContent: function (scope, path, readyCB, errorCB) {
             return this.callMethodEx(null, 'getDriverContent', [scope, path], readyCB, true);
         },
-        createStore:function(data,scope,track){
-            var storeClass = declare('deviceStore',[TreeMemory,Trackable,ObservableStore],{});
+        createStore: function (data, scope, track) {
+            var storeClass = declare('deviceStore', [TreeMemory, Trackable, ObservableStore], {});
             var store = new storeClass({
                 data: data.items,
                 idProperty: 'path',
-                Model:Device,
-                id:utils.createUUID(),
-                scope:scope,
-                observedProperties:[
+                Model: Device,
+                id: utils.createUUID(),
+                scope: scope,
+                observedProperties: [
                     "name",
                     "state",
                     "iconClass",
@@ -5679,8 +5501,8 @@ define('xcf/manager/DeviceManager',[
                 ]
             });
 
-            if(scope && track!==false){
-                this.setStore(scope,store);
+            if (scope && track !== false) {
+                this.setStore(scope, store);
             }
             return store;
         },
@@ -5690,8 +5512,8 @@ define('xcf/manager/DeviceManager',[
          * @returns {exports|module.exports|module:xcf/data/Store}
          * @private
          */
-        initStore: function (data,scope,track) {
-            return this.createStore(data,scope,track);
+        initStore: function (data, scope, track) {
+            return this.createStore(data, scope, track);
         },
         /////////////////////////////////////////////////////////////////////////////////////
         //
@@ -5703,10 +5525,10 @@ define('xcf/manager/DeviceManager',[
          * @param item
          * @private
          */
-        fixDeviceCI:function(item){
+        fixDeviceCI: function (item) {
             var meta = item['user'];
-            var driverOptions= utils.getCIByChainAndName(meta, 0, DEVICE_PROPERTY.CF_DEVICE_DRIVER_OPTIONS);
-            if(!driverOptions) {
+            var driverOptions = utils.getCIByChainAndName(meta, 0, DEVICE_PROPERTY.CF_DEVICE_DRIVER_OPTIONS);
+            if (!driverOptions) {
                 meta.inputs.push({
                     "chainType": 0,
                     "class": "cmx.types.ConfigurableInformation",
@@ -5725,8 +5547,8 @@ define('xcf/manager/DeviceManager',[
                     "title": "Driver Options",
                     "type": 5,
                     "uid": "-1",
-                    "value":0,
-                    "data":[
+                    "value": 0,
+                    "data": [
                         {
                             value: 2,
                             label: 'Runs Server Side'
@@ -5748,7 +5570,7 @@ define('xcf/manager/DeviceManager',[
                     "visible": true,
                     "device": item
                 });
-            }else{
+            } else {
                 driverOptions.data = [
                     {
                         value: 2,
@@ -5769,12 +5591,12 @@ define('xcf/manager/DeviceManager',[
 
                 ];
 
-                driverOptions.group = 'Common'
+                driverOptions.group = 'Common';
             }
 
 
-            var loggingFlags= utils.getCIByChainAndName(meta, 0, DEVICE_PROPERTY.CF_DEVICE_LOGGING_FLAGS);
-            if(!loggingFlags) {
+            var loggingFlags = utils.getCIByChainAndName(meta, 0, DEVICE_PROPERTY.CF_DEVICE_LOGGING_FLAGS);
+            if (!loggingFlags) {
                 meta.inputs.push({
                     "chainType": 0,
                     "class": "cmx.types.ConfigurableInformation",
@@ -5793,8 +5615,8 @@ define('xcf/manager/DeviceManager',[
                     "title": "Logging Flags",
                     "type": DEVICE_PROPERTY.CF_DEVICE_LOGGING_FLAGS,
                     "uid": "-1",
-                    "value":0,
-                    "data":[
+                    "value": 0,
+                    "data": [
                         {
                             value: 2,
                             label: 'On Connected'
@@ -5819,75 +5641,74 @@ define('xcf/manager/DeviceManager',[
                     "visible": true,
                     "device": item
                 });
-            }else{
-                loggingFlags.group = "Logging"
+            } else {
+                loggingFlags.group = "Logging";
             }
 
 
             var protocolCI = utils.getCIByChainAndName(meta, 0, DEVICE_PROPERTY.CF_DEVICE_PROTOCOL);
-            if(protocolCI){
+            if (protocolCI) {
                 protocolCI.type = 3;
                 protocolCI.options = [
                     {
-                        label:"TCP",
-                        value:"tcp"
+                        label: "TCP",
+                        value: "tcp"
                     },
                     {
-                        label:"UDP",
-                        value:"udp"
+                        label: "UDP",
+                        value: "udp"
                     },
                     {
-                        label:"Driver",
-                        value:"driver"
+                        label: "Driver",
+                        value: "driver"
                     },
                     {
-                        label:"SSH",
-                        value:"ssh"
+                        label: "SSH",
+                        value: "ssh"
                     },
                     {
-                        label:"Serial",
-                        value:"serial"
+                        label: "Serial",
+                        value: "serial"
                     },
                     {
-                        label:"MQTT",
-                        value:"mqtt"
+                        label: "MQTT",
+                        value: "mqtt"
                     }
-                ]
+                ];
             }
         },
-        _deviceInfoCache:null,
+        _deviceInfoCache: null,
         /**
          * Return handy info for a device
          * @param {module:xcf/model/Device} item
          * @returns {module:xide/types~DeviceInfo|null}
          */
-        toDeviceControlInfo: function (item) {            
-            if(!item){
+        toDeviceControlInfo: function (item) {
+            if (!item) {
                 return null;
             }
 
             var hash = item.hash;
-            if(!has('xcf-ui') && hash && !has('host-node')) {
-                if(this._deviceInfoCache[hash]){
+            if (!has('xcf-ui') && hash && !has('host-node')) {
+                if (this._deviceInfoCache[hash]) {
                     return this._deviceInfoCache[hash];
                 }
             }
-            if(!item._store && item.id){
+            if (!item._store && item.id) {
                 var _item = this.getItemById(item.id);
-                if(_item){
+                if (_item) {
                     item = _item;
                 }
             }
-            if(!item || !item.path){
+            if (!item || !item.path) {
                 _debug && console.error('not a device');
                 var _item = this.getDeviceStoreItem(item);
-                if(!_item){
+                if (!_item) {
                     return null;
                 }
             }
             _debug && !item && console.error('toDeviceControlInfo: invalid device item');
             _debug && !item.user && console.error('toDeviceControlInfo: invalid device item, has no meta');
-            
             var meta = item['user'],
                 host = utils.getCIInputValueByName(meta, DEVICE_PROPERTY.CF_DEVICE_HOST),
                 port = utils.getCIInputValueByName(meta, DEVICE_PROPERTY.CF_DEVICE_PORT),
@@ -5917,26 +5738,26 @@ define('xcf/manager/DeviceManager',[
                     host: host,
                     port: port,
                     protocol: protocol,
-                    driver: script ? script.replace('./', '') : '',                    
-                    driverId:driverId,
+                    driver: script ? script.replace('./', '') : '',
+                    driverId: driverId,
                     driverScope: driverScope,
                     id: item.id,
-                    devicePath:item.path,
-                    deviceScope:item.getScope(),
-                    title:title,                    
-                    options:options,                    
-                    driverOptions:driverOptions,
-                    serverSide:serverSide,
-                    isServer:isServer,
-                    responseSettings:responseSettings,
-                    source:isIDE ? 'ide' : 'server',
-                    user_devices:this.ctx.getMount(item.getScope()),
-                    system_devices:this.ctx.getMount('system_devices'),
-                    system_drivers:this.ctx.getMount('system_drivers'),
-                    user_drivers:this.ctx.getMount('user_drivers'),
-                    loggingFlags:loggingFlags,
-                    toString:function(){
-                        return item.getScope() +'://' + this.host + ':'+this.port+'@'+this.protocol;
+                    devicePath: item.path,
+                    deviceScope: item.getScope(),
+                    title: title,
+                    options: options,
+                    driverOptions: driverOptions,
+                    serverSide: serverSide,
+                    isServer: isServer,
+                    responseSettings: responseSettings,
+                    source: isIDE ? 'ide' : 'server',
+                    user_devices: this.ctx.getMount(item.getScope()),
+                    system_devices: this.ctx.getMount('system_devices'),
+                    system_drivers: this.ctx.getMount('system_drivers'),
+                    user_drivers: this.ctx.getMount('user_drivers'),
+                    loggingFlags: loggingFlags,
+                    toString: function () {
+                        return item.getScope() + '://' + this.host + ':' + this.port + '@' + this.protocol;
                     }
                 };
 
@@ -5944,32 +5765,26 @@ define('xcf/manager/DeviceManager',[
                     host: host,
                     port: port,
                     protocol: protocol,
-                    driverId:driverId,
+                    driverId: driverId,
                     driverScope: driverScope,
                     id: item.id,
-                    devicePath:item.path,
-                    deviceScope:item.getScope(),
-                    source:isIDE ? 'ide' : 'server',
-                    user_devices:this.ctx.getMount(item.getScope()),
-                    system_devices:this.ctx.getMount('system_devices'),
-                    system_drivers:this.ctx.getMount('system_drivers'),
-                    user_drivers:this.ctx.getMount('user_drivers')
+                    devicePath: item.path,
+                    deviceScope: item.getScope(),
+                    source: isIDE ? 'ide' : 'server',
+                    user_devices: this.ctx.getMount(item.getScope()),
+                    system_devices: this.ctx.getMount('system_devices'),
+                    system_drivers: this.ctx.getMount('system_drivers'),
+                    user_drivers: this.ctx.getMount('user_drivers')
                 }), 1);
-                
                 var userDirectory = this.ctx.getUserDirectory();
-                
-                if(userDirectory){
+                if (userDirectory) {
                     result.userDirectory = userDirectory;
                 }
-                
-            }else{
-                _debug && console.error('cant find driver ' + driverId + ' for '+ item.toString());
+            } else {
+                _debug && console.error('cant find driver ' + driverId + ' for ' + item.toString());
             }
-
-
             item.info = result;
-
-            if(!has('xcf-ui') && hash && !has('host-node')) {
+            if (!has('xcf-ui') && hash && !has('host-node')) {
                 this._deviceInfoCache[hash] = result;
             }
 
@@ -5981,22 +5796,21 @@ define('xcf/manager/DeviceManager',[
          * @returns {module:xcf/model/Device} The device
          */
         getItemById: function (itemId) {
-
-            function search(store){
+            function search(store) {
                 var data = store.data;
-                var device = _.find(data,{
+                var device = _.find(data, {
                     id: itemId
                 });
-                if(!device){
+                if (!device) {
                     return null;
                 }
                 return store.getSync(device.path);
             }
 
-            for(var scope in this.stores){
+            for (var scope in this.stores) {
                 var store = this.stores[scope];
                 var result = search(store);
-                if(result){
+                if (result) {
                     return result;
                 }
             }
@@ -6008,13 +5822,14 @@ define('xcf/manager/DeviceManager',[
          * @returns {module:xcf/model/Device} The device
          */
         getItemByPath: function (path) {
-            function search(store){
+            function search(store) {
                 return store.getSync(path);
             }
-            for(var scope in this.stores){
+
+            for (var scope in this.stores) {
                 var store = this.stores[scope];
                 var result = search(store);
-                if(result){
+                if (result) {
                     return result;
                 }
             }
@@ -6031,22 +5846,23 @@ define('xcf/manager/DeviceManager',[
                 type = evt.type,
                 data = evt.data,
                 store = evt.store,
-                items = store ? utils.queryStore(store, { isDir: false}) : [],
+                items = store ? utils.queryStore(store, {isDir: false}) : [],
                 owner = evt.owner,
                 driverManager = this.ctx.getDriverManager();
 
-            if(items && !_.isArray(items)){
-               items = [items];
-            };
+            if (items && !_.isArray(items)) {
+                items = [items];
+            }
 
-            if(type!==types.ITEM_TYPE.DEVICE){
+
+            if (type !== types.ITEM_TYPE.DEVICE) {
                 return;
             }
 
             for (var i = 0; i < items.length; i++) {
                 var item = store.getSync(items[i].path);
-                if(!item){
-                    console.error('cant find '+items[i].path);
+                if (!item) {
+                    console.error('cant find ' + items[i].path);
                     continue;
                 }
                 if (item._completed != null) {
@@ -6063,23 +5879,22 @@ define('xcf/manager/DeviceManager',[
                     CIS = item.user;
 
                 //complete CIS
-                _.each(CIS.inputs,function(ci){
+                _.each(CIS.inputs, function (ci) {
                     ci.device = item;
                     ci.actionTarget = isIDE ? ctx.mainView.getToolbar() : null;
                     ci.ctx = ctx;
-
                 });
                 if (!_.isEmpty(driver)) {
-                    if(isIDE) {
-                        this.completeDevice(store,item,driver);
+                    if (isIDE) {
+                        this.completeDevice(store, item, driver);
                         item.iconClass = item.getStateIcon();
                     }
                 }
             }
-            all(this.connectToAllDevices()).then(function(){
-                thiz.publish('DevicesConnected',evt);
+            all(this.connectToAllDevices()).then(function () {
+                thiz.publish('DevicesConnected', evt);
             });
-            
+
         },
         /**
          *
@@ -6094,19 +5909,19 @@ define('xcf/manager/DeviceManager',[
          * @param evt.data.type {string}
          * @param evt.data.level {string}
          */
-        onClientMessage:function(evt){
+        onClientMessage: function (evt) {
             this.checkDeviceServerConnection();
-            if(this.deviceServerClient){
-                _debugLogging && console.log('WRITE_LOG_MESSAGE ',evt);
+            if (this.deviceServerClient) {
+                _debugLogging && console.log('WRITE_LOG_MESSAGE ', evt);
                 this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.WRITE_LOG_MESSAGE, evt);
             }
         },
         /**
-         * 
+         *
          * @param evt
          */
-        onClientLogMessage:function(evt){
-            if(!isServer){
+        onClientLogMessage: function (evt) {
+            if (!isServer) {
                 this.onClientMessage(evt);
             }
         },
@@ -6115,39 +5930,34 @@ define('xcf/manager/DeviceManager',[
          * @param evt
          * @private
          */
-        onVariableChanged:function(evt){
-
+        onVariableChanged: function (evt) {
             var variable = evt.item,
                 scope = evt.scope,
                 name = variable.name,
-                publish = evt.publish!==false;
-
+                publish = evt.publish !== false;
             //_debugMQTT && console.log('DeviceManager/onVariableChanged/variable changed: '+name + ' - publish : ' + publish);
 
-            if(name==='value' || publish===false || !variable){
+            if (name === 'value' || publish === false || !variable) {
                 return;
             }
 
             var value = variable.value,
-                driver= scope.driver,
+                driver = scope.driver,
                 device = scope.device;
 
-            if(device && device.info) {
-
+            if (device && device.info) {
                 var deviceInfo = device.info,
-                    mqttTopic = deviceInfo.host + '/' + deviceInfo.port+'/Variable/' + name;
-
-                _debugMQTT && evt.publishMQTT!==false && console.log('send mqtt message ' + mqttTopic);
-
-                evt.publishMQTT!==false && this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.MQTT_PUBLISH, {
-                    topic:mqttTopic,
-                    data:{
-                        value:value,
-                        device:deviceInfo
+                    mqttTopic = deviceInfo.host + '/' + deviceInfo.port + '/Variable/' + name;
+                _debugMQTT && evt.publishMQTT !== false && console.log('send mqtt message ' + mqttTopic);
+                evt.publishMQTT !== false && this.sendManagerCommand(types.SOCKET_SERVER_COMMANDS.MQTT_PUBLISH, {
+                    topic: mqttTopic,
+                    data: {
+                        value: value,
+                        device: deviceInfo
                     }
                 });
-            }else{
-                _debugMQTT && console.warn('onVariableChanged->MQTT : have no device')
+            } else {
+                _debugMQTT && console.warn('onVariableChanged->MQTT : have no device');
             }
             //_debugMQTT && console.info('on variable changed ' + device.toString());
         },
@@ -6157,16 +5967,16 @@ define('xcf/manager/DeviceManager',[
          */
         init: function () {
             var thiz = this;
-            if(this.initUI){
+            if (this.initUI) {
                 this.initUI();
             }
             this.stores = {};
-            this._deviceInfoCache={};
+            this._deviceInfoCache = {};
             this.subscribe(types.EVENTS.ON_DRIVER_VARIABLE_CHANGED, this.onVariableChanged);
-            this.subscribe(types.EVENTS.ON_DEVICE_SERVER_CONNECTED,function(){
+            this.subscribe(types.EVENTS.ON_DEVICE_SERVER_CONNECTED, function () {
                 var connect = has('drivers') && has('devices');
                 if (thiz.autoConnectDevices && connect) {
-                    all(thiz.connectToAllDevices()).then(function(){
+                    all(thiz.connectToAllDevices()).then(function () {
                         thiz.publish('DevicesConnected');
                     });
                 }
@@ -6184,7 +5994,7 @@ define('xcf/manager/DeviceManager',[
                 "system_drivers": "system_drivers/",
                 "user_drivers": "user_drivers/"
             };
-            this.lastUpTime = (new Date()).getTime();            
+            this.lastUpTime = (new Date()).getTime();
             setInterval(function () {
                 var current = (new Date()).getTime();
                 if (current - thiz.lastUpTime > 30000) {
@@ -6196,39 +6006,34 @@ define('xcf/manager/DeviceManager',[
             this.initReload();
 
         },
-        onDeviceServerConnected:function(){
+        onDeviceServerConnected: function () {
             var self = this;
-            if(this.deviceInstances) {
-
+            if (this.deviceInstances) {
                 _.each(this.deviceInstances, function (instance) {
-
-                    if(instance && instance.device && !instance.domNode) {
+                    if (instance && instance.device && !instance.domNode) {
                         var device = instance.device;
                         self.startDevice(device);
-                    }else{
-                        console.log('invalid instance');
                     }
-                    //var driverInstance = instance.driverInstance;
-                    //driverInstance && driverInstance.onLostServer && driverInstance.onLostServer();
-                    //device.setState(types.DEVICE_STATE.LOST_DEVICE_SERVER);
                 });
             }
         },
         //nulled in server mode
-        addDeviceInstance:function(device,driver){},
+        addDeviceInstance: function (device, driver) {
+        },
         /***
          * ls is enumerating all drivers in a given scope
          * @param scope{string}
          * @returns {Deferred}
          */
-        ls: function (scope,track,path) {
+        ls: function (scope, track, path) {
             var dfd = new Deferred();
+
             function data(data) {
                 try {
                     var store = this.createStore(data, scope, track === true ? false : true);
-                    track!==false && this.setStore(scope,store);
+                    track !== false && this.setStore(scope, store);
                     this.onStoreReady(store);
-                    track!==false && this.publish(types.EVENTS.ON_STORE_CREATED, {
+                    track !== false && this.publish(types.EVENTS.ON_STORE_CREATED, {
                         data: data,
                         owner: this,
                         store: store,
@@ -6241,19 +6046,19 @@ define('xcf/manager/DeviceManager',[
                     logError(e, 'error ls drivers');
                 }
             }
-            if(has('php')) {
+
+            if (has('php')) {
                 this.runDeferred(null, 'ls', [scope]).then(data.bind(this));
-            }else{
-                if(!isServer) {
+            } else {
+                if (!isServer) {
                     this._getText(require.toUrl(scope).replace('main.js', '') + scope + '.json', {
                         sync: false,
                         handleAs: 'json'
                     }).then(data.bind(this));
-                }else{
-                    dfd.resolve({items:[]});
+                } else {
+                    dfd.resolve({items: []});
                 }
             }
-
             return dfd;
         },
         /**
@@ -6261,7 +6066,7 @@ define('xcf/manager/DeviceManager',[
          * @param scope
          * @returns {*}
          */
-        hasStore:function(scope){
+        hasStore: function (scope) {
             return this.stores[scope];
         }
     });
@@ -6269,19 +6074,15 @@ define('xcf/manager/DeviceManager',[
 
 define('xcf/manager/BlockManager',[
     'dcl/dcl',
-    "xdojo/declare",
-    "dojo/_base/lang",
     'xide/types',
-    'xide/utils',
-    'xide/factory',
     'xide/manager/ManagerBase',
-    'xblox/manager/BlockManager'
-], function (dcl,declare, lang, types, utils, factory, ManagerBase, BlockManager) {
-
+    'xblox/manager/BlockManager',
+    "xide/lodash"
+], function (dcl, types, ManagerBase, BlockManager,_) {
     return dcl([ManagerBase, BlockManager], {
-        declaredClass:"xcf.manager.BlockManager",
+        declaredClass: "xcf.manager.BlockManager",
         //nulled for server mode
-        onReady:function(){},
+        onReady: function () {},
         addDriverFunctions: function (target, source) {
 
             for (var i in source) {
@@ -6289,8 +6090,8 @@ define('xcf/manager/BlockManager',[
                 if (i === 'constructor' || i === 'inherited') {
                     continue;
                 }
-                if (lang.isFunction(source[i]) /*&& lang.isFunction(target[i])*/) {
-                    target[i] = source[i];//swap
+                if (_.isFunction(source[i])) {
+                    target[i] = source[i];
                 }
             }
         },
@@ -6314,9 +6115,6 @@ define('xcf/manager/BlockManager',[
                 obj.blockScope = scope;
             }
 
-
-            var deviceManager = this.ctx.getDeviceManager();
-
             //add shortcuts to the device
             if (scope.context) {
 
@@ -6331,31 +6129,28 @@ define('xcf/manager/BlockManager',[
                     /*this.addDriverFunctions(obj,scope.context.instance);*/
 
                     /*
-                    scope.device = {//we have a real device : add 'sendMessage'
-                        _object: obj,
-                        _scope: scope,
-                        sendMessage: function (message) {
+                     scope.device = {//we have a real device : add 'sendMessage'
+                     _object: obj,
+                     _scope: scope,
+                     sendMessage: function (message) {
 
-                            //case when we've been constructed with no real device
-                            if (this._scope && this._scope.context && this._scope.context.instance) {
-                                this._scope.context.instance.sendMessage(message);
-                                return;
-                            }
-                            //console.log('sending device message : ' + message);
-                            //xlog('sending message : ' + message);
-                            //xtrace('test');
-                            //xtrace('test');
-                            //console.trace("Device.Manager.Send.Message : " + message, this);//sending device message
-                        }
-                    }
-                    */
+                     //case when we've been constructed with no real device
+                     if (this._scope && this._scope.context && this._scope.context.instance) {
+                     this._scope.context.instance.sendMessage(message);
+                     return;
+                     }
+                     //console.log('sending device message : ' + message);
+                     //xlog('sending message : ' + message);
+                     //xtrace('test');
+                     //xtrace('test');
+                     //console.trace("Device.Manager.Send.Message : " + message, this);//sending device message
+                     }
+                     }
+                     */
                 }
             } else {
                 console.error('scope has no context!');
             }
-
-            //add various functions
-
             ///////////////////////////////////////////////////////////////////////////////
             //
             //  Commands
@@ -6373,7 +6168,6 @@ define('xcf/manager/BlockManager',[
                         _block.solve(this.blockScope);
                     } else {
                         console.log('no such variable : ' + title);
-                        return;
                     }
                 };
             }
@@ -6392,16 +6186,13 @@ define('xcf/manager/BlockManager',[
                 obj.setVariable = function (title, value, save, publish, source) {
                     var _variable = this.blockScope.getVariable(title);
                     if (_variable) {
-
                         _variable.value = value;
-                        _variable.set('value',value);
+                        _variable.set('value', value);
                         console.log('setting variable ' + title + ' to ' + value);
                     } else {
                         console.log('no such variable : ' + title);
                         return;
                     }
-
-
                     if (publish !== false) {
                         thiz.publish(types.EVENTS.ON_DRIVER_VARIABLE_CHANGED, {
                             item: _variable,
@@ -6414,7 +6205,6 @@ define('xcf/manager/BlockManager',[
                     }
                 };
             }
-
             /**
              * Add getVariable
              * @param title
@@ -6428,63 +6218,12 @@ define('xcf/manager/BlockManager',[
                     return '';
                 };
             }
-
             this.inherited(arguments);
         },
         onReloaded: function () {
             this.init();
         },
-        getDeviceVariablesAsEventOptions:function(scope){
-
-            var options = [];
-            var _item = function(label,value,intend,selected,displayValue){
-
-
-                var string="<span style=''>" +label + "</span>";
-                var pre = "";
-                if(intend>0){
-                    for (var i = 0; i < intend; i++) {
-                        pre+="&nbsp;";
-                        pre+="&nbsp;";
-                        pre+="&nbsp;";
-                    }
-                }
-                return {
-                    label:pre + string,
-                    label2:displayValue,
-                    value:value/*,
-                     selected:selected*/
-                };
-            };
-
-            var driverManager = this.ctx.getDriverManager();
-            var deviceManager = this.ctx.getDeviceManager();
-            var items = deviceManager.getDevices(false,true);
-
-            for (var i = 0; i < items.length; i++) {
-                var device = items[i];
-                var driver = device.driver;
-                if(!driver){
-                    continue;
-                }
-
-                var title = deviceManager.getMetaValue(device, types.DEVICE_PROPERTY.CF_DEVICE_TITLE);
-                options.push(_item(title,driver.id+'/' +driver.id,0,false));
-
-                var blockScope = driver.blockScope;
-                var variables = blockScope.getVariables();
-
-
-                for (var j = 0; j < variables.length; j++) {
-                    var variable = variables[j];
-
-                    var value = driver.id + '/'+ variable.id;
-                    var selected = ci.value ===value;
-
-                    options.push(_item(variable.title,value,1,selected,title + '/' + variable.title));
-                }
-            }
-        },
+        getDeviceVariablesAsEventOptions: function () {},
         /**
          * Callback for VariableSwitch::getFields('variable').
          *
@@ -6492,108 +6231,18 @@ define('xcf/manager/BlockManager',[
          * @param evt.CI {xide/types/ConfigurableInformation}
          * @param evt.owner {xblox/model/variables/Variable} The variable
          */
-        onCreateVariableCI:function(evt){
-
-            console.log('onCreateVariableCI12',evt);
-            /**
-             *
-             * 1. check its a ui variable:
-             * 2. alter CI
-             *
-             */
-            var ci = evt.CI,
-                variable = evt.owner,
-                scope = variable.scope,
-                isDriverVariable = scope.device!=null;
-
-            console.log('ci value ' + ci.value);
-
-            if(!isDriverVariable){
-                return;
-            }
-
-            //  create filtering select options, pseudo code:
-            //
-            //  foreach(device in devices)
-            //      let driver in device
-            //      createSelect(device name)
-            //      foreach(variable in driver)
-            //          createSelect(variable,value =  )
-            //
-            //
-
-
-            var options = [];
-            var _item = function(label,value,intend,selected,displayValue){
-
-
-                var string="<span style=''>" +label + "</span>";
-                var pre = "";
-                if(intend>0){
-                    for (var i = 0; i < intend; i++) {
-                        pre+="&nbsp;";
-                        pre+="&nbsp;";
-                        pre+="&nbsp;";
-                    }
-                }
-                return {
-                    label:pre + string,
-                    label2:displayValue,
-                    value:value/*,
-                    selected:selected*/
-                };
-            };
-
-            var driverManager = this.ctx.getDriverManager();
-            var deviceManager = this.ctx.getDeviceManager();
-            var items = deviceManager.getDevices(false,true);
-
-            for (var i = 0; i < items.length; i++) {
-                var device = items[i];
-                var driver = device.driver;
-                if(!driver){
-                    continue;
-                }
-
-                var title = deviceManager.getMetaValue(device, types.DEVICE_PROPERTY.CF_DEVICE_TITLE);
-                options.push(_item(title,driver.id+'/' +driver.id,0,false));
-
-                var blockScope = driver.blockScope;
-                var variables = blockScope.getVariables();
-
-
-                for (var j = 0; j < variables.length; j++) {
-                    var variable = variables[j];
-
-                    var value = driver.id + '/'+ variable.id;
-                    var selected = ci.value ===value;
-
-                    options.push(_item(variable.name,value,1,selected,title + '/' + variable.title));
-                }
-            }
-
-            ci.options = options;
-
-            ci.widget = {
-                "class":"xide.form.FilterSelect"
-
-            }
-        }
+        onCreateVariableCI: function (evt) {}
     });
 });
 
 define('xcf/manager/DriverManager_Server',[
     'dcl/dcl',
-    "dojo/_base/lang",
     'dojo/_base/declare',
     'xide/types',
     'xide/utils'
-], function(dcl,lang,declare,types,utils){
-
-    var debugDeviceMessages = false;
+], function(dcl,declare,types,utils){
 
     function isItemPath(startNeedle,path){
-
         var _start = startNeedle;
         if (path.indexOf(_start) != -1) {
             var libPath = path.substr(path.indexOf(_start) + (_start.length + 1 ), path.length);
@@ -6606,40 +6255,8 @@ define('xcf/manager/DriverManager_Server',[
         declaredClass:'xcf.manager.DriverManager_Server',
         onDriverBlocksChanged:function(dataPath,shortPath){
 
-
-            var options = [];
-
-            var store = this.getStore() || this.store;
-
-            if (!store) {
-                console.error('getDriversAsEnumeration:: have no store!');
-                return options;
-            }
-
-            var items = store.query({
-                isDir: false
-            });
-
-            for (var i = 0; i < items.length; i++) {
-                var driver = items[i];
-                var meta = driver['user'];
-                var id = utils.getInputCIByName(meta, types.DRIVER_PROPERTY.CF_DRIVER_ID);
-                var title = utils.getInputCIByName(meta, types.DRIVER_PROPERTY.CF_DRIVER_NAME);
-                if(!meta || !driver.blockPath){
-                    continue;
-                }
-
-
-                if(driver.blockPath.indexOf(shortPath)!==-1){
-
-                }
-
-
-            }
-
         },
         onFileChanged:function(evt){
-
             if(evt.type!=='changed'){
                 return;
             }
@@ -6647,12 +6264,9 @@ define('xcf/manager/DriverManager_Server',[
                 return;
             }
             evt._didb=true;
-
             var path = utils.replaceAll('\\', '/', evt.path);
             path = utils.replaceAll('//', '/', path);
             path = path.replace(/\\/g,"/");
-
-            ////data/system/drivers/SSH/Hercules.xblox'
             var isDriver = isItemPath('system/driver',path);
             if(isDriver && isDriver.indexOf('.xblox')!==-1){
                 console.log('driver blocks changed ' + isDriver + ' @ '+ path, evt);
@@ -6668,46 +6282,31 @@ define('xcf/manager/DriverManager_Server',[
 
             var thiz=this;
             var baseDriverPrefix = this.driverScopes['system_drivers'];
-
             var baseDriverRequire = baseDriverPrefix + 'DriverBase';
-
-            //console.error(baseDriverRequire);
-
             require([baseDriverRequire],function(baseDriver){
 
                 baseDriver.prototype.declaredClass=baseDriverRequire;
-
                 var meta = storeItem['user'];
                 var driverPrefix = thiz.driverScopes[storeItem['scope']];
                 var driver  = utils.getCIInputValueByName(meta,types.DRIVER_PROPERTY.CF_DRIVER_CLASS);
                 if(!driver){
                     console.error('cant find driver class in meta');
                     return;
-
                 }
                 var requirePath  = driverPrefix + driver;
                 requirePath=requirePath.replace('.js','');
                 requirePath=requirePath.replace('./','');
-
-                console.log('create driver instance ' + requirePath);
-
-
                 require([requirePath],function(driverProtoInstance){
                     var baseClass = baseDriver;
-                    var baseClasses = [baseClass];
-
                     var driverProto = declare([baseClass],driverProtoInstance.prototype);
-
                     var driverInstance = new driverProto();
                     driverInstance.baseClass = baseClass.prototype.declaredClass;
                     driverInstance.modulePath = utils.replaceAll('//','/',requirePath);
                     driverInstance.delegate=thiz;
                     storeItem.instance = driverInstance;
-
                     if(readyCB){
                         readyCB(driverInstance);
                     }
-
                     try{
                         driverInstance.start();
                     }catch(e){
@@ -6716,106 +6315,6 @@ define('xcf/manager/DriverManager_Server',[
                     return driverInstance;
                 });
             });
-        },
-        onDeviceDisconnected:function(evt){
-            /*console.log('device disconnected');*/
-        },
-        onDeviceMessage:function(evt){
-
-            if(evt && evt['device'] && evt['driverInstance']){
-
-                debugDeviceMessages && console.log('device message ',evt);
-
-                var _deviceInfo=evt['device'];
-                var _driverInstance=evt['driverInstance'];
-                var _driverOptions =_driverInstance['options'];
-                if(!_driverOptions)return;
-
-                //split message;
-                var messages=[evt.deviceMessage];
-
-                if( _.isString(evt.deviceMessage) &&
-                    evt.deviceMessage.indexOf(_driverInstance.lineBreak)!=-1){
-                    messages=[];
-                    messages=evt.deviceMessage.split(_driverInstance.lineBreak);
-                }
-
-
-                //forward to blox
-                if(messages.length>0){
-
-                    var scope=this.ctx.getBlockManager().getScope(_driverOptions.id);
-                    var blockStore=scope.blockStore;
-
-                    var responseBlocks = scope.getBlocks({
-                        group:types.BLOCK_GROUPS.CF_DRIVER_RESPONSE_BLOCKS
-                    });
-
-                    var responseVariables = scope.getVariables({
-                        group:types.BLOCK_GROUPS.CF_DRIVER_RESPONSE_VARIABLES
-                    });
-
-                    if(!responseBlocks || responseBlocks.length==0){
-                        console.log('have no response blocks, abort');
-                    }
-                    var responseVariable = scope.getVariable('value');
-                    if(responseVariable){
-
-                    }else{
-                        responseVariable = new Variable({
-                            id:utils.createUUID(),
-                            title : 'value',
-                            value : '',
-                            scope : scope,
-                            type  : 13,
-                            group : 'processVariables',
-                            gui:false,
-                            cmd:false
-                        });
-                    }
-
-                    for(var i=0; i < messages.length ; i++){
-
-                        if(messages[i].length==0){
-                            continue;
-                        }
-
-                        //update system variable 'value'
-                        responseVariable.value=messages[i];
-                        
-                        console.log('update process value '+responseVariable.value + ' for ' + _deviceInfo.host);
-                        
-                        this.publish(types.EVENTS.ON_DRIVER_VARIABLE_CHANGED,{
-                            item:responseVariable,
-                            scope:scope,
-                            owner:this
-                        });
-
-                        //now run each top-variabl block in 'conditional process'
-                        for(var j=0; j < responseVariables.length ; j++){
-                            //console.profile('profiling response variable');
-                            if(responseVariables[j].title=='value'){
-                                continue;
-                            }
-                            scope.expressionModel.parseVariable(scope,responseVariables[j]);
-                            //console.profileEnd();
-                        }
-
-                        //now run each top-level block in 'conditional process'
-                        for(var j=0; j < responseBlocks.length ; j++){
-                            scope.solveBlock(responseBlocks[j],{highlight:true});
-                        }
-
-
-                    }
-
-                    console.log('forward messages to scope');
-                }
-            }
-        },
-        init:function(){
-            this.subscribe(types.EVENTS.ON_DEVICE_MESSAGE,this.onDeviceMessage);
-            this.subscribe(types.EVENTS.ON_DEVICE_DISCONNECTED,this.onDeviceDisconnected);
         }
     });
 });
@@ -6847,9 +6346,8 @@ define('xcf/manager/DriverManager',[
     'xdojo/has!xcf-ui?xide/views/_CIDialog'
 ], function (dcl,declare, lang,json,types,fTypes,utils,
              BeanManager,Variable, DriverManager_Server,
-             TreeMemory,ObservableStore,Trackable,
-             has,Driver,
-             ServerActionBase,Reference,Deferred,ReloadMixin,EventedMixin,DriverManager_UI,_CIDialog) {
+             TreeMemory,ObservableStore,Trackable,has,Driver,ServerActionBase,Reference,Deferred,ReloadMixin,
+             EventedMixin,DriverManager_UI,_CIDialog) {
 
     var bases = [
         ServerActionBase,
@@ -6863,22 +6361,69 @@ define('xcf/manager/DriverManager',[
     has('xcf-ui') && bases.push(DriverManager_UI);
     
     return dcl(bases, {
+        declaredClass:"xcf.manager.DriverManager",
+        /***
+         * The Bean-Manager needs a unique name of the bean:
+         */
+        beanNamespace: 'driver',
+        /***
+         * The Bean-Manager has some generic function like creating Dialogs for adding new items, please
+         * provide a title for the interface.
+         */
+        beanName: 'Driver',
+        /**
+         * the icon class for bean edit views
+         */
+        beanIconClass:'fa-exchange',
+        /**
+         * Bean group type
+         */
+        groupType: types.ITEM_TYPE.DRIVER_GROUP,
+        /**
+         * Bean item type
+         */
+        itemType: types.ITEM_TYPE.DRIVER,
+        /**
+         * The name of the CI in the meta database for the title or name.
+         */
+        itemMetaTitleField:types.DRIVER_PROPERTY.CF_DRIVER_NAME,
+        /**
+         * the default scope for new items
+         */
+        defaultScope: 'system_drivers',
+        /***
+         * The RPC server class:
+         */
+        serviceClass: 'XCF_Driver_Service',
+        /***
+         * A copy of all divers raw da4ta from the server
+         */
+        rawData: null,
+        /***
+         * {module:xide/data/TreeMemory}
+         */
+        store: null,
+        /***
+         * {xcf.views.DriverTreeView}
+         */
+        treeView: null,
+        /**
+         * array of driver store scopes : TODO : tbr
+         */
+        driverScopes: null,
+        _isLoading: false,
         /**
          *
          * @param driver
          * @returns {dojo/Deferred}
          */
         getDriverModule:function(driver){
-
             var dfd = new Deferred();
-
             var driverMeta = driver['user'],
                 script = utils.getCIInputValueByName(driverMeta, types.DRIVER_PROPERTY.CF_DRIVER_CLASS);
 
             var driverScope = driver['scope'];
             script = script ? script.replace('./', '') : '';
-            //script = script ? script.replace('.js', '') : '';
-
             var packageUrl = require.toUrl(driverScope);
             packageUrl = utils.removeURLParameter(packageUrl,'bust');
             packageUrl = utils.removeURLParameter(packageUrl,'time');
@@ -6892,7 +6437,6 @@ define('xcf/manager/DriverManager',[
             }
 
             var requirePath = packageUrl + '/'+ script;
-
             if(has('debug') && !isServer){
                 requirePath+= requirePath.indexOf('?') == -1 ? '?' : '&';
                 requirePath+='time'+ new Date().getTime();
@@ -6915,7 +6459,6 @@ define('xcf/manager/DriverManager',[
                 baseDriverRequire = baseDriverPrefix + 'DriverBase';
 
             var urlBase = require.toUrl(this.driverScopes['system_drivers']);
-            var url = decodeURIComponent(urlBase) + "/DriverBase";
             var self = this;
             var ctx = self.ctx,
                 dfd = new Deferred(),
@@ -6984,16 +6527,13 @@ define('xcf/manager/DriverManager',[
             parts = utils.urlArgs(parts.host);//go on with query string
             return this.getItemById(parts.driver.value);
         },
-        declaredClass:"xcf.manager.DriverManager",
         /**
          *
          * @param device
          * @param driver
          */
         addDeviceInstance:function(device,driver){
-
             driver.directory = true;
-
             var store = driver._store,
                 parentId = driver.path,
                 deviceManager = this.ctx.getDeviceManager(),
@@ -7055,56 +6595,6 @@ define('xcf/manager/DriverManager',[
 
             driver.instances.push(instance);
         },
-        /***
-         * The Bean-Manager needs a unique name of the bean:
-         */
-        beanNamespace: 'driver',
-        /***
-         * The Bean-Manager has some generic function like creating Dialogs for adding new items, please
-         * provide a title for the interface.
-         */
-        beanName: 'Driver',
-        /**
-         * the icon class for bean edit views
-         */
-        beanIconClass:'fa-exchange',
-        /**
-         * Bean group type
-         */
-        groupType: types.ITEM_TYPE.DRIVER_GROUP,
-        /**
-         * Bean item type
-         */
-        itemType: types.ITEM_TYPE.DRIVER,
-        /**
-         * The name of the CI in the meta database for the title or name.
-         */
-        itemMetaTitleField:types.DRIVER_PROPERTY.CF_DRIVER_NAME,
-        /**
-         * the default scope for new items
-         */
-        defaultScope: 'system_drivers',
-        /***
-         * The RPC server class:
-         */
-        serviceClass: 'XCF_Driver_Service',
-        /***
-         * A copy of all divers raw da4ta from the server
-         */
-        rawData: null,
-        /***
-         * {module:xide/data/TreeMemory}
-         */
-        store: null,
-        /***
-         * {xcf.views.DriverTreeView}
-         */
-        treeView: null,
-        /**
-         * array of driver store scopes : TODO : tbr
-         */
-        driverScopes: null,
-        _isLoading: false,
         removeDriverInstance:function(instance,device){
 
             var driver = instance.driver,
@@ -7133,106 +6623,9 @@ define('xcf/manager/DriverManager',[
                 instanceReferenceItem.refresh();
                 driverStore.getSync(parentId + '_instances').refresh();
             }else{
-                debug && console.error('bad!! cant find reference for instance',arguments);;
+                debug && console.error('bad!! cant find reference for instance',arguments);
             }
 
-        },
-        onReloaded: function () {
-            return;
-        },
-        _onReloaded: function () {
-
-            return;
-
-            /*
-
-            var currentItem = this.getItem();
-            if (!currentItem) {
-                currentItem = {
-                    path: ""
-                }
-            }
-            var parent = currentItem ? currentItem.isDir === true ? currentItem.path : '' : '';
-            var scope = 'system_drivers';
-
-
-            var templateUrlMeta = require.toUrl('xcfnode/data/driver/system/Default.meta.json');
-            var meta = utils.getJson(this._getText(templateUrlMeta));
-
-
-            var templateUrlDriverCode = require.toUrl('xcfnode/data/driver/system/Default.js');
-            var driverCode = this._getText(templateUrlDriverCode);
-
-            //console.log('template url : ' + templateUrlDriverCode + " : " + driverCode );
-            //console.log('template url : ' + templateUrlDriverCode + " : " + driverCode );
-            console.log('get json : ', meta);
-
-
-            var nameCi = utils.getInputCIByName(meta, types.DRIVER_PROPERTY.CF_DRIVER_NAME);
-            var idCi = utils.getInputCIByName(meta, types.DRIVER_PROPERTY.CF_DRIVER_ID);
-            idCi.value = utils.createUUID();
-
-            nameCi.value = 'My New Driver2';
-
-
-            var thiz = this;
-            var actionDialog = new CIActionDialog({
-                title: 'New Driver',
-                resizable: true,
-                delegate: {
-                    onOk: function (dlg, data) {
-                        if (nameCi.value !== 'Default') {
-                            try {
-                                var metaOut = JSON.stringify(meta, null, 2);
-                                if (parent.length == 0) {
-                                    parent = "/";
-                                }
-                                thiz.createItem(scope, parent, nameCi.value, metaOut, driverCode).then(function (data) {
-
-                                    var newItem = thiz.createNewItem(title, scope, parent);
-                                    newItem.user = meta;
-                                    thiz.store.putSync(newItem);
-
-                                    thiz.publish(types.EVENTS.ON_STORE_CHANGED, {
-                                        owner: thiz,
-                                        store: thiz.store,
-                                        action: types.NEW_FILE,
-                                        item: newItem
-                                    });
-
-                                    //console.log('did create driver ', data);
-
-
-                                });
-                            } catch (e) {
-                                console.error('error in CIDialog', e);
-                            }
-                        }
-                    }
-                },
-                cis: [
-                    nameCi,
-                    utils.createCI('Scope', 3, 'system_devices', {
-                        group: 'Common',
-                        options: [
-                            {
-                                label: 'System',
-                                value: 'system_devices'
-                            },
-                            {
-                                label: 'User',
-                                value: 'user_devices'
-                            },
-                            {
-                                label: 'App',
-                                value: 'app_devices'
-                            }
-                        ]
-                    })
-                ]
-            });
-            actionDialog.show();
-            actionDialog.resize();*/
         },
         /////////////////////////////////////////////////////////////////////////////////////
         //
@@ -7253,211 +6646,6 @@ define('xcf/manager/DriverManager',[
          *
          * @param evt
          */
-
-        onDeviceMessage: function (evt) {
-
-
-            return;
-            if (!evt || !evt.device || !evt.driverInstance) {
-                return;
-            }
-            var _deviceInfo = evt['device'],
-                _driverInstance = evt['driverInstance'],
-                _driverOptions = _driverInstance['options'];
-
-            if (!_driverOptions)return;
-
-            if (!_driverInstance.responseSettings) {
-                console.error('driver has no response settings!');
-                return;
-            }
-
-            var serverSide = _driverOptions.serverSide;
-            var deviceMessage  = evt.deviceMessage;
-
-            debugDeviceMessages && console.log('device message',evt);
-
-            //split string into messages, using the driver's delimiter
-            var messages = [deviceMessage];
-            if (_.isString(deviceMessage)) {
-                messages = _driverInstance.split(deviceMessage);
-            }
-
-            var _messages = [];
-            /*
-            var _messages = _driverInstance.onMessageRaw({
-                device: evt.device,
-                message:deviceMessage,
-                bytes:evt.bytes
-            });
-            */
-
-            if(_messages){
-                messages = _.isArray(_messages) ? _messages : [_messages];
-                console.log(' : have ' +messages.length + ' messages');
-            }
-
-            /***
-             * At this point, we should reject incoming traffic
-             */
-            if (_driverInstance.hasMessages() && _driverInstance.sendSettings.send.mode) {
-                //console.error('abort incoming, have still messages to send');
-                //return;
-            }
-
-            debugDeviceMessages && console.log('Driver Manager : onDeviceMessage ',evt);
-
-            //forward to blox
-            if (messages.length > 0) {
-
-                var scope = _driverInstance.blockScope;
-
-                var responseBlocks = scope.getBlocks({
-                    group: types.BLOCK_GROUPS.CF_DRIVER_RESPONSE_BLOCKS
-                });
-
-                var responseVariables = scope.getVariables({
-                    group: types.BLOCK_GROUPS.CF_DRIVER_RESPONSE_VARIABLES
-                });
-
-                if (!responseBlocks || responseBlocks.length == 0) {
-                    //console.log('have no response blocks, abort');
-                }
-                var responseVariable = scope.getVariable('value');
-                if (responseVariable) {
-
-                } else {
-
-                    responseVariable = new Variable({
-                        id: utils.createUUID(),
-                        name: 'value',
-                        value: '',
-                        scope: scope,
-                        type: 13,
-                        group: 'processVariables',
-                        gui: false,
-                        cmd: false
-                    });
-                    scope.blockStore.putSync(responseVariable);
-                }
-
-
-
-                for (var i = 0; i < messages.length; i++) {
-
-                   if (messages[i].length == 0) {
-                        continue;
-                    }
-
-                    responseVariable.value = messages[i];
-
-
-                    this.publish(types.EVENTS.ON_DRIVER_VARIABLE_CHANGED, {
-                        item: responseVariable,
-                        scope: scope,
-                        owner: this,
-                        save: false,                         //dont save it
-                        source: types.MESSAGE_SOURCE.DEVICE  //for prioritizing
-                    });
-                    var runVariables = false;
-                    var runBlocks = false;
-
-                    //now run each top-variabl block in 'conditional process'
-                    for (var j = 0; j < responseVariables.length; j++) {
-
-                        var _var = responseVariables[j];
-                        if (responseVariables[j].title == 'value') {
-                            continue;
-                        }
-
-                        var _varResult = null;
-                        var _cValue = responseVariable.value;
-
-
-                        if (!(typeof _cValue == "number")) {
-                            _cValue = '' + _cValue;
-                            _cValue = "'" + _cValue + "'";
-                        }
-
-
-                        var prefix = "var value = " + _cValue + ";";
-
-                        var _varResult = _cValue;
-
-                        /*
-                        try {
-                            //_varResult = scope.expressionModel.parseVariable(scope, _var, prefix, false, false);
-                        } catch (e) {
-                            console.error('parsing response variable ' + _var.title + ' failed');
-                            this.publish(types.EVENTS.ON_BLOCK_EXPRESSION_FAILED, {
-                                item: _var,
-                                scope: scope,
-                                owner: this,
-                                deviceInfo: _deviceInfo
-                            });
-                        }
-                        */
-
-                        if (_var.target && _var.target != 'None' && _varResult != null && _varResult != 'null' && _varResult != "'null'") {
-
-                            var targetVariable = scope.getVariable(_var.target);
-                            if (targetVariable) {
-
-                                targetVariable.value = _varResult;
-                                this.publish(types.EVENTS.ON_DRIVER_VARIABLE_CHANGED, {
-                                    item: targetVariable,
-                                    scope: scope,
-                                    owner: this,
-                                    save: false,
-                                    source: types.MESSAGE_SOURCE.BLOX  //for prioritizing
-                                });
-                            }
-                        }
-                    }
-
-                    if( (isServer && serverSide) || (!serverSide && !isServer)) {
-
-                        for (var j = 0; j < messages.length; j++) {
-                            var message = messages[j];
-                            if(_.isObject(message)) {
-                                if (message.src) {
-
-                                    var block = scope.getBlockById(message.src);
-                                    if(block && block.onData){
-                                        block.onData(message);
-                                    }
-                                }
-                            }
-                        }
-
-
-                        if(!runDrivers){
-                            return;
-                        }
-                        //now run each top-level block in 'conditional process'
-                        for (var j = 0; j < responseBlocks.length; j++) {
-
-                            var block = responseBlocks[j];
-
-                            if (block.enabled == false) {
-                                continue;
-                            }
-                            block.override = {
-                                args: _var ? [_var.value] : null
-                            };
-                            try {
-                                scope.solveBlock(responseBlocks[j], {
-                                    highlight: isServer ? false : true
-                                });
-                            } catch (e) {
-                                logError(e,'----solving response block crashed ')
-                                debug && console.trace();
-                            }
-                        }
-                    }
-                }
-            }
-        },
         /////////////////////////////////////////////////////////////////////////////////////
         //
         //  CI related
@@ -7468,13 +6656,9 @@ define('xcf/manager/DriverManager',[
             var items = utils.queryStore(store, {
                 isDir: false
             });
-
             if (!_.isArray(items)) {
                 items = [items];
             }
-
-            var diver = null;
-
             for (var i = 0; i < items.length; i++) {
                 var driver = items[i];
                 var meta = driver['user'];
@@ -7484,23 +6668,18 @@ define('xcf/manager/DriverManager',[
                 }
                 if (_id.value == id) {
                     return store.getSync(driver.path);
-                    return driver;
                 }
             }
             return null;
         },
         getDriverById: function (id,store) {
-
             if(store){
                 return this._getDriverById(id,store);
             }
-
             var options = [];
             var result = null;
             var self = this;
-
             var driver = null;
-
             if(!has('xcf-ui') && !has('host-node')){
                 !this._driverQueryCache && (this._driverQueryCache={});
                 if(this._driverQueryCache[id]){
@@ -7513,7 +6692,6 @@ define('xcf/manager/DriverManager',[
             }
 
             for(var scope in this.stores){
-
                 var store = this.stores[scope];
                 result = search(store);
                 if(result){
@@ -7552,7 +6730,6 @@ define('xcf/manager/DriverManager',[
             }
 
             for(var scope in this.stores){
-
                 var store = this.stores[scope];
                 result = search(store);
                 if(result){
@@ -7589,17 +6766,14 @@ define('xcf/manager/DriverManager',[
         },
         onStoreCreated: function (evt) {
             var type = evt.type,
-                data = evt.data,
                 store = evt.store,
                 items = store.query({
                     isDir: false
-                }),
-                owner = evt.owner;
+                });
 
             if(type!==types.ITEM_TYPE.DRIVER){
                 return;
             }
-
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item._completed != null || item.name === 'Default') {
@@ -7613,12 +6787,13 @@ define('xcf/manager/DriverManager',[
         },
 
         /***
-         * Inits the store with the driver data
+         * Init the store with the driver data
          * @param data
-         * @returns {xide.data.TreeMemory}
+         * @param scope {string}
+         * @param track {boolean}
+         * @returns {module:xide/data/TreeMemory}
          */
         createStore:function(data,scope,track){
-            
             var storeClass = declare('driverStore',[TreeMemory,Trackable,ObservableStore],{});
             var store = new storeClass({
                 data: data.items,
@@ -7631,24 +6806,24 @@ define('xcf/manager/DriverManager',[
                     "enabled"
                 ]
             });
-
             if(scope && track!==false){
                 this.setStore(scope,store);
             }
-
             return store;
         },
         /***
          * Inits the store with the driver data
          * @param data
-         * @returns {xide.data.TreeMemory}
+         * @param scope {string}
+         * @param track {boolean}
+         * @returns {module:xide/data/TreeMemory}
          */
         initStore:function(data,scope,track){
             var store = this.createStore(data,scope,track);
             return store;
         },
         getStore:function(scope){
-            scope = scope || 'system_drivers'
+            scope = scope || 'system_drivers';
             var store = this.stores[scope];
             if(store){
                 return store;
@@ -7747,6 +6922,4 @@ define('xcf/mainr.js',[
     "xcf/manager/BlockManager",
     "xcf/manager/DriverManager",
     "xcf/manager/DriverManager_Server"
-], function () {
-
-});
+], function () {});

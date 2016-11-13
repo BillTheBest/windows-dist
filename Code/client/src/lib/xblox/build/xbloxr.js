@@ -53,17 +53,6 @@ define('xblox/component',[
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         _load:function(){
-            /*
-            var dfd = new Deferred();
-            var _re = require,
-                thiz = this;//hide from gcc
-            _re('xblox/xblox', function () {
-                thiz.inherited(arguments).then(function(){
-                    dfd.resolve();
-                })
-            });
-            return dfd.promise;
-            */
         },
         hasEditors:function(){
             return ['xblox'];
@@ -116,83 +105,76 @@ define('xblox/component',[
 define('xblox/types/Types',[
     'xide/types/Types',
     'xide/utils'
-],function(types,utils){
-
-        types.BLOCK_MODE = {
-            NORMAL:0,
-            UPDATE_WIDGET_PROPERTY:1
-        };
-
-        types.BLOCK_OUTLET = {
-            NONE:0x00000000,
-            PROGRESS:0x00000001,
-            ERROR:0x00000002,
-            PAUSED:0x00000004,
-            FINISH:0x00000008,
-            STOPPED:0x00000010
-        };
-
-        utils.mixin(types.EVENTS,{
-            ON_RUN_BLOCK:                   'onRunBlock',
-            ON_RUN_BLOCK_FAILED:            'onRunBlockFailed',
-            ON_RUN_BLOCK_SUCCESS:           'onRunBlockSuccess',
-            ON_BLOCK_SELECTED:              'onItemSelected',
-            ON_BLOCK_UNSELECTED:            'onBlockUnSelected',
-            ON_BLOCK_EXPRESSION_FAILED:     'onExpressionFailed',
-            ON_BUILD_BLOCK_INFO_LIST:       'onBuildBlockInfoList',
-            ON_BUILD_BLOCK_INFO_LIST_END:   'onBuildBlockInfoListEnd',
-            ON_BLOCK_PROPERTY_CHANGED:      'onBlockPropertyChanged',
-            ON_SCOPE_CREATED:               'onScopeCreated',
-            ON_VARIABLE_CHANGED:            'onVariableChanged',
-            ON_CREATE_VARIABLE_CI:          'onCreateVariableCI'
-        });
-
-
-        types.BlockType = {
-
-            AssignmentExpression: 'AssignmentExpression',
-            ArrayExpression: 'ArrayExpression',
-            BlockStatement: 'BlockStatement',
-            BinaryExpression: 'BinaryExpression',
-            BreakStatement: 'BreakStatement',
-            CallExpression: 'CallExpression',
-            CatchClause: 'CatchClause',
-            ConditionalExpression: 'ConditionalExpression',
-            ContinueStatement: 'ContinueStatement',
-            DoWhileStatement: 'DoWhileStatement',
-            DebuggerStatement: 'DebuggerStatement',
-            EmptyStatement: 'EmptyStatement',
-            ExpressionStatement: 'ExpressionStatement',
-            ForStatement: 'ForStatement',
-            ForInStatement: 'ForInStatement',
-            FunctionDeclaration: 'FunctionDeclaration',
-            FunctionExpression: 'FunctionExpression',
-            Identifier: 'Identifier',
-            IfStatement: 'IfStatement',
-            Literal: 'Literal',
-            LabeledStatement: 'LabeledStatement',
-            LogicalExpression: 'LogicalExpression',
-            MemberExpression: 'MemberExpression',
-            NewExpression: 'NewExpression',
-            ObjectExpression: 'ObjectExpression',
-            Program: 'Program',
-            Property: 'Property',
-            ReturnStatement: 'ReturnStatement',
-            SequenceExpression: 'SequenceExpression',
-            SwitchStatement: 'SwitchStatement',
-            SwitchCase: 'SwitchCase',
-            ThisExpression: 'ThisExpression',
-            ThrowStatement: 'ThrowStatement',
-            TryStatement: 'TryStatement',
-            UnaryExpression: 'UnaryExpression',
-            UpdateExpression: 'UpdateExpression',
-            VariableDeclaration: 'VariableDeclaration',
-            VariableDeclarator: 'VariableDeclarator',
-            WhileStatement: 'WhileStatement',
-            WithStatement: 'WithStatement'
-        };
-
-        return types;
+], function (types, utils) {
+    types.BLOCK_MODE = {
+        NORMAL: 0,
+        UPDATE_WIDGET_PROPERTY: 1
+    };
+    types.BLOCK_OUTLET = {
+        NONE: 0x00000000,
+        PROGRESS: 0x00000001,
+        ERROR: 0x00000002,
+        PAUSED: 0x00000004,
+        FINISH: 0x00000008,
+        STOPPED: 0x00000010
+    };
+    utils.mixin(types.EVENTS, {
+        ON_RUN_BLOCK: 'onRunBlock',
+        ON_RUN_BLOCK_FAILED: 'onRunBlockFailed',
+        ON_RUN_BLOCK_SUCCESS: 'onRunBlockSuccess',
+        ON_BLOCK_SELECTED: 'onItemSelected',
+        ON_BLOCK_UNSELECTED: 'onBlockUnSelected',
+        ON_BLOCK_EXPRESSION_FAILED: 'onExpressionFailed',
+        ON_BUILD_BLOCK_INFO_LIST: 'onBuildBlockInfoList',
+        ON_BUILD_BLOCK_INFO_LIST_END: 'onBuildBlockInfoListEnd',
+        ON_BLOCK_PROPERTY_CHANGED: 'onBlockPropertyChanged',
+        ON_SCOPE_CREATED: 'onScopeCreated',
+        ON_VARIABLE_CHANGED: 'onVariableChanged',
+        ON_CREATE_VARIABLE_CI: 'onCreateVariableCI'
+    });
+    types.BlockType = {
+        AssignmentExpression: 'AssignmentExpression',
+        ArrayExpression: 'ArrayExpression',
+        BlockStatement: 'BlockStatement',
+        BinaryExpression: 'BinaryExpression',
+        BreakStatement: 'BreakStatement',
+        CallExpression: 'CallExpression',
+        CatchClause: 'CatchClause',
+        ConditionalExpression: 'ConditionalExpression',
+        ContinueStatement: 'ContinueStatement',
+        DoWhileStatement: 'DoWhileStatement',
+        DebuggerStatement: 'DebuggerStatement',
+        EmptyStatement: 'EmptyStatement',
+        ExpressionStatement: 'ExpressionStatement',
+        ForStatement: 'ForStatement',
+        ForInStatement: 'ForInStatement',
+        FunctionDeclaration: 'FunctionDeclaration',
+        FunctionExpression: 'FunctionExpression',
+        Identifier: 'Identifier',
+        IfStatement: 'IfStatement',
+        Literal: 'Literal',
+        LabeledStatement: 'LabeledStatement',
+        LogicalExpression: 'LogicalExpression',
+        MemberExpression: 'MemberExpression',
+        NewExpression: 'NewExpression',
+        ObjectExpression: 'ObjectExpression',
+        Program: 'Program',
+        Property: 'Property',
+        ReturnStatement: 'ReturnStatement',
+        SequenceExpression: 'SequenceExpression',
+        SwitchStatement: 'SwitchStatement',
+        SwitchCase: 'SwitchCase',
+        ThisExpression: 'ThisExpression',
+        ThrowStatement: 'ThrowStatement',
+        TryStatement: 'TryStatement',
+        UnaryExpression: 'UnaryExpression',
+        UpdateExpression: 'UpdateExpression',
+        VariableDeclaration: 'VariableDeclaration',
+        VariableDeclarator: 'VariableDeclarator',
+        WhileStatement: 'WhileStatement',
+        WithStatement: 'WithStatement'
+    };
+    return types;
 });
 /** @module xblox/model/ModelBase
  *  @description The base for block related classes, this must be kept small and light as possible
@@ -4377,9 +4359,9 @@ define('xblox/model/variables/VariableSwitch',[
 define('xblox/model/Referenced',[
     'dcl/dcl',
     "dojo/_base/declare",
-    "xide/mixins/ReferenceMixin"
-], function (dcl,declare, ReferenceMixin) {
-
+    "xide/mixins/ReferenceMixin",
+    "xide/utils"
+], function (dcl,declare, ReferenceMixin,utils) {
     var Implementation = {
         /**
          * JSON String in that format : reference(string) | mode (string)
@@ -4392,16 +4374,15 @@ define('xblox/model/Referenced',[
          */
         deserialize: function (value) {
             if (!value || value.length == 0) {
-                return {}
+                return {};
             }
             try {
-                return dojo.fromJson(value);
+                return utils.fromJson(value);
             } catch (e) {
                 return {};
             }
         }
-    }
-
+    };
     /**
      * Holds information to locate an object by string or direct reference.
      * This must be used as mixin rather as base class!
@@ -6666,7 +6647,7 @@ define('xblox/model/Scope',[
             var blocks = this.blocksToJson();
             try {
                 //test integrity
-                dojo.fromJson(JSON.stringify(blocks));
+                utils.fromJson(JSON.stringify(blocks));
             } catch (e) {
                 debug && console.error('scope::toString : invalid data in scope');
                 return;
@@ -8147,83 +8128,57 @@ define('xblox/data/Store',[
     "dojo/_base/declare",
     'xide/data/TreeMemory',
     'xide/data/ObservableStore',
-    'xide/data/Model',
     'dstore/Trackable',
     'dojo/Deferred'
-
-], function (declare, TreeMemory,ObservableStore,Model,Trackable, Deferred) {
-
-    return declare("xblox.data.Store", [TreeMemory,Trackable,ObservableStore], {
-        idProperty:'id',
-        parentField:'parentId',
+], function (declare, TreeMemory, ObservableStore, Trackable, Deferred) {
+    return declare("xblox.data.Store", [TreeMemory, Trackable, ObservableStore], {
+        idProperty: 'id',
+        parentField: 'parentId',
         filter: function (data) {
-
             var _res = this.inherited(arguments);
-            this._state.filter= data;
-            //console.log('filter ',data);
+            delete this._state.filter;
+            this._state.filter = data;
             return _res;
         },
         getChildren: function (object) {
-
-            //console.log('getChildren ' , object);
-            // summary:
-            // Get a collection of the children of the provided parent object
-            // object:
-            // The parent object
-            // returns: dstore/Store.Collection
-            return this.root.filter({ parentId:this.getIdentity(object) });
-        },
-        __getChildren:function(parent){
-            /*
-            if(parent.getChildren){
-                return parent.getChildren();
-            }*/
-
-            return this.inherited(arguments);
+            return this.root.filter({parentId: this.getIdentity(object)});
         },
         _fetchRange: function (kwArgs) {
-
             var deferred = new Deferred();
-
             var _res = this.fetchRangeSync(kwArgs);
-
-            if(this._state.filter){
-
+            var _items;
+            if (this._state.filter) {
                 //the parent query
-                if(this._state && this._state.filter && this._state.filter['parentId']) {
+                if (this._state && this._state.filter && this._state.filter['parentId']) {
                     var _item = this.getSync(this._state.filter.parentId);
                     if (_item) {
                         this.reset();
-                        var _items = _item.items;
-
-                        if(_item.getChildren){
+                        _items = _item.items;
+                        if (_item.getChildren) {
                             _items = _item.getChildren();
                         }
-
                         deferred.resolve(_items);
                         _res = _items;
                     }
                 }
 
                 //the group query
-                if(this._state && this._state.filter && this._state.filter['group']) {
-                    var _items = this.getSync(this._state.filter.parent);
+                if (this._state && this._state.filter && this._state.filter['group']) {
+                    _items = this.getSync(this._state.filter.parent);
                     if (_item) {
                         this.reset();
-                        _res=_item.items;
+                        _res = _item.items;
                     }
                 }
             }
             deferred.resolve(_res);
-
-            //return _res;
             return deferred;
         },
-        mayHaveChildren: function(parent){
-            if(parent.mayHaveChildren){
+        mayHaveChildren: function (parent) {
+            if (parent.mayHaveChildren) {
                 return parent.mayHaveChildren(parent);
             }
-            return parent.items!=null && parent.items.length>0;
+            return parent.items != null && parent.items.length > 0;
         }
     });
 });
@@ -8232,7 +8187,6 @@ define('xblox/data/Store',[
 
 define('xblox/manager/BlockManager',[
     'dcl/dcl',
-    "dojo/_base/lang",
     'dojo/has',
     'dojo/Deferred',
     'dojo/promise/all',
@@ -8245,11 +8199,12 @@ define('xblox/manager/BlockManager',[
     'xide/mixins/ReloadMixin',
     'xide/manager/ManagerBase',
     'xblox/data/Store',
-    "xdojo/has!xblox-ui?xblox/manager/BlockManagerUI"
-],function (dcl,lang,has,Deferred,all,types,utils,factory,ModelBase,Scope,BlockModel,ReloadMixin,ManagerBase,Store,BlockManagerUI){
+    "xdojo/has!xblox-ui?xblox/manager/BlockManagerUI",
+    "xide/lodash"
+],function (dcl,has,Deferred,all,types,utils,factory,ModelBase,Scope,BlockModel,ReloadMixin,ManagerBase,Store,BlockManagerUI,_){
     var bases = has('host-browser') && has("xblox-ui") ? [BlockManagerUI,ManagerBase,ReloadMixin.dcl] : [ManagerBase,ReloadMixin.dcl];
     var debug = false;
-    var blockManager = dcl(bases,{
+    return dcl(bases,{
         declaredClass:"xblox/manager/BlockManager",
         serviceObject:null,
         loaded:{},
@@ -8275,28 +8230,20 @@ define('xblox/manager/BlockManager',[
                     "blocks": [
                     ],
                     "variables": []
-                }
+                };
             }
-
             var scopeId = utils.createUUID();
             var blockInData = data;
-            var variableInData = data;
-
             //check structure
-            if (lang.isArray(data)) {// a flat list of blocks
+            if (_.isArray(data)) {// a flat list of blocks
 
-            } else if (lang.isObject(data)) {
+            } else if (_.isObject(data)) {
                 scopeId = data.scopeId || scopeId;
                 blockInData = data.blocks || [];
-                variableInData = data.variables || [];
             }
-
-            var blockManager = this;
-
             var scopeUserData = {
                 owner:this
             };
-
             var blockScope = this.getScope(scopeId, scopeUserData, true);
             var allBlocks = blockScope.blocksFromJson(blockInData);
             for (var i = 0; i < allBlocks.length; i++) {
@@ -8304,7 +8251,7 @@ define('xblox/manager/BlockManager',[
                 obj._lastRunSettings = {
                     force: false,
                     highlight: true
-                }
+                };
             }
             blockScope.serviceObject = this.serviceObject;
             return blockScope;
@@ -8497,13 +8444,9 @@ define('xblox/manager/BlockManager',[
                     delete this.loaded[scopeId];
                 }
             }
-            try {
-                if (this.scopes[id]) {
-                    this.scopes[id]._destroy();
-                    delete this.scopes[id];
-                }
-            }catch(e){
-                debugger;
+            if (this.scopes[id]) {
+                this.scopes[id]._destroy();
+                delete this.scopes[id];
             }
             return null;
         },
@@ -8514,7 +8457,6 @@ define('xblox/manager/BlockManager',[
          * @returns {*}
          */
         createScope:function(mixed,data,errorCB){
-            //console.error('create scope');
             data = data || [];
             var blockStore = new Store({
                 data: [],
@@ -8567,7 +8509,6 @@ define('xblox/manager/BlockManager',[
             }
         }
     });
-    return blockManager;
 });
 /** @module xblox/model/functions/StopBlock **/
 define('xblox/model/functions/StopBlock',[
@@ -10607,10 +10548,10 @@ define('xblox/factory/Blocks',[
              OnKey,
              Subscribe,
              Publish,
-             ReadJSON
+             ReadJSON){
 
-    )
-{
+    var cachedAll = null;
+
     factory.prepareBlockContructorArgs=function(ctorArgs){
         if(!ctorArgs){
             ctorArgs={};
@@ -10629,12 +10570,11 @@ define('xblox/factory/Blocks',[
      * @param mixed String|Prototype
      * @param ctorArgs
      * @param baseClasses
+     * @param publish
      */
     factory.createBlock=function(mixed,ctorArgs,baseClasses,publish){
-
         //complete missing arguments:
         factory.prepareBlockContructorArgs(ctorArgs);
-
         var block= factory.createInstance(mixed,ctorArgs,baseClasses);
         block.ctrArgs=null;
         var newBlock;
@@ -10642,31 +10582,21 @@ define('xblox/factory/Blocks',[
             if(block && block.init){
                 block.init();
             }
-            //ReloadMixin.prototype.mergeFunctions(block,EventedMixin.prototype);
             //add to scope
             if (block.scope) {
                 newBlock = block.scope.registerBlock(block,publish);
             }
-            try{
-                if(block.initReload){
-                    block.initReload();
-                }
-            }catch(e){
-                debugger;
+
+            if(block.initReload){
+                block.initReload();
             }
         }catch(e){
             logError(e,'create block');
         }
-        if(!block){
-            //logError(e,'create block');
-        }
         return newBlock || block;
-
     };
-    var cachedAll = null;
     factory.clearVariables=function(){};
     factory.getAllBlocks=function(scope,owner,target,group,allowCache){
-
         if(allowCache!==false && cachedAll !=null){
             /**
              * remove dynamic blocks like 'Set Variable'
@@ -10682,10 +10612,7 @@ define('xblox/factory/Blocks',[
         }else if(allowCache==false){
             cachedAll=null;
         }
-
-
         var items = factory._getFlowBlocks(scope,owner,target,group);
-        
         items = items.concat(factory._getLoopBlocks(scope,owner,target,group));
         items = items.concat(factory._getCommandBlocks(scope,owner,target,group));
         items = items.concat(factory._getCodeBlocks(scope,owner,target,group));
@@ -10694,12 +10621,10 @@ define('xblox/factory/Blocks',[
         items = items.concat(factory._getServerBlocks(scope,owner,target,group));
         items = items.concat(factory._getMQTTBlocks(scope,owner,target,group));
         items = items.concat(factory._getFileBlocks(scope,owner,target,group));
-        
         cachedAll = items;
         return items;
     };
     factory._getMQTTBlocks=function(scope,owner,target,group){
-
         var items = [];
         items.push({
             name:'MQTT',
@@ -11160,11 +11085,8 @@ define('xblox/embedded',[
     "xblox/model/html/SetStyle",
     "xblox/manager/BlockManager",
     "xblox/factory/Blocks",
-
     "xdojo/has!xblox-ui?xblox/model/Block_UI"
 ], function () {
-
-
     if(!Array.prototype.remove){
         Array.prototype.remove= function(){
             var what, a= arguments, L= a.length, ax;
@@ -11181,7 +11103,6 @@ define('xblox/embedded',[
         };
     }
     if(!Array.prototype.swap){
-
         Array.prototype.swap = function (x,y) {
             var b = this[x];
             this[x] = this[y];
@@ -11193,13 +11114,13 @@ define('xblox/embedded',[
     if ( typeof String.prototype.startsWith != 'function' ) {
         String.prototype.startsWith = function( str ) {
             return this.substring( 0, str.length ) === str;
-        }
+        };
     }
 
     if ( typeof String.prototype.endsWith != 'function' ) {
         String.prototype.endsWith = function( str ) {
             return this.substring( this.length - str.length, this.length ) === str;
-        }
+        };
     }
 
     if(!Function.prototype.bind) {
@@ -11208,181 +11129,6 @@ define('xblox/embedded',[
             return dojo.hitch(that, this);
         };
     }
-    /*
-     cycle.js
-     2013-02-19
-
-     Public Domain.
-
-     NO WARRANTY EXPRESSED OR IMPLIED. USE AT YOUR OWN RISK.
-
-     This code should be minified before deployment.
-     See http://javascript.crockford.com/jsmin.html
-
-     USE YOUR OWN COPY. IT IS EXTREMELY UNWISE TO LOAD CODE FROM SERVERS YOU DO
-     NOT CONTROL.
-     */
-
-    /*jslint evil: true, regexp: true */
-
-    /*members $ref, apply, call, decycle, hasOwnProperty, length, prototype, push,
-     retrocycle, stringify, test, toString
-     */
-
-    /*
-    if (typeof JSON.decycle !== 'function') {
-        JSON.decycle = function decycle(object) {
-            'use strict';
-
-// Make a deep copy of an object or array, assuring that there is at most
-// one instance of each object or array in the resulting structure. The
-// duplicate references (which might be forming cycles) are replaced with
-// an object of the form
-//      {$ref: PATH}
-// where the PATH is a JSONPath string that locates the first occurance.
-// So,
-//      var a = [];
-//      a[0] = a;
-//      return JSON.stringify(JSON.decycle(a));
-// produces the string '[{"$ref":"$"}]'.
-
-// JSONPath is used to locate the unique object. $ indicates the top level of
-// the object or array. [NUMBER] or [STRING] indicates a child member or
-// property.
-
-            var objects = [],   // Keep a reference to each unique object or array
-                paths = [];     // Keep the path to each unique object or array
-
-            return (function derez(value, path) {
-
-// The derez recurses through the object, producing the deep copy.
-
-                var i,          // The loop counter
-                    name,       // Property name
-                    nu;         // The new object or array
-
-// typeof null === 'object', so go on if this value is really an object but not
-// one of the weird builtin objects.
-
-                if (typeof value === 'object' && value !== null &&
-                    !(value instanceof Boolean) &&
-                    !(value instanceof Date)    &&
-                    !(value instanceof Number)  &&
-                    !(value instanceof RegExp)  &&
-                    !(value instanceof String)) {
-
-// If the value is an object or array, look to see if we have already
-// encountered it. If so, return a $ref/path object. This is a hard way,
-// linear search that will get slower as the number of unique objects grows.
-
-                    for (i = 0; i < objects.length; i += 1) {
-                        if (objects[i] === value) {
-                            return {$ref: paths[i]};
-                        }
-                    }
-
-// Otherwise, accumulate the unique value and its path.
-
-                    objects.push(value);
-                    paths.push(path);
-
-// If it is an array, replicate the array.
-
-                    if (Object.prototype.toString.apply(value) === '[object Array]') {
-                        nu = [];
-                        for (i = 0; i < value.length; i += 1) {
-                            nu[i] = derez(value[i], path + '[' + i + ']');
-                        }
-                    } else {
-
-// If it is an object, replicate the object.
-
-                        nu = {};
-                        for (name in value) {
-                            if (Object.prototype.hasOwnProperty.call(value, name)) {
-                                nu[name] = derez(value[name],
-                                    path + '[' + JSON.stringify(name) + ']');
-                            }
-                        }
-                    }
-                    return nu;
-                }
-                return value;
-            }(object, '$'));
-        };
-    }
-
-
-    if (typeof JSON.retrocycle !== 'function') {
-        JSON.retrocycle = function retrocycle($) {
-            'use strict';
-
-// Restore an object that was reduced by decycle. Members whose values are
-// objects of the form
-//      {$ref: PATH}
-// are replaced with references to the value found by the PATH. This will
-// restore cycles. The object will be mutated.
-
-// The eval function is used to locate the values described by a PATH. The
-// root object is kept in a $ variable. A regular expression is used to
-// assure that the PATH is extremely well formed. The regexp contains nested
-// * quantifiers. That has been known to have extremely bad performance
-// problems on some browsers for very long strings. A PATH is expected to be
-// reasonably short. A PATH is allowed to belong to a very restricted subset of
-// Goessner's JSONPath.
-
-// So,
-//      var s = '[{"$ref":"$"}]';
-//      return JSON.retrocycle(JSON.parse(s));
-// produces an array containing a single element which is the array itself.
-
-            var px =
-                /^\$(?:\[(?:\d+|\"(?:[^\\\"\u0000-\u001f]|\\([\\\"\/bfnrt]|u[0-9a-zA-Z]{4}))*\")\])*$/;
-
-            (function rez(value) {
-
-// The rez function walks recursively through the object looking for $ref
-// properties. When it finds one that has a value that is a path, then it
-// replaces the $ref object with a reference to the value that is found by
-// the path.
-
-                var i, item, name, path;
-
-                if (value && typeof value === 'object') {
-                    if (Object.prototype.toString.apply(value) === '[object Array]') {
-                        for (i = 0; i < value.length; i += 1) {
-                            item = value[i];
-                            if (item && typeof item === 'object') {
-                                path = item.$ref;
-                                if (typeof path === 'string' && px.test(path)) {
-                                    value[i] = eval(path);
-                                } else {
-                                    rez(item);
-                                }
-                            }
-                        }
-                    } else {
-                        for (name in value) {
-                            if (typeof value[name] === 'object') {
-                                item = value[name];
-                                if (item) {
-                                    path = item.$ref;
-                                    if (typeof path === 'string' && px.test(path)) {
-                                        value[name] = eval(path);
-                                    } else {
-                                        rez(item);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }($));
-            return $;
-        };
-
-    }
-    */
 });
 define('xblox/model/html/SetState',[
     "dcl/dcl",
@@ -14102,15 +13848,12 @@ define('xblox/RunScript',[
     'xblox/model/Referenced',
     'xide/mixins/EventedMixin',
     'xide/mixins/ReloadMixin',
-
-/** 2way binding dependencies **/
-
+    /** 2way binding dependencies **/
     'xwire/Binding',
     'xwire/EventSource',
     'xwire/WidgetTarget'
-    //'xide/registry'
 
-], function (lang, on, dcl,register, CustomElement, Events, utils, Types, Referenced, EventedMixin, ReloadMixin, Binding, EventSource, WidgetTarget,registry) {
+], function (lang, on, dcl, register, CustomElement, Events, utils, Types, Referenced, EventedMixin, ReloadMixin, Binding, EventSource, WidgetTarget, registry) {
 
     var debugWidgets = false;
     var debugApp = false;
@@ -14124,24 +13867,18 @@ define('xblox/RunScript',[
      * @class xblox/RunScript
      */
     var Impl = {
-
         declaredClass: 'xblox/RunScript',
         targetevent: '',
-        //sourceevent: "onDriverVariableChanged",
-        //sourceeventvaluepath: "item.value",
-        //sourceeventnamepath: "item.name",
-        //targetproperty: "value",
-
         sourceevent: "",
         sourceeventvaluepath: "",
         sourceeventnamepath: "",
         targetproperty: "",
         targetvariable: "",
-        targetfilter:"",
-        script:"",
+        targetfilter: "",
+        script: "",
         bidirectional: false,
-        blockGroup:'',
-        block:'',
+        blockGroup: '',
+        block: '',
         _targetBlock: null,
         _targetReference: null,
         _appContext: null,
@@ -14150,33 +13887,23 @@ define('xblox/RunScript',[
         stop: false,
         _events: [],
         context: null,
-        accept:'',
-        transform:'',
-        /**
-         * @type {xide/types/BlockMode}
-         */
-        mode:0,
-        /**
-         * 2 way binding
-         */
+        accept: '',
+        transform: '',
+        mode: 0,
         _2wayHandle: null,//the handle
         binding: null,//the binding
-
         /**
          * soft destroy
          */
-        reset:function(){
+        reset: function () {
             this._destroyHandles();
             if (this._2wayHandle) {
                 this._2wayHandle.remove();
             }
-            if(this.binding){
+            if (this.binding) {
                 this.binding.destroy();
-
             }
-
             delete this.binding;
-            //this._targetBlock = null;
             this._appContext = null;
             this._targetReference = null;
         },
@@ -14184,16 +13911,12 @@ define('xblox/RunScript',[
          *
          * @param newSettings
          */
-        onSettingsChanged:function(newSettings){
-
+        onSettingsChanged: function () {
             this.reset();
-
             if (!this.enabled) {
                 return;
             }
-
             this.onAppReady(null);
-
         },
         getChildren: function () {
             return [];
@@ -14205,6 +13928,7 @@ define('xblox/RunScript',[
             this.onDestroy && this.onDestroy();
             this.reset();
             delete this.binding;
+            delete this.context;
         },
         /**
          * The final execution when 'target event' has been triggered. This
@@ -14213,20 +13937,17 @@ define('xblox/RunScript',[
          * @param val
          */
         run: function (event, val) {
-
             if (!this.enabled) {
                 return;
             }
             var settings = {};
-
             //filter, in design mode, we ain't do anything
             if (this.context && this.context.delegate) {
-
                 if (this.context.delegate.isDesignMode && this.context.delegate.isDesignMode()) {
                     return;
                 }
                 if (this.context.delegate.getBlockSettings) {
-                    settings  =this.context.delegate.getBlockSettings();
+                    settings = this.context.delegate.getBlockSettings();
                 }
             }
             //setup variables
@@ -14237,14 +13958,13 @@ define('xblox/RunScript',[
             if (block && context) {
                 block.context = context;
                 block._targetReference = context;
-
                 if (this.targetvariable && this.targetvariable.length && val != null) {
                     block.override = {
                         variables: {}
                     };
                     block.override.variables[this.targetvariable] = val;
                 }
-                result = block.solve(block.scope,settings);
+                result = block.solve(block.scope, settings);
                 debugRun && console.log('run ' + block.name + ' for even ' + event, result + ' for ' + this.id, this._targetReference);
             }
         },
@@ -14252,7 +13972,6 @@ define('xblox/RunScript',[
          * Callback when the minimum parameters are given: targetReference & targetBlock
          */
         onReady: function () {
-
             if (!this._targetReference) {
                 this._setupTargetReference();
             }
@@ -14273,18 +13992,11 @@ define('xblox/RunScript',[
             }
 
             if (this._targetReference && this._targetBlock) {
-
                 //we trigger on events
                 if (this.targetevent) {
-
                     this._complete = true;
-
                     //patch the target
-                    lang.mixin(this._targetReference, EventedMixin.prototype);
-                    //<d-xscript style="position: absolute; left: 151px; top: 37px;" bidirectional="true" targetevent="change" targetvariable="Volume" blockid="5edc09c5-7118-84d1-69b9-8321f3fb33aa" scopeid="235eb680-cb87-11e3-9c1a-0800200c9a66" script="SetMasterVolume"></d-xscript>
-                    //subscribe
-                    /*this._targetReference.subscribe(this.targetevent,this.run,this);*/
-
+                    utils.mixin(this._targetReference, EventedMixin.prototype);
                     var _target = this._targetReference.domNode || this._targetReference,
                         _event = this.targetevent,
                         _isWidget = this._targetReference.declaredClass || this._targetReference.startup,
@@ -14293,113 +14005,47 @@ define('xblox/RunScript',[
                         _isDelite = _target.render != null && _target.on != null,
                         thiz = this;
 
-
-                    if (_isWidget &&
-                            //dijit
-                        (this._targetReference.baseClass && this._targetReference.baseClass.indexOf('dijitContentPane') != -1)
-                            //delite
-                        || this._targetReference.render != null || this._targetReference.on != null) {
+                    if (_isWidget && (this._targetReference.baseClass && this._targetReference.baseClass.indexOf('dijitContentPane') != -1) || this._targetReference.render != null || this._targetReference.on != null) {
                         _isWidget = false;//use on
                     }
 
                     if (_target) {
-
-                        debugBinding && console.log('wire success ' + this.id + ' for '+this.targetevent);
-
+                        debugBinding && console.log('wire success ' + this.id + ' for ' + this.targetevent);
                         if (!_isDelite && (!_hasWidgetCallback || !_isWidget)) {
-
                             _handle = on(_target, this.targetevent, function (evt) {
-
-                                /*
-                                if (this.stop) {
-                                    evt.preventDefault();
-                                    evt.stopImmediatePropagation();
-                                }
-                                */
-
                                 this.run(this.targetevent);
-
                             }.bind(this));
-
                         } else {
                             _target = this._targetReference;
                             var useOn = true;
-
                             if (useOn) {
-
-                                /*
-
-                                bloody, dojo
-
-                                 _handle=dojo.connect(_target,_event, function (value) {
-                                 debugger;
-                                 thiz.onTriggered(value);
-                                 });
-
-                                 _handle=dojo.connect(_target,'onchange', function (value) {
-                                 debugger;
-                                 thiz.onTriggered(value);
-                                 });
-
-                                 _handle=dojo.connect(_target.domNode,_event, function (value) {
-                                 debugger;
-                                 thiz.onTriggered(value);
-                                 });
-                                 _handle = on(_target,this.targetevent, function (evt) {
-                                 debugger;
-                                 if (this.stop) {
-                                 evt.preventDefault();
-                                 evt.stopImmediatePropagation();
-                                 }
-                                 this.run(this.targetevent);
-                                 }.bind(this));
-
-                                 _handle = _target.on(this.targetevent, function (evt) {
-                                 debugger;
-                                 if (this.stop) {
-                                 evt.preventDefault();
-                                 evt.stopImmediatePropagation();
-                                 }
-                                 this.run(this.targetevent);
-                                 }.bind(this));
-
-                                 */
-
                                 if (!_isDelite) {
                                     var _e = 'on' + utils.capitalize(_event);
-
                                     this._targetReference[_e] = function (val, nada) {
                                         if (_target.ignore !== true) {
                                             thiz.run(thiz.targetevent, val);
                                         }
-                                    }
+                                    };
                                 } else {
-
                                     _handle = _target.on(this.targetevent, function (evt) {
-
                                         if (this.stop) {
                                             evt.preventDefault();
                                             evt.stopImmediatePropagation();
                                         }
                                         this.run(this.targetevent, evt.currentTarget.value);
                                     }.bind(this));
-
                                 }
-
                             } else {
-
                                 this._targetReference['on' + utils.capitalize(_event)] = function (val) {
                                     if (_target.ignore !== true) {
                                         thiz.run(thiz.targetevent, val);
                                     }
-                                }
+                                };
                             }
                         }
-                        if (_handle) {
-                            this._events.push(_handle);
-                        }
+                        _handle && this._events.push(_handle);
                     } else {
-                        console.error('have no target to wire')
+                        console.error('have no target to wire');
                     }
                 }
             } else {
@@ -14409,17 +14055,16 @@ define('xblox/RunScript',[
                 this.binding.start();
             }
         },
-        resolveBlock:function(block){
-            var ctx  = this._appContext;
+        resolveBlock: function (block) {
+            var ctx = this._appContext;
             var deviceManager = ctx.getDeviceManager();
-
-            if(block.indexOf('://')!==-1) {
-                if(!deviceManager){
+            if (block.indexOf('://') !== -1) {
+                if (!deviceManager) {
                     return;
                 }
                 var _block = deviceManager.getBlock(this.block);
-                if(_block){
-                    return _block
+                if (_block) {
+                    return _block;
                 }
             }
         },
@@ -14429,16 +14074,12 @@ define('xblox/RunScript',[
          * @private
          */
         _setBlock: function (ctx) {
-
             ctx = ctx || window['appContext'];
-
             if (!ctx || !ctx.getBlockManager) {
                 debugApp && console.warn('have no context or block manager');
                 return;
             }
-
             this._appContext = ctx;
-
             var blockManager = ctx.getBlockManager(),
                 deviceManager = ctx.getDeviceManager(),
                 thiz = this;
@@ -14449,20 +14090,19 @@ define('xblox/RunScript',[
             var _block = this.block ? this.block : this.getAttribute('block');
             if (_block && _block.length > 0) {
                 var parts = utils.parse_url(_block);
-                if(_block.indexOf('://')!==-1) {
-                    if(!deviceManager){
+                if (_block.indexOf('://') !== -1) {
+                    if (!deviceManager) {
                         debugApp && console.warn('xScript::_setBlock : have no device manager');
                         return;
                     }
                     var _block2 = deviceManager.getBlock(_block);
-                    if(_block2){
+                    if (_block2) {
                         thiz._targetBlock = _block2;
                         thiz.onReady();
-                        return;
-                    }else{
-                        debugBinding && console.warn('cant get block : '+_block);
+                    } else {
+                        debugBinding && console.warn('cant get block : ' + _block);
                     }
-                }else {
+                } else {
                     blockManager.load(parts.scheme, parts.host).then(function (scope) {
                         var block = scope.getBlockById(thiz.blockid);
                         if (block) {
@@ -14471,47 +14111,38 @@ define('xblox/RunScript',[
                         }
                     });
                 }
-
             } else if (this.scopeid) {
-
                 var scope = blockManager.hasScope(thiz.scopeid);
                 if (scope) {
                     var block = scope.getBlockById(thiz.blockid);
                     if (block) {
                         thiz._targetBlock = block;
                         thiz.onReady();
-                    }else{
+                    } else {
                         block = scope.getVariableById(thiz.blockid);
                         if (block) {
                             thiz._targetBlock = block;
                             thiz.onReady();
                         }
                     }
-                }else{
+                } else {
                     console.error('have no scope!');
                 }
             }
         },
         initWithReference: function (ref) {
-            //target node or widget
-            if(ref.nodeType!==1){
-                //console.error('invalid node type '+ref.nodeType);
+            if (ref.nodeType !== 1) {
                 return;
             }
             this._targetReference = ref;
             this._setBlock(null);
         },
-        onReloaded: function () {
-            //console.log('on reloaded');
-        },
-        resolveFilter:function(expression,value,widget){
-
-            if(this._targetBlock){
-
+        resolveFilter: function (expression, value, widget) {
+            if (this._targetBlock) {
                 var expressionModel = this._targetBlock.scope.expressionModel;
-                value = expressionModel.parseVariable(this._targetBlock.scope,{
-                    value:expression
-                },'',false,false,widget,[value]);
+                value = expressionModel.parseVariable(this._targetBlock.scope, {
+                    value: expression
+                }, '', false, false, widget, [value]);
             }
             return value;
         },
@@ -14520,22 +14151,17 @@ define('xblox/RunScript',[
          * @private
          */
         _setup1WayBinding: function () {
-
             debugBinding && console.log('setup 1 way binding');
-
             //destroy old handle
             if (this._2wayHandle) {
                 this._2wayHandle.remove();
             }
 
-            if(!this._targetBlock){
+            if (!this._targetBlock) {
                 console.error('invalid params for one way binding');
                 return;
             }
-
             var sourceVariableTitle = this._targetBlock.name;
-
-
             //wire to system event
             var bindingSource = new EventSource({
                 //listen to variable changes
@@ -14557,34 +14183,26 @@ define('xblox/RunScript',[
                 //the path to value
                 path: this.targetproperty,
                 object: this._targetReference,
-                targetFilter:this.targetfilter,
-                delegate:this
+                targetFilter: this.targetfilter,
+                delegate: this
             });
-
-
-
-            var accept = this._findbyTagAndName('D-SCRIPT','accept');
-            var transform = this._findbyTagAndName('D-SCRIPT','transform');
-
-
+            var accept = this._findbyTagAndName('D-SCRIPT', 'accept');
+            var transform = this._findbyTagAndName('D-SCRIPT', 'transform');
             //construct the binding
             var binding = new Binding({
                 source: bindingSource,
                 target: bindingTarget,
-                accept:this._findbyTagAndName('D-SCRIPT','accept'),
-                transform:this._findbyTagAndName('D-SCRIPT','transform')
+                accept: this._findbyTagAndName('D-SCRIPT', 'accept'),
+                transform: this._findbyTagAndName('D-SCRIPT', 'transform')
             });
-
-
             this.binding = binding;
-
             binding.start();
         },
-        _findbyTagAndName:function(tag,name){
+        _findbyTagAndName: function (tag, name) {
             var scripts = $(this).find(tag);
             for (var i = 0; i < scripts.length; i++) {
                 var script = scripts[i];
-                if($(script).attr('name')===name){
+                if ($(script).attr('name') === name) {
                     return script;
                 }
             }
@@ -14595,18 +14213,14 @@ define('xblox/RunScript',[
          * @private
          */
         _setup2WayBinding: function () {
-
-            if(this.binding){
+            if (this.binding) {
                 return;
             }
             debugBinding && console.log('setup 2 way binding');
-
             //destroy old handle
             if (this._2wayHandle) {
                 this._2wayHandle.remove();
             }
-
-
             //wire to system event
             var bindingSource = new EventSource({
                 //listen to variable changes
@@ -14622,34 +14236,25 @@ define('xblox/RunScript',[
                 }]
             });
 
-
             //now map the event source to a widget
             var bindingTarget = new WidgetTarget({
                 //the path to value
                 path: 'value',
                 object: this._targetReference
             });
-
-
-            //construct the binding
-            var binding = new Binding({
+            this.binding = new Binding({
                 source: bindingSource,
                 target: bindingTarget
             });
-
-            this.binding = binding;
-
-
             this.binding.start();
         },
-
         /**
          * Returns the widget whose DOM tree contains the specified DOMNode, or null if
          * the node is not contained within the DOM tree of any widget
          * @param {Element} node
          */
         getEnclosingWidget: function (node) {
-            if(node) {
+            if (node) {
                 do {
                     if (node.nodeType === 1 && node.render) {
                         return node;
@@ -14669,7 +14274,6 @@ define('xblox/RunScript',[
                 widget = null;
 
             while (i < 2 && !widget) {
-
                 if (element) {
                     element = element.parentNode;
                     widget = this.getEnclosingWidget(element, "widgetId");
@@ -14687,10 +14291,8 @@ define('xblox/RunScript',[
                     this.initWithReference(this.domNode.parentNode);
                     debugWidgets && console.error('cant find widget reference, using parent node', this._targetReference);
                 } else {
-                    if(this.parentNode){
-
+                    if (this.parentNode) {
                         this.initWithReference(this.parentNode);
-
                     }
                     debugWidgets && console.error('cant find widget reference', this);
                 }
@@ -14702,24 +14304,19 @@ define('xblox/RunScript',[
          * @param evt
          */
         onAppReady: function (evt) {
-
-            //var _r = registry.hash;
-
             debugApp && console.log('-ready');
             //resolve target reference
             if (!this._targetReference) {
                 this._setupTargetReference();
             }
-
             //resolve target block
             if (!this._targetBlock) {
                 this._setBlock(evt ? evt.context : null);
             }
 
-            this.mode = this['bidirectional'] ===true ? 0 : 1;
-
+            this.mode = this['bidirectional'] === true ? 0 : 1;
             //normal mode, allows 2-way binding
-            if(this.mode===0) {
+            if (this.mode === 0) {
                 //resolve 2way binding
                 if (this._targetBlock && this._targetReference && this['bidirectional'] === true && this.sourceevent && this.sourceevent.length) {
                     this._setup2WayBinding();
@@ -14730,80 +14327,57 @@ define('xblox/RunScript',[
                     this.onReady();
                 }
 
-            }else if(this.mode===1 && this._targetBlock){
-
+            } else if (this.mode === 1 && this._targetBlock) {
                 if (this._targetReference && this.sourceevent && this.sourceevent.length && this.targetproperty && this.targetproperty.length) {
                     this._setup1WayBinding();
-                    if(this.binding){
+                    if (this.binding) {
                         this.binding.start();
                     }
                 }
-
             }
-
             //track context {xapp/manager/Context}
             if (evt && evt.context) {
                 this.context = evt.context;
             }
         },
-        detachedCallback:function(){
+        detachedCallback: function () {
             debugAttach && console.info('detachedCallback', this);
-            if(this._appContext){
+            if (this._appContext) {
                 this.destroy();
-            }else{
-
             }
-
         },
         /**
          * Delite created callback
          */
         createdCallback: function () {
-            //console.error('createdCallback', this);
             debugCreated && console.info('createdCallback', this);
         },
         /**
          * Delite attached callback
          */
         attachedCallback: function () {
-
             debugAttach && console.info('attachedCallback', this);
-
             if (this._started) {
                 return;
             }
-
-            //this._blockId = '' + this.blockid;
-
-            //this.onAppReady();//emulates
-
             this.initReload();
-
             this.subscribe(Types.EVENTS.ON_APP_READY);
-
             this._started = true;
-            //registry.add(this);
 
         },
         detachCallback: function () {
-
         },
         render: function () {
-            console.log('render');
+
         },
         postRender: function () {
-            console.log('post render');
+
         },
         startup: function () {
-
             debugAttach && console.log('startup');
-
             this.inherited(arguments);
-
             this.onAppReady();
-
             this.initReload();
-
             this.subscribe(Types.EVENTS.ON_APP_READY);
 
         }
@@ -14833,7 +14407,6 @@ define('xblox/_State',[
     'xwire/EventSource',
     'xwire/WidgetTarget'
 ], function (lang, on, dcl,register, CustomElement, Events, utils, Types, Referenced, EventedMixin, ReloadMixin, Binding, EventSource, WidgetTarget) {
-
     var debugWidgets = false;
     var debugApp = false;
     var debugAttach = false;
@@ -15001,18 +14574,13 @@ define('xblox/_State',[
     return _class; 
 });
 define('xblox/CSSState',[
-    "dojo/on",
     "dcl/dcl",
     "delite/register",
     "delite/CustomElement",
-    'xide/types/Types',
     'xblox/_State',
     'xide/utils',
-    'xide/registry',
     'xdojo/has'
-
-], function (on, dcl,register, CustomElement, Types, _State,utils,registry,has) {
-
+], function (dcl,register, CustomElement,_State,utils,has) {
     var extraRules = [],
         extraSheet,
         removeMethod,
@@ -15072,9 +14640,6 @@ define('xblox/CSSState',[
             extraSheet.addRule ?
                 extraSheet.addRule(selector, css) :
                 extraSheet.insertRule(selector + '{' + css + '}', extraRules[index]);
-
-            //console.log('adding css ' + index + ' selector ' + selector,[extraRules]);
-
             return {
                 get: function (prop) {
                     return extraSheet[rulesProperty][extraRules[index]].style[prop];
@@ -15091,49 +14656,26 @@ define('xblox/CSSState',[
             };
         },
         escapeCssIdentifier: function (id, replace) {
-            // summary:
-            //		Escapes normally-invalid characters in a CSS identifier (such as . or :);
-            //		see http://www.w3.org/TR/CSS2/syndata.html#value-def-identifier
-            // id: String
-            //		CSS identifier (e.g. tag name, class, or id) to be escaped
-            // replace: String?
-            //		If specified, indicates that invalid characters should be
-            //		replaced by the given string rather than being escaped
-
             return typeof id === 'string' ? id.replace(invalidCssChars, replace || '\\$1') : id;
         },
         detachedCallback:function(){
             this._styles && _.each(this._styles,function(style){
                 style.remove();
-            })
+            });
             delete this._styles;
         },
         applyTo:function(widget,name){
-
             if(this._lastState){
                 this._lastState.remove();
             }
-
-
-            if(this._lastStateName ===name){
-                //return;
-            }
-
+            delete this._lastStateName;
             this._lastStateName = name;
-
             if(!this._attached){
                 return;
             }
-
-
             var cssClass = this.cssClass;
             var isCSSClass = cssClass.length > 0;
-
-            //console.log('apply state ' + name);
-
-
             var id = widget.id || utils.createUUID();
-            //var _uniqueId = registry.getUniqueId(widget.tagName.replace(/\./g,"_")) + '_' + id;
             var _uniqueId = widget.tagName.replace(/\./g,"_") + '_' + id;
             var css = '' + this.innerHTML;
             css = css.replace('.style','');
@@ -15165,7 +14707,6 @@ define('xblox/CSSState',[
 
     };
 
-    //package and declare via dcl
     var _class = dcl([_State], Impl);
     //static access to Impl.
     _class.Impl = Impl;
@@ -15180,11 +14721,11 @@ define('xblox/StyleState',[
     'xide/types/Types',
     'xblox/_State'
 ], function (dcl,register, CustomElement, Events, utils, Types,_State) {
-
     var Impl = {
         declaredClass: 'xblox/StyleState',
         _targetReference: null,        
         name:"Default",
+        _widget:null,
         /**
          * Convert Style String to an object array, eg: { color:value,.... }
          * @param styleString
@@ -15221,28 +14762,19 @@ define('xblox/StyleState',[
             }
             return _values.join(';') + ';';
         },
-        _widget:null,
         onChanged:function () {
             this.applyTo(this._widget);
         },
         applyTo:function(widget){
-
             $(widget).removeClass($(widget).data('_lastCSSState'));
             $(widget).removeClass($(widget).data('_lastCSSClass'));
-
             if(widget && widget._attached){
                 this._widget = widget;
-                //console.error('css ',$(widget).attr());
                 var _cssWidget = this._toObject($(widget).attr('style'));
                 var _cssThis = this._toObject($(this).attr('style'));
                 var styleOut = utils.mixin(_cssWidget,_cssThis);
                 $(widget).attr('style',this._toStyleString(styleOut));
-            }else{
-                //console.error('not attached');
             }
-
-
-
         }
     };
     var _class = dcl(_State, Impl);

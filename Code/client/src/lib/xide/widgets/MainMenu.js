@@ -104,9 +104,7 @@ define([
              */
 
             function registerRootKeyboardHandler(name){
-
                 var keyboardCombo = 'alt ' + name[0];
-
             }
 
             _.each(tree.root, function (menuActions, level) {
@@ -196,16 +194,19 @@ define([
         lastFocused:null,
         setupKeyboard:function(node){
             function keyhandler(e){
-                e.keyCode === 16 && (this._shiftDown = e.type==='keydown');
-                if(e.keyCode==27){
-                    var navData = this.keyboardController.toNavigationData($(e.target),this.getRootContainer());
-                    navData && navData.element && this.keyboardController.close(navData.element);
-                    $(this.lastFocused).focus();
-                }
-                if(this._shiftDown && e.key in this.shortcuts){
-                    this.lastFocused = document.activeElement;
-                    //open root
-                    this.keyboardController.openRoot(null,this._topLevelMenu[this.shortcuts[e.key]]);
+                var className = e.target.className.toLowerCase();
+                if (e.target.tagName!=='BUTTON' && className.indexOf('input') == -1) {
+                    e.keyCode === 16 && (this._shiftDown = e.type === 'keydown');
+                    if (e.keyCode == 27) {
+                        var navData = this.keyboardController.toNavigationData($(e.target), this.getRootContainer());
+                        navData && navData.element && this.keyboardController.close(navData.element);
+                        $(this.lastFocused).focus();
+                    }
+                    if (this._shiftDown && e.key in this.shortcuts) {
+                        this.lastFocused = document.activeElement;
+                        //open root
+                        this.keyboardController.openRoot(null, this._topLevelMenu[this.shortcuts[e.key]]);
+                    }
                 }
             }
             $(node).on('keydown',keyhandler.bind(this));

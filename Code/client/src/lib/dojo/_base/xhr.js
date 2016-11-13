@@ -363,7 +363,6 @@ define([
 			var err = dfd.ioArgs.error;
 			if(!err){
 				err = new Error("request cancelled");
-				throw new Error();
 				err.dojoType="cancel";
 				dfd.ioArgs.error = err;
 			}
@@ -625,6 +624,12 @@ define([
 		dfd.ioArgs.xhr = rDfd.response.xhr;
 
 		rDfd.then(function(){
+			if(has('debug')) {
+				var debugData = rDfd.response.getHeader('xapp_debug_data');
+				if (debugData && typeof xappServerDebug !== 'undefined') {
+					xappServerDebug(debugData, rDfd, dfd);
+				}
+			}
 			dfd.resolve(dfd);
 		}).otherwise(function(error){
 			ioArgs.error = error;
@@ -686,7 +691,13 @@ define([
 
 	dojo._getText = function(url){
 		var result;
-		dojo.xhrGet({url:url, sync:true, load:function(text){
+		dojo.xhrGet({
+			url:url,
+			sync:true,
+			headers:{
+				"X-Requested-With": null
+			},
+			load:function(text){
 			result = text;
 		}});
 		return result;

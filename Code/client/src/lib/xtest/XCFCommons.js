@@ -59,15 +59,6 @@ define([
         }
         return this;
     };
-    Array.prototype.contains1 = function(obj) {
-        var i = this.length;
-        while (i--) {
-            if (this[i] == obj) {
-                return true;
-            }
-        }
-        return false;
-    };
     Array.prototype.swap = function (x,y) {
         var b = this[x];
         this[x] = this[y];

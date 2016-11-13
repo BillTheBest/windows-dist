@@ -1,14 +1,11 @@
-/** @module xgrid/Base **/
+/** @module xcf/widgets/LoggingWidget **/
 define([
     "dcl/dcl",
     'xide/types',
     'xide/utils',
     'xide/widgets/WidgetBase',
     'xide/widgets/FlagsWidget'
-
-], function (dcl,types,
-             utils, WidgetBase,FlagsWidget) {
-
+], function (dcl,types,utils, WidgetBase,FlagsWidget) {
 
     var Module = dcl(WidgetBase, {
         declaredClass: "xide.widgets.ArgumentsWidget",
@@ -20,9 +17,7 @@ define([
         "<div attachTo='itemsNode' class='text-default'></div>"+
         "</div>",
         renderFlags:function(label,value){
-
             var LOGGING_FLAGS = types.LOGGING_FLAGS;
-            
             var flags = [
                 {
                     value: LOGGING_FLAGS.GLOBAL_CONSOLE,
@@ -48,7 +43,6 @@ define([
                     value: LOGGING_FLAGS.FILE,
                     label: 'File'
                 }
-
             ];
 
             var flagsWidget = utils.addWidget(FlagsWidget, {
@@ -65,9 +59,7 @@ define([
             }, this, this.itemsNode, true, 'ui-widget-content');
 
             this.$itemsNode.append('<hr/>');
-
             return flagsWidget;
-
         },
         renderItem:function(label,value,object){
             var widget = this.renderFlags(label,value);
@@ -93,20 +85,16 @@ define([
             if(!this.userData.value || !_.isObject(this.userData.value)){
                 this.userData.value = {};
             }
-            var value = this.userData.value;
-            
-            this._renderItem(OUTPUT.DEVICE_CONNECTED,LOGGING_FLAGS.GLOBAL_CONSOLE | LOGGING_FLAGS.POPUP |  LOGGING_FLAGS.STATUS_BAR | LOGGING_FLAGS.DEVICE_CONSOLE);            
+
+            //defaults
+            this._renderItem(OUTPUT.DEVICE_CONNECTED,LOGGING_FLAGS.GLOBAL_CONSOLE | LOGGING_FLAGS.POPUP |  LOGGING_FLAGS.STATUS_BAR | LOGGING_FLAGS.DEVICE_CONSOLE);
             this._renderItem(OUTPUT.DEVICE_DISCONNECTED,LOGGING_FLAGS.GLOBAL_CONSOLE | LOGGING_FLAGS.POPUP |  LOGGING_FLAGS.STATUS_BAR | LOGGING_FLAGS.DEVICE_CONSOLE);
             this._renderItem(OUTPUT.RESPONSE,LOGGING_FLAGS.DEVICE_CONSOLE | LOGGING_FLAGS.GLOBAL_CONSOLE);
             this._renderItem(OUTPUT.SEND_COMMAND,LOGGING_FLAGS.DEVICE_CONSOLE | LOGGING_FLAGS.GLOBAL_CONSOLE);
             this._renderItem(OUTPUT.DEVICE_ERROR,LOGGING_FLAGS.GLOBAL_CONSOLE | LOGGING_FLAGS.POPUP | LOGGING_FLAGS.STATUS_BAR | LOGGING_FLAGS.DEV_CONSOLE | LOGGING_FLAGS.DEVICE_CONSOLE);
-
             this.onReady();
         }
     });
-
     types.registerWidgetMapping('Logging Flags',Module);
-
     return Module;
-
 });

@@ -15,17 +15,13 @@ define([
 
             var dstNode = utils.find(data.query, this.domNode) || data.node || this.domNode;
             if (dstNode) {
-
                 var widgetNS = data.widgetClass || "xide.widgets.TemplatedWidgetBase";
-
                 var widgetClz = dojo.getObject(widgetNS);
-
                 if (widgetClz) {
-
                     //try to find data
                     var wData = null;
                     if (this.dataItem && data.insertDataRef != null && this.dataItem[data.insertDataRef] != null) {
-                        wData = dojo.isString(this.dataItem[data.insertDataRef]) ? dojo.fromJson(this.dataItem[data.insertDataRef]) : this.dataItem[data.insertDataRef];
+                        wData = dojo.isString(this.dataItem[data.insertDataRef]) ? utils.fromJson(this.dataItem[data.insertDataRef]) : this.dataItem[data.insertDataRef];
                     }
                     var insert = data.insert || '<div></div>';
                     insert = utils.cleanString(insert);
@@ -44,7 +40,7 @@ define([
                         if (dojo.isString(data.mixin)) {
                             data.mixin = utils.cleanString(data.mixin);
                         }
-                        data.mixin = dojo.isString(data.mixin) ? dojo.fromJson(data.mixin) : data.mixin;
+                        data.mixin = dojo.isString(data.mixin) ? utils.fromJson(data.mixin) : data.mixin;
                         if (data.mixin) {
 
                             //put content from code node into content
@@ -76,11 +72,9 @@ define([
             }
         },
         doInserts: function (data) {
-
             if (this.didInserts) {
                 return;
             }
-
             if (data) {
                 for (var i = 0; i < data.length; i++) {
                     this.doInsert(data[i]);

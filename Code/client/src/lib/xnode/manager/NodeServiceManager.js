@@ -34,21 +34,17 @@ define([
         beanNamespace: 'serviceConsoleView',
         consoles: {},
         /**
-         * Create a socket client to the service (service shell) if applicaple.
+         * Create a socket client to the service (service shell) if applicable.
          * @param item
          * @returns {*}
          */
         createClient: function (item) {
-
             if (!item.info) {
-                console.error('NodeJs service has no host infos');
+                console.error('NodeJs service has no host info');
                 return;
             }
-
-            
-            if (!this.clients)this.clients = {};
+            !this.clients && (this.clients = {});
             var hash = this.getViewId(item);
-
             if (this.clients[hash]) {
                 return this.clients[hash];
             }
@@ -93,7 +89,6 @@ define([
          * @returns {xide.data.Memory}
          */
         initStore: function (data) {
-
             var sdata = {
                 identifier: "name",
                 label: "Name",
@@ -147,10 +142,8 @@ define([
          * @returns {*}
          */
         ls: function (readyCB, errorCB, emit) {
-            //console.log('xnode : ls ' + this.serviceUrl,this);
             var thiz = this;
             var dfd = null;
-
             function ready(data) {
                 thiz.rawData = data;
                 thiz.initStore(data);
@@ -161,29 +154,22 @@ define([
                     readyCB(data);
                 }
             }
-
             if(this.services){
                 dfd = new Deferred();
                 ready(this.services);
                 dfd.resolve();
                 return dfd;
             }
-
-
             dfd = this.runDeferred(null, 'ls');
-
             try {
                 dfd.then(function (data) {
                     ready(data);
                 });
             }catch(e){
-                console.error('error loading store',e)
                 logError(e,"error loading store");
             }
-
             return dfd;
         }
-
     });
     return NodeServiceManager;
 });

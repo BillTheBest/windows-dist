@@ -25,8 +25,6 @@ define('xwire/_Base',[
     function getPathComps(path, create) {
         return path === "" ? [] : typeof path.splice !== "function" ? path.split(".") : create ? path.slice() : path;
     }
-
-
     /**
      * Sets a value to an object path.
      * @param {object} o An object.
@@ -55,7 +53,6 @@ define('xwire/_Base',[
          * @param {array} arguments
          */
         constructor: function(args){
-
             //simple mixin of constructor arguments
             for (var prop in args) {
                 if (args.hasOwnProperty(prop)) {
@@ -141,8 +138,7 @@ define('xwire/Source',[
      * @extends {module:xwire/_Base}
      */
     return dcl(_Base,{
-        declaredClass:"xwire.Source",
-        destroy:function(){}
+        declaredClass:"xwire.Source"
     });
 });
 /** @module xwire/Target */
@@ -150,7 +146,6 @@ define('xwire/Target',[
     'dcl/dcl',
     'xwire/_Base'
 ],function(dcl,_Base){
-
     /**
      * Abstract binding target
      * @class xwire/Target
@@ -187,8 +182,9 @@ define('xwire/Target',[
     return Module
 });
 define('xwire/WidgetSource',[
-    'dcl/dcl'
-],function(dcl,Source){
+    'dcl/dcl',
+    'dojo/base/_kernel'
+],function(dcl,Source,dojo){
     /**
      * Event based binding source
      */
@@ -208,18 +204,14 @@ define('xwire/WidgetSource',[
          * @param value
          */
         onTriggered:function(value){
-
             var thiz=this;
-
             //skip
             if(this.object && this.object.ignore===true){
-                /*this.object.ignore=false;*/
                 setTimeout(function(){
                     thiz.object.ignore=false;
                 },500);
                 return;
             }
-
             /**
              * forward to owner
              */
@@ -238,7 +230,6 @@ define('xwire/WidgetSource',[
             this.handle=dojo.connect(this.object,this.trigger, function (value) {
                 thiz.onTriggered(value);
             });
-
         },
         /**
          * Cleanup
@@ -274,33 +265,28 @@ define('xwire/WidgetTarget',[
          * Run the action
          */
         run:function(data){
-            var thiz = this,
-                isDelite = thiz.object !==null && thiz.object.render!=null;
-
+            var thiz = this;
+            var isDelite = thiz.object !==null && thiz.object.render!=null;
             var acceptFn = this.binding.accept ? this.binding.accept.getFunction() : null;
             var transformFn = this.binding.transform ? this.binding.transform.getFunction() : null;
-
             if(thiz.object){
                 var value = data.value;
                 if(this.targetFilter!=null && this.targetFilter.length && this.delegate && this.delegate.resolveFilter){
                     value = this.delegate.resolveFilter(this.targetFilter,value,this.object);
                 }
                 thiz.object.ignore=true;
-
                 if(acceptFn){
                     var accept = acceptFn.apply(this.delegate,[value,this.binding.accept,this.delegate,,this.object]);
                     if(!accept){
                         return;
                     }
                 }
-
                 if(transformFn){
                     var _value = transformFn.apply(this.delegate,[value,this.binding.transform,this.delegate,this.object]);
                     if(_value!==null && _value!==undefined){
                         value = _value;
                     }
                 }
-
                 if(!isDelite && thiz.object.set) {
                     thiz.object.set(thiz.path, value);
                 }else if(thiz.object._set){
@@ -309,7 +295,6 @@ define('xwire/WidgetTarget',[
                     if(thiz.object[_funcPath]) {
                         thiz.object[_funcPath](value,data);
                     }
-
                 }else{
                     thiz.object[thiz.path] = value;
                 }
@@ -357,15 +342,12 @@ define('xwire/EventSource',[
          * @private
          */
         _matches:function(object,filters){
-
             for(var i =0 ; i<filters.length;i++){
-
                 var value = this.getValue(object,filters[i].path);
                 if(value!==filters[i].value){
                     return false;
                 }
             }
-
             return true;
         },
         /**
@@ -373,8 +355,6 @@ define('xwire/EventSource',[
          * @param evt
          */
         onTriggered:function(evt){
-
-            //var value = this.getVariable('value');var out = 0;if (value.indexOf('MV') != -1 && value.indexOf('MVMAX') == -1) {    var _volume = value.substring(2, value.length);    _volume = parseInt(_volume.substring(0, 2));    if (!isNaN(_volume)) {        this.setVariable('Volume', _volume);        out = _volume;    }else{        return null;    }}else{    return null;}return out;
             /**
              * Run event filters if specified
              */
@@ -394,7 +374,6 @@ define('xwire/EventSource',[
                     })
                 }
             }
-
         },
         /***
          * Start will subscribe to event specified in trigger
@@ -433,11 +412,9 @@ define('xwire/DeviceTarget',[
         run:function(data){
             this.inherited(arguments);
             if(this.object){
-
                 if(this.variable){
                     this.object.setVariable(this.variable,data.value,false,false,types.MESSAGE_SOURCE.GUI);
                 }
-
                 if(this.command){
                     this.object.callCommand(this.command);
                 }
@@ -453,6 +430,4 @@ define('xwire/main.js',[
     "xwire/WidgetTarget",
     "xwire/EventSource",
     "xwire/DeviceTarget"
-], function(dojo){
-});
-
+], function(){});

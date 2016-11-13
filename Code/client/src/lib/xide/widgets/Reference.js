@@ -256,14 +256,13 @@ define([
             return flagsWidget;
         },
         fillTemplate: function () {
-
             if (this.editBox) {
                 return;
             }
             var thiz = this;
             var value = utils.toString(this.userData['value']);
             if (value) {
-                var _t = dojo.fromJson(value);
+                var _t = utils.fromJson(value);
                 if (_t) {
                     this.mode = _t.mode;
                     value = _t.reference
@@ -277,8 +276,6 @@ define([
             this.selectButton = factory.createButton(this.button0, "fa-eyedropper", "elusiveButton", "", "", this.onPick, this);
             this.addPickFilter();
             this.addModeSelector();
-
-
         },
         startup: function () {
             this.fillTemplate();

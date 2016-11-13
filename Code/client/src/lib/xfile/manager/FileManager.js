@@ -1,7 +1,7 @@
 /** @module xfile/manager/FileManager */
 define([
     'dcl/dcl',
-    'dojo/_base/lang',
+    'dojo/_base/kernel',
     'xide/manager/ServerActionBase',
     'xide/types',
     'xfile/types',
@@ -13,8 +13,9 @@ define([
     'xfile/manager/FileManagerActions',
     'require',
     'xfile/factory/Store',
+    "xide/lodash",
     'xdojo/has!electron?xfile/manager/Electron'
-], function (dcl,lang, ServerActionBase, types, fTypes, utils, SHA1, RPCService, Deferred,has,FileManagerActions,require,StoreFactory,Electron) {
+], function (dcl,dojo,ServerActionBase, types, fTypes, utils, SHA1, RPCService, Deferred,has,FileManagerActions,require,StoreFactory,_,Electron) {
     var bases = [ServerActionBase, FileManagerActions];
     if(has('electronx') && Electron){
         bases.push(Electron);
@@ -67,11 +68,9 @@ define([
         settingsStore: null,
         stores:[],
         getStore:function(mount,cache){
-
             var store =  _.find(this.stores,{
                 mount:mount
             });
-
             if(store){
                 return store;
             }
@@ -106,20 +105,14 @@ define([
             var serviceClass = this.serviceClass || 'XCOM_Directory_Service';
             var path = utils.buildPath(src.mount, src.path, true);
             path = this.serviceObject.base64_encode(path);
-
             downloadUrl += 'service=' + serviceClass + '.get&path=' + path + '&callback=asdf';
-
             if (this.config.DOWNLOAD_URL) {
                 downloadUrl = '' + this.config.DOWNLOAD_URL;
                 downloadUrl += '&path=' + path + '&callback=asdf';
             }
-
             downloadUrl += '&raw=html';
             downloadUrl += '&attachment=1';
-            //downloadUrl += '&send=1';
-
             var aParams = utils.getUrlArgs(location.href);
-
             utils.mixin(aParams, {
                 "service": serviceClass + ".get",
                 "path": path,
@@ -128,22 +121,16 @@ define([
                 "attachment": "1",
                 "send": "1"
             });
-
             delete  aParams['theme'];
             delete  aParams['debug'];
             delete  aParams['width'];
             delete  aParams['attachment'];
             delete  aParams['send'];
-            var pStr = dojo.toJson(aParams);
+            var pStr = dojo.toJson(JSON.string(aParams));
             var signature = SHA1._hmac(pStr, this.config.RPC_PARAMS.rpcSignatureToken, 1);
-            //console.error('sign ' + pStr + ' with ' + this.config.RPC_PARAMS.rpcSignatureToken + ' to ' + signature,aParams);
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcUserField + '=' + this.config.RPC_PARAMS.rpcUserValue;
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcSignatureField + '=' + signature;
-
             window.open(downloadUrl);
-            //http://localhost/projects/x4mm/Code/test2.php?view=smdCall&debug=true&service=XCOM_Directory_Service.get&path=cm9vdCUzQSUyRiUyRnR1dG9yaWFscy5tZA==&callback=asdf&raw=html&attachment=1&user=21232f297a57a5a743894a0e4a801fc3&sig=81102d7ee14b546b9cd2d5ae3ec69de0c52d9c23
-            // http://localhost/projects/x4mm/Code/test2.php?view=smdCall&debug=true&service=XCOM_Directory_Service.get&path=cm9vdCUzQSUyRiUyRnR1dG9yaWFscy5tZA==&callback=asdf&raw=html&attachment=1&user=21232f297a57a5a743894a0e4a801fc3&sig=81102d7ee14b546b9cd2d5ae3ec69de0c52d9c23
-
         },
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         //
@@ -151,11 +138,6 @@ define([
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         getImageUrl: function (src, preventCache, extraParams) {
-
-            if (!src) {
-                console.error('invalid item!');
-            }
-            var thiz = this;
             preventCache = location.href.indexOf('noImageCache') != -1 || preventCache === true || src.dirty === true;
             var downloadUrl = decodeURIComponent(this.serviceUrl);
             downloadUrl = downloadUrl.replace('view=rpc', 'view=smdCall');
@@ -183,23 +165,12 @@ define([
                 "callback": "asdf",
                 "raw": "html"
             });
-
-
-
             utils.mixin(aParams, extraParams);
-
             delete  aParams['theme'];
             delete  aParams['debug'];
             delete  aParams['width'];
-
-            //{"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRm1hcmFudHoucG5n","callback":"asdf","raw":"html","attachment":"0","send":"1","width":448} with 6ae3c21684c50742b7fce2e17a97657a to 1da8648ace2aaedfb49d4d1fd6be6c09d7996ef4
-            //{"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRm1hcmFudHoucG5n","callback":"asdf","raw":"html","attachment":"0","send":"1","width":"448"} with 6ae3c21684c50742b7fce2e17a97657a  to 7c3421b2ca35a106c6cae9f4c78a560beb711979
             var pStr = dojo.toJson(aParams);
             var signature = SHA1._hmac(pStr, this.config.RPC_PARAMS.rpcSignatureToken, 1);
-            //http://192.168.1.37/projects/xbox-app/index.php?view=rpc&service=XCOM_Directory_Service.get
-            //console.log('sign ' + pStr + ' with ' + this.config.RPC_PARAMS.rpcSignatureToken + ' to ' + signature,aParams);
-            //server {"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRlNlbGVjdGlvbl8xNjQucG5n","callback":"asdf","raw":"html"}
-            //client {"service":"XCOM_Directory_Service.get","path":"cm9vdCUzQSUyRiUyRlNlbGVjdGlvbl8xNjQucG5n","callback":"asdf","raw":"html","attachment":"0","send":"1","width":448}
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcUserField + '=' + this.config.RPC_PARAMS.rpcUserValue;
             downloadUrl += '&' + this.config.RPC_PARAMS.rpcSignatureField + '=' + signature;
             if (preventCache) {
@@ -229,6 +200,7 @@ define([
         onFileUploaded: function (item) {
             var thiz = this,
                 eventKeys = types.EVENTS;
+
             setTimeout(function () {
                 var struct1 = {
                     message: '' + item.file.name + ' uploaded to ' + item.dstDir,
@@ -241,7 +213,6 @@ define([
                 thiz.filesToUpload.remove(item);
                 thiz.publish(eventKeys.ON_UPLOAD_FINISH, {item: item});
             }, 500);
-
         },
         getUploadUrl: function () {
             var url = '' + decodeURIComponent(this.serviceUrl);
@@ -256,15 +227,11 @@ define([
             var xhr = new XMLHttpRequest();
             var uploadUrl = this.getUploadUrl();
             var uri = '' + uploadUrl;
-
             uri += '&mount=' + encodeURIComponent(mount);
             uri += '&dstDir=' + encodeURIComponent(dstDir);
-
             var thiz = this;
             var upload = xhr.upload;
-
             upload.addEventListener("progress", function (e) {
-
                 if (!e.lengthComputable) {
                     thiz.onFileUploaded(item);
                 } else {
@@ -287,7 +254,7 @@ define([
                                 code: 1
                             };
                         }
-                        if (error && error.result && lang.isArray(error.result) && error.result.length > 0) {
+                        if (error && error.result && _.isArray(error.result) && error.result.length > 0) {
                             var _message = null;
                             for (var i = 0; i < error.result.length; i++) {
                                 thiz.publish(types.EVENTS.ERROR, 'Error uploading : ' + item.name + ' ' + error.result[i], thiz);
@@ -309,7 +276,6 @@ define([
                     thiz.submitNext();
                 }
             }.bind(this);
-
             upload.onerror = function () {
                 thiz.publish(types.EVENTS.ERROR, 'Error uploading : ' + item.name, thiz);
             };
@@ -336,9 +302,7 @@ define([
         upload: function (files, mount, path, callee, view) {
             var dfds = [];
             for (var i = 0; i < files.length; i++) {
-                var file = files[i];
                 var uploadStruct = {
-
                     file: files[i],
                     dstDir: '' + path,
                     mount: '' + mount,
@@ -361,12 +325,10 @@ define([
             var auto_rename = false;
             item.status = 'loading';
             var xhr = this.initXHRUpload(item, (auto_rename ? "auto_rename=true" : ""), item['dstDir'], item['mount']);
-            //var file = item.file;
-            var struct = {
+            this.publish(types.EVENTS.ON_UPLOAD_BEGIN,{
                 item: item,
                 name: item.name
-            };
-            this.publish(types.EVENTS.ON_UPLOAD_BEGIN, struct, this);
+            }, this);
             if (window.FormData) {
                 this.sendFileUsingFormData(xhr, item);
             }
@@ -391,12 +353,9 @@ define([
         //
         //////////////////////////////////////////////////////////////////////////////////////////////////////
         onError: function (err) {
-
             if (err) {
                 if (err.code === 1) {
-
-                    if (err.message && lang.isArray(err.message)) {
-
+                    if (err.message && _.isArray(err.message)) {
                         this.publish(types.EVENTS.ERROR, err.message.join('<br/>'), this);
                         return;
                     }
@@ -404,11 +363,9 @@ define([
                     this.publish(types.EVENTS.STATUS, 'Ok', this);
                 }
             }
-
-            var struct = {
+            this.publish(types.EVENTS.ERROR, {
                 error: err
-            };
-            this.publish(types.EVENTS.ERROR, struct, this);
+            }, this);
         },
         addError: function (def) {
             var thiz = this;
@@ -429,7 +386,6 @@ define([
             if (dstItem) {
                 var thiz = this;
                 var _cb = function (result) {
-
                     var _failed = false;
                     if (result && result.error && result.error.code == 1) {
                         _failed = true;
@@ -441,7 +397,6 @@ define([
 
                     readyCB(arguments);
                 };
-
                 thiz.publish(types.EVENTS.ON_DOWNLOAD_TO_BEGIN, {
                     dst: dstItem,
                     url: url,
@@ -450,7 +405,6 @@ define([
             } else {
                 console.log('download from remote url have no dest item');
             }
-
             return this.callMethod(types.OPERATION.DOWNLOAD_TO, [url, mount, dst], _cb, true);
         },
         find: function (mount, conf, readyCB) {
@@ -471,7 +425,7 @@ define([
                 var _path = this.serviceObject.base64_encode(utils.buildPath(mount, path, true));
                 return this.callMethod(types.OPERATION.GET_CONTENT, [_path, false, false], readyCB, false);
             }else{
-                var def = this._getText(require.toUrl(mount).replace('main.js','') + '/' + path,{
+                return this._getText(require.toUrl(mount).replace('main.js','') + '/' + path,{
                     sync: false,
                     handleAs: 'text'
                 }).then(function(res){
@@ -483,39 +437,33 @@ define([
                         logError(e, 'error running RPC');
                     }
                 });
-                return def;
             }
         },
         setContent: function (mount, path, content, readyCB) {
-            
             this.publish(types.EVENTS.ON_CHANGED_CONTENT, {
                 'mount': mount,
                 'path': path,
                 'content': content
             });
-
             this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
                 text: "Did save file : " + mount + '://' + path
             });
-
             if(this.setContentE){
                 var res = this.setContentE.apply(this,arguments);
                 if(res){
                     return res;
                 }
             }
-            
             return this.callMethod(types.OPERATION.SET_CONTENT, [mount, path, content], readyCB, true);
         },
         onMessages: function (res) {
             var events = utils.getJson(res.events);
-            if (events && lang.isArray(events)) {
+            if (events && _.isArray(events)) {
                 for (var i = 0; i < events.length; i++) {
-
                     var struct = {
                         path: events[i].relPath
                     };
-                    lang.mixin(struct, events[i]);
+                    utils.mixin(struct, events[i]);
                     this.publish(events[i].clientEvent, struct, this);
                 }
             }
@@ -548,8 +496,7 @@ define([
              * Build signature
              */
             var params = {};
-            params = lang.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
+            params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
             /**
              * Mixin mandatory fields
              */
@@ -558,16 +505,13 @@ define([
             this.serviceObject.signatureField = this.config.RPC_PARAMS.rpcSignatureField;
             this.serviceObject.signatureToken = this.config.RPC_PARAMS.rpcSignatureToken;
             this.serviceObject[serviceClass][method](args).then(function (res) {
-
                 try {
                     if (readyCB) {
-
                         readyCB(res);
                     }
                 } catch (e) {
                     console.error('bad news : callback for method ' + method + ' caused a crash in service class ' + serviceClass);
                 }
-
                 if (res && res.error && res.error.code == 3) {
                     setTimeout(function () {
                         thiz.onMessages(res.error);
@@ -596,7 +540,6 @@ define([
              */
             var serviceClass = this.serviceClass;
             try {
-
                 if (!this.serviceObject[serviceClass][method]) {
                     if (omitError === true) {
                         this.onError({
@@ -610,9 +553,7 @@ define([
                  * Build signature
                  */
                 var params = {};
-                params = lang.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
-
+                params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
                 /**
                  * Mixin mandatory fields
                  */
@@ -622,7 +563,6 @@ define([
                 this.serviceObject.signatureToken = this.config.RPC_PARAMS.rpcSignatureToken;
                 var dfd = this.serviceObject[this.serviceClass][method](args);
                 dfd.then(function (res) {
-
                     try {
                         if (readyCB) {
                             readyCB(res);
@@ -632,7 +572,7 @@ define([
                         logError(e, 'error running RPC');
 
                     }
-
+                    //@TODO: batch, still needed?
                     if (res && res.error && res.error.code == 3) {
                         setTimeout(function () {
                             thiz.onMessages(res.error);
@@ -643,20 +583,16 @@ define([
                         thiz.onError(res.error);
                         return;
                     }
-
                     if (omitError !== false) {
                         var struct = {
                             message: 'Ok!'
                         };
                         thiz.publish(types.EVENTS.STATUS, struct, this);
                     }
-
                 }, function (err) {
                     thiz.onError(err);
                 });
-
                 return dfd;
-
             } catch (e) {
                 console.error('crash calling method' + e,arguments);
                 thiz.onError(e);
@@ -669,8 +605,6 @@ define([
                 if(this.serviceUrl) {
                     this.serviceObject = new RPCService(decodeURIComponent(this.serviceUrl));
                     this.serviceObject.config = this.config;
-                }else{
-                    console.warn('FileManager : Have no service url');
                 }
             }
         }

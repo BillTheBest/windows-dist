@@ -9,7 +9,6 @@ define([
     'xide/widgets/ActionToolbar',
     'dojo/promise/all'
 ], function (dcl,WidgetBase, types,utils,factory,ActionProvider,_LayoutMixin,ActionToolbar,all) {
-
     var Module = dcl([WidgetBase,_LayoutMixin.dcl,ActionProvider.dcl], {
         declaredClass: "xide.widgets.JSONDualEditorWidget",
         minHeight: "400px;",
@@ -218,7 +217,7 @@ define([
         onUp:function(){
             var valueDown = this.editorWidget.getValue();
             try{
-                var newData = dojo.fromJson(valueDown);
+                var newData = utils.fromJson(valueDown);
                 this.jsonEditorWidget.setData(newData)
             }catch(e){
                 console.error('mal formed '+e);
@@ -265,6 +264,5 @@ define([
             return this._activeEditor.getValue();
         }
     });
-
     return Module;
 });

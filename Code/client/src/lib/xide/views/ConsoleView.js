@@ -186,49 +186,7 @@ define([
                     editor = thiz.getEditor(),
                     aceEditor = this.aceEditor;
 
-
                 utils.resizeTo(editor, thiz.consoleParent, true, true);
-
-
-                return;
-
-
-                if (thiz.isExpanded) {
-
-                    $(thiz.consoleParent).css({
-                        height: '2em'
-                    });
-
-                    thiz.isExpanded = false;
-                    editor.renderer.$maxLines = 1;
-                    editor.renderer.setShowGutter(false);
-                    editor.renderer.setHighlightGutterLine(false);
-                    aceEditor.showToolbar(false);
-                } else {
-
-                    $(thiz.consoleParent).css({
-                        height: $(this.domNode.parentNode).height() + 'px'
-                    });
-                    editor.renderer.$maxLines = Infinity;
-                    thiz.isExpanded = true;
-                    editor.renderer.setShowGutter(true);
-                    editor.renderer.setHighlightGutterLine(true);
-                    utils.resizeTo(editor.renderer.container, thiz.consoleParent, true, true);
-                    editor.resize();
-                    aceEditor.resize();
-                    aceEditor.showToolbar(true);
-                    var toolbar = aceEditor.getToolbar();
-                    toolbar && $(toolbar.domNode).css({
-                        top: '0%',
-                        position: "absolute"
-                    });
-                }
-
-                if (this.delegate && this.delegate.onConsoleExpanded) {
-                    this.delegate.onConsoleExpanded();
-                }
-
-                this.resize();
             },
             createEditor: function () {
                 var _thiz = this;
@@ -246,7 +204,6 @@ define([
                 return editor;
             },
             onAddEditorActions:function(evt){
-                var actions = evt.actions;
                 evt.owner = this.aceEditor;
                 this.delegate.onAddEditorActions(evt);
             },
@@ -264,7 +221,7 @@ define([
                 if(this.delegate && this.delegate.maximize){
                     aceEditor.maximize = function() {
                         return this.delegate.maximize();
-                    }
+                    };
                 }
                 this.aceEditorEditor = aceEditor;
                 this.consoleEditor = editor;
@@ -515,16 +472,11 @@ define([
                 return this.delegate.onClear();
             }
             if(this.delegate.delegate && this.delegate.delegate.runAction){
-
                 var _result = this.delegate.delegate.runAction(action);
-
-                //console.log('run action ' + action.command,_result);
                 if(_result){
                     return _result;
                 }
-
             }
-
             if(action.command==='Console/Send'){
                 var value = this.get('value');
                 return this.delegate.delegate.onConsoleEnter(value);

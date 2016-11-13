@@ -23,7 +23,7 @@ define([
             this._messages = [];
         },
         updateTitleNode: function (value) {}
-    }
+    };
 
     //var Module = declare("xide.widgets.TemplatedWidgetBase", [_Widget, _XWidget,_TemplatedMixin, _WidgetsInTemplateMixin, EventedMixin],Implementation);
     var Module = dcl([_XWidget2],Implementation);
