@@ -9498,6 +9498,26 @@ define('xide/widgets/_Widget',[
     return Module;
 });
 
+/** @module xide/lodash **/
+define('xide/lodash',[],function(){
+    /**
+     * temp. wanna be shim for lodash til dojo-2/loader lands here
+     */
+    if(typeof _ !=="undefined"){
+        return _;
+    }
+});
+
+/** @module xide/$ **/
+define('xide/$',[],function(){
+    /**
+     * temp. wanna be shim for jQuery
+     */
+    if(typeof $ !=="undefined"){
+        return $;
+    }
+});
+
 /**
  * @module xide/_base/_Widget
  */
@@ -9510,8 +9530,10 @@ define('xide/_base/_Widget',[
     "dojo/_base/lang",
     "xide/registry",
     "dojo/cache",
-    "dojo/dom-construct"
-], function (dcl,inherited,_Widget,utils,string,lang,registry,cache,domConstruct) {
+    "dojo/dom-construct",
+    'xide/lodash',
+    'xide/$'
+], function (dcl,inherited,_Widget,utils,string,lang,registry,cache,domConstruct,_,$) {
     /////////////////////////////////////////////////////////////////
     //
     //  Attach Mixin Class
@@ -9621,7 +9643,6 @@ define('xide/_base/_Widget',[
                         _attachScope[point] = baseNode;
                         this.__attachAsjQueryObject &&  (_attachScope['$'+point] = $(baseNode));
                     }
-
                     ret = this.__stopAtContainerNode ? (point != "containerNode") : ret;
                     this._attachPoints.push(point);
                 }
@@ -9654,10 +9675,9 @@ define('xide/_base/_Widget',[
                 }
                 this._started=true;
                 return res;
-            }
+            };
         })
     });
-
     /////////////////////////////////////////////////////////////////
     //
     //  Templated Mixin Class
@@ -9751,27 +9771,19 @@ define('xide/_base/_Widget',[
                         // if it's a node, all we have to do is clone it
                         node = cached.cloneNode(true);
                     }
-
                     this.domNode = node;
                 }
 
                 // Call down to _WidgetBase.buildRendering() to get base classes assigned
-                // TODO: change the baseClass assignment to _setBaseClassAttr
-
-                sup.call(this, arguments);//this.inherited(arguments);
-
+                sup.call(this, arguments);
                 if(!this._rendered){
                     this._fillContent(this.srcNodeRef);
                 }
-
                 this._rendered = true;
-
                 if(this.domNode && this.declaredClass){
                     $(this.domNode).addClass(utils.replaceAll('/','.',this.declaredClass));
                 }
-
             };
-
         }),
         /**
          *
@@ -9856,24 +9868,11 @@ define('xide/_base/_Widget',[
             }
             return ret;
         }
-
-        function nonEmptyAttrToDom(attr){
-            // summary:
-            //		Returns a setter function that copies the attribute to this.domNode,
-            //		or removes the attribute from this.domNode, depending on whether the
-            //		value is defined or not.
-            return function(val){
-                $(this.domNode)[val ? "attr" : "removeAttr"](attr, val);
-                this._set(attr, val);
-            };
-        }
-
         function isEqual(a, b){
             //	summary:
             //		Function that determines whether two values are identical,
             //		taking into account that NaN is not normally equal to itself
             //		in JS.
-
             return a === b || (/* a is NaN */ a !== a && /* b is NaN */ b !== b);
         }
 
@@ -9897,11 +9896,8 @@ define('xide/_base/_Widget',[
                 //		registered with watch() if the value has changed.
                 var oldValue = this[name];
                 this[name] = value;
-
                 if(this._created && !isEqual(oldValue, value)){
-
                     this._watchCallbacks && this._watchCallbacks(name, oldValue, value);
-
                     this.emit("attrmodified-" + name, {
                         detail: {
                             prevValue: oldValue,
@@ -9969,8 +9965,6 @@ define('xide/_base/_Widget',[
              * @returns {*}
              */
             set: function(name, value){
-
-
                 if(typeof name === "object"){
                     for(var x in name){
                         this.set(x, name[x]);
@@ -9982,10 +9976,8 @@ define('xide/_base/_Widget',[
 
                 if(_.isFunction(setter)){
                     // use the explicit setter
-                    var result = setter.apply(this, Array.prototype.slice.call(arguments, 1));
+                    setter.apply(this, Array.prototype.slice.call(arguments, 1));
                 }else{
-
-
                     // Mapping from widget attribute to DOMNode/subwidget attribute/value/etc.
                     // Map according to:
                     //		1. attributeMap setting, if one exists (TODO: attributeMap deprecated, remove in 2.0)
@@ -10011,17 +10003,13 @@ define('xide/_base/_Widget',[
                 return this;
             },
             postCreate:function(){
-
             },
             postMixInProperties:dcl.superCall(function(sup){
                 return function(props){
                     sup && sup.call(this, props);
-
                 };
             }),
             create: function(params, srcNodeRef){
-
-
                 // summary:
                 //		Kick off the life-cycle of a widget
                 // description:
@@ -10055,11 +10043,9 @@ define('xide/_base/_Widget',[
                 this._supportingWidgets = [];
 
                 // this is here for back-compat, remove in 2.0 (but check NodeList-instantiate.html test)
-
                 if(this.srcNodeRef && this.srcNodeRef.id){
                     this.id = this.srcNodeRef.id;
                 }
-
 
                 // mix in our passed parameters
                 if(params){
@@ -10088,11 +10074,6 @@ define('xide/_base/_Widget',[
                 registry.add(this);
 
                 this.buildRendering();
-
-                var deleteSrcNodeRef,
-                    preserveNodes;
-
-
                 if(this.domNode){
                     // Copy attributes listed in attributeMap into the [newly created] DOM for the widget.
                     // Also calls custom setters for all attributes with custom setters.
@@ -10105,11 +10086,9 @@ define('xide/_base/_Widget',[
                     var source = this.srcNodeRef;
                     if(source && source.parentNode && this.domNode !== source){
                         source.parentNode.replaceChild(this.domNode, source);
-                        deleteSrcNodeRef = true;
                     }
                     // Note: for 2.0 may want to rename widgetId to dojo._scopeName + "_widgetId",
                     // assuming that dojo._scopeName even exists in 2.0
-
                     this.domNode.setAttribute("id", this.id);
 
                     if(this.style){
@@ -10117,7 +10096,6 @@ define('xide/_base/_Widget',[
                     }
                 }
                 this.postCreate();
-
                 this._created = true;
             },
             constructor:function(params,container){
@@ -10185,19 +10163,14 @@ define('xide/_base/_Widget',[
                         w.destroy(preserveDom);
                     }
                 }
-
                 // Destroy supporting widgets, but not child widgets under this.containerNode (for 2.0, destroy child widgets
                 // here too).   if() statement is to guard against exception if destroy() called multiple times (see #15815).
                 if(this.domNode){
                     _.each(registry.findWidgets(this.domNode, this.containerNode), destroy);
                 }
-
                 this.destroyRendering(preserveDom);
-
                 registry.remove(this.id);
-
                 this._destroyed = true;
-
                 this._emit('destroy');
             },
             destroyRendering: function(/*Boolean?*/ preserveDom){
@@ -10279,10 +10252,7 @@ define('xide/_base/_Widget',[
     dcl.chainAfter(Module,"resize");
     dcl.chainAfter(Module,"destroy");
     dcl.chainAfter(Module,"startup");
-
     return Module;
-
-
 });
 define('xide/mixins/ActionMixin',[
     "dcl/dcl",
@@ -11031,16 +11001,6 @@ define('xide/model/Path',[
     Path.EMPTY = new Path("");
     return Path;
 });
-/** @module xide/lodash **/
-define('xide/lodash',[],function(){
-    /**
-     * temp. wanna be shim for lodash til dojo-2/loader lands here
-     */
-    if(typeof _ !=="undefined"){
-        return _;
-    }
-});
-
 define('xide/utils/ObjectUtils',[
     'xide/utils',
     'require',
@@ -13124,16 +13084,6 @@ define('dijit/place',[
 	=====*/
 
 	return dijit.place = place;	// setting dijit.place for back-compat, remove for 2.0
-});
-
-/** @module xide/$ **/
-define('xide/$',[],function(){
-    /**
-     * temp. wanna be shim for jQuery
-     */
-    if(typeof $ !=="undefined"){
-        return $;
-    }
 });
 
 /** @module xide/popup **/

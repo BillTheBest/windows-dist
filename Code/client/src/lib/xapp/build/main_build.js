@@ -6565,7 +6565,7 @@ define('xdeliteful/MediaPlayer',[
             path = path.replace(/\\/g, '/');
             if(item.isDir) {
                 //path += '/*.mp3';
-                path+='/+(*.mp3|*.wav|*.m4a|*.wma)'
+                path+='/+(*.mp3|*.wav|*.m4a|*.wma)';
             }
             vlc.setVariable("Current Folder",path);
             vlc.callCommand('Play Args');
@@ -6590,7 +6590,7 @@ define('xdeliteful/MediaPlayer',[
                     "deliteful/Combobox",
                     "deliteful/list/List",
                     "dstore/Memory",
-                    "requirejs-dplugins/css!../../../css/xfile/main_lib.css"
+                    "requirejs-dplugins/css!../../../build/xfile/xfile.min.css"
                 ], function (Popup, FileGridLight, utils, DriverStore, types, Deferred, _Popup, FilePicker, declare,popup,Combobox, List, Memory) {
 
                     function createStore(ext) {
@@ -6607,7 +6607,7 @@ define('xdeliteful/MediaPlayer',[
                         var match = thiz.allowAudio ? "(*.m4a)|(*.wav)|(*.mp3)|(*.wma)" : "";
                         if(thiz.allowVideo){
                             thiz.allowAudio && (match+="|");
-                            match+="(*.avi)|(*.mp4)|(*.mkv)"
+                            match+="(*.avi)|(*.mp4)|(*.mkv)";
                         }
                         match+="|!(*.*)";
                         return new DriverStore({
