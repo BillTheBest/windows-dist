@@ -400,12 +400,7 @@ define([
                         if (self.hideSubsFirst) {
                             subMenuData.css('display', 'none');
                         }
-
-                        var labelLocalized = self.localize(item.text);
-                        var title = labelLocalized;
                         $menu.data('item', item);
-                        //subMenuData.attr("title",labelLocalized);
-
                     } else {
                         if (item.subMenu && item.subMenuData) {
                             this.buildMenuItems(item.subMenuData, item.subMenu, id, true);
@@ -551,7 +546,7 @@ define([
                         element += self.localize(data.text);
                         element += '</label>';
                         element += '<span style="max-width:100px;margin-right:20px" class="text-muted pull-right ellipsis keyboardShortCut">' + keyComboString + '</span>';
-                        element += '</div>';
+                        element += '</li>';
 
                         $menu.addClass('noclose');
                         var result = $(element);

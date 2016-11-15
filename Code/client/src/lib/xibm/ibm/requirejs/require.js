@@ -1923,6 +1923,7 @@ var requirejs, require, define;
     req.load = function (context, moduleName, url) {
         var config = (context && context.config) || {},
             node;
+        //console.log('request '+moduleName);
         if (isBrowser) {
             //In the browser so use a script tag
             node = req.createNode(config, moduleName, url);

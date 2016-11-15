@@ -193,20 +193,27 @@ define([
         },
         lastFocused:null,
         setupKeyboard:function(node){
+
             function keyhandler(e){
-                var className = e.target.className.toLowerCase();
-                if (e.target.tagName!=='BUTTON' && className.indexOf('input') == -1) {
-                    e.keyCode === 16 && (this._shiftDown = e.type === 'keydown');
-                    if (e.keyCode == 27) {
-                        var navData = this.keyboardController.toNavigationData($(e.target), this.getRootContainer());
-                        navData && navData.element && this.keyboardController.close(navData.element);
-                        $(this.lastFocused).focus();
+                try {
+                    if(e && e.target && e.target.className) {
+                        var className = e.target.className.toLowerCase();
+                        if (e.target.tagName !== 'BUTTON' && className.indexOf('input') == -1) {
+                            e.keyCode === 16 && (this._shiftDown = e.type === 'keydown');
+                            if (e.keyCode == 27) {
+                                var navData = this.keyboardController.toNavigationData($(e.target), this.getRootContainer());
+                                navData && navData.element && this.keyboardController.close(navData.element);
+                                $(this.lastFocused).focus();
+                            }
+                            if (this._shiftDown && e.key in this.shortcuts) {
+                                this.lastFocused = document.activeElement;
+                                //open root
+                                this.keyboardController.openRoot(null, this._topLevelMenu[this.shortcuts[e.key]]);
+                            }
+                        }
                     }
-                    if (this._shiftDown && e.key in this.shortcuts) {
-                        this.lastFocused = document.activeElement;
-                        //open root
-                        this.keyboardController.openRoot(null, this._topLevelMenu[this.shortcuts[e.key]]);
-                    }
+                }catch (e){
+                    logError(e,'error in keyboard handler');
                 }
             }
             $(node).on('keydown',keyhandler.bind(this));

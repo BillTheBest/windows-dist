@@ -48,9 +48,9 @@ define([
                     this.$loading && utils.destroy(this.$loading[0]);
                     if(value===true) {
                         var markup = '<div class="container-fluid center-block panel-spinner" style="opacity: 1;position: absolute;top:50%;">' +
-                            '<div class="row-fluid">' +
+                            '<div class="">' +
                             '<div class="offset3 span6 centering center-block">' +
-                            '<div class="spinner-loader"/>' +
+                            '<div class="fa fa-3x fa-spinner fa-spin "/>' +
                             '</div>' +
                             '</div>' +
                             '</div>';
@@ -171,7 +171,7 @@ define([
                 this.templateString = '<div tabindex="1"  class="panel ' + extra + '" attachTo="panelNode"><div class="panel-heading" attachTo="titleBar">'+
                     toggleNodeStr +
                     '</div><div attachTo="containerRoot" class="containerNode panel-collapse ${!containerClass}" id="${!id}-Collapse" aria-expanded="${!ariaOpen}">'+
-                    '<div style="height: ${!height};padding:${!padding}" class="panel-body" attachTo="containerNode"></div>'+
+                    '<div style="height: ${!height};padding:${!padding};position:relative" class="panel-body" attachTo="containerNode"></div>'+
                     '</div></div>';
 
                 return this.inherited(arguments);

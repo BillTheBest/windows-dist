@@ -26,7 +26,7 @@ define([
             }
             return [
                 'dcl/dcl',
-                'davinci/davinci',
+                'davinci/davinci_',
                 'xdojo/declare',
                 'xdojo/has',
                 'xideve/types',

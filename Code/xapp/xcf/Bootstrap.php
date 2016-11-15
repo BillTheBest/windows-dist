@@ -162,7 +162,7 @@ class XCF_Bootstrap extends XIDE_Bootstrap
 		$XCF_SYSTEM_PROTOCOLS = $xcvDataRoot . DIRECTORY_SEPARATOR . 'system' . DIRECTORY_SEPARATOR . 'protocols' . DIRECTORY_SEPARATOR;
 		$XAPP_WORKSPACE_DIRECTORY = realpath($xcvDataRoot) . DIRECTORY_SEPARATOR . 'workspace/';
 		$vfsVariables = array(
-			'docs' => realpath(XAPP_ROOT_DIR . '/docs/docFiles/'),
+			'docs' => realpath(XAPP_ROOT_DIR . '/Control-Freak-Documentation/docFiles/'),
 			'system_drivers' => $XCF_SYSTEM_DRIVERS,
 			'user_drivers' => $XCF_USER_DRIVERS,
 			'user_devices' => $xcvUserRoot . 'devices' . DIRECTORY_SEPARATOR,
@@ -380,7 +380,7 @@ class XCF_Bootstrap extends XIDE_Bootstrap
 
 
 		$vfsVariables = array(
-			'docs' => realpath(XAPP_ROOT_DIR . '/docs/docFiles/'),
+			'docs' => realpath(XAPP_ROOT_DIR . '/Control-Freak-Documentation/docFiles/'),
 			'system_drivers' => $XCF_SYSTEM_DRIVERS,
 			'user_drivers' => $XCF_USER_DRIVERS,
 			'user_devices' => $XCF_USER_DEVICES,

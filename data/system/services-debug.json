@@ -9,31 +9,6 @@
             "path":"%NODE_ROOT%",
             "enabled":true,
             "url":"no url",
-            "main":"nxappmain/xide",
-            "name":"XIDE Server",
-            "autostart":true,
-            "port":9993,
-            "host":"0.0.0.0",
-            "can":{
-                "start":true,
-                "stop":true,
-                "stats":false,
-                "debug":false,
-                "info":true
-            },
-            "has":{
-                "dojo":false,
-                "logFile":null,
-                "options":"--jhelp"
-            }
-
-        },
-        {
-            "class":"cmx.types.Resource",
-            "type":"NODE_JS_SERVICE",
-            "path":"%NODE_ROOT%",
-            "enabled":true,
-            "url":"no url",
             "main":"nxappmain/server",
             "name":"Device Control Server",
             "autostart":true,

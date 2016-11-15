@@ -1,11 +1,10 @@
-@import url("//fonts.googleapis.com/css?family=Raleway:400");
 /* line 12, ../../src/sass/messenger-theme-ice.sass */
 ul.messenger-theme-ice {
   -moz-user-select: none;
   -webkit-user-select: none;
   -o-user-select: none;
   user-select: none;
-  font-family: "Raleway", sans-serif;
+  font-family: sans-serif;
 }
 /* line 16, ../../src/sass/messenger-theme-ice.sass */
 ul.messenger-theme-ice .messenger-message {

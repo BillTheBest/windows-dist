@@ -122,13 +122,13 @@ define([
                             top = 20;
                         }
                         $dd.css({
-                            top: top,
+                            top: top + 20,
                             left: e.pageX - 13
                         }).fadeIn(options.fadeSpeed);
 
                     } else {
                         $dd.css({
-                            top: e.pageY + 10,
+                            top: e.pageY - 10,
                             left: e.pageX - 13
                         }).fadeIn(options.fadeSpeed);
                     }
