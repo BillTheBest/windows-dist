@@ -10838,7 +10838,7 @@ define('xide/utils/ObjectUtils',[
                 _function.apply(who,args);
             }
         }
-        return _place();
+        return _place;
     };
 
 
@@ -19259,6 +19259,8 @@ define('xide/data/_Base',[
         },
         destroy:function(){
             this._emit('destroy',this);
+            delete this._queryCache;
+            this._queryCache=null;
         },
         notify: function () {
         },
@@ -19275,7 +19277,7 @@ define('xide/data/_Base',[
                 if(this._queryCache[hash]){
                     return this._queryCache[hash];
                 }
-            };
+            }
             /*
             if(!query && !options && allowCache!==false && this.allowCache){
                 return this.data;
@@ -19369,7 +19371,7 @@ define('xide/data/_Base',[
             };
             if(!has('xcf-ui') && hash && !has('host-node') && allowCache!==false){
                 this._queryCache[hash]=queryResults;
-            };
+            }
             return queryResults;
         }
     });
@@ -19377,9 +19379,30 @@ define('xide/data/_Base',[
 define('xide/data/Memory',[
     "dojo/_base/declare",
 	'dstore/Memory',
-    'xide/data/_Base'
-], function (declare, Memory,_Base) {
-    return declare('xide.data.Memory',[Memory, _Base], {});
+    'xide/data/_Base',
+    'dojo/when',
+    'dojo/Deferred',
+    'xide/lodash'
+], function (declare, Memory,_Base,when,Deferred,lodash) {
+    return declare('xide.data.Memory',[Memory, _Base], {
+        _find:function (query) {
+            var result = lodash.find(this.data,query);
+            if(lodash.isArray(result)){
+                return result;
+            }else if(lodash.isObject(result)){
+                return [result];
+            }
+            return [];
+        },
+        _query:function(query){
+            var dfd = new Deferred();
+            var collection = this.filter(query);
+            when(collection.fetch(), function (data) {
+                dfd.resolve(data);
+            });
+            return dfd;
+        }
+    });
 });
 
 /** @module xide/data/TreeMemory **/
