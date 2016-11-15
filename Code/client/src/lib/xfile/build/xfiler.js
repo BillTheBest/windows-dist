@@ -3152,7 +3152,7 @@ define('xide/model/Base',[
         getID: function () {
             return null;
         }
-    }
+    };
 
     var Module = declare("xide/model/Base",null,Implementation);
     Module.dcl = dcl(null,Implementation);
@@ -3702,173 +3702,16 @@ define('xide/mixins/EventedMixin',[
 });
 
 
-/** @module xide/mixins/ReloadMixin **/
-define('xide/mixins/ReloadMixin',[
-    "xdojo/declare",
-    "dcl/dcl",
-    'xide/types',
-    'xide/utils',
-    'xide/mixins/EventedMixin'
-], function (declare,dcl,types, utils,EventedMixin) {
-
-    /**
-     * Mixin which adds functions for module reloading to the consumer. All functions
-     * of the reloaded module will be overridden with the re-loaded module's version.
-     * Recommended: turn off web-cache and use turn on 'cacheBust' in your Dojo-Config.
-     *
-     *
-     *  <b>Usage</b> :
-     *  1. call initReload manually (subscribes to types.EVENTS.ON_MODULE_RELOADED which is triggered by module:xide/manager/Context )
-     *  2. that's it actually.
-     *  3. optionally add a function 'onReloaded' to your sub class and refresh yourself, ie: re-create widgets or simply test
-     *  a piece of code
-     *
-     *
-     * @mixin module:xide/mixins/ReloadMixin
-     * @requires module:xide/mixins/EventedMixin
-     */
-    var Impl = {
-        /**
-         *
-         * Not used yet, but at @TODO: some flags to describe the hot-replace for reloaded modules
-         *
-         */
-        _mergeFunctions: true,
-        _mergeMissingVariables: true,
-        /**
-         * Cross instanceOf equal check, tries:
-         *
-         *  1. native
-         *  2. Dojo::isInstanceOf
-         *  3. baseClasses
-         *
-         * @param cls {Object}
-         * @returns {boolean}
-         */
-        isInstanceOf_: function (cls) {
-
-            try {
-
-                //Try native and then Dojo declare's _Stateful::isInstanceOf
-                if (!!this instanceof cls
-                    || (this.isInstanceOf && this.isInstanceOf(cls))) {
-
-                    return true;
-
-                }else{
-
-                    //manual lookup, browse all base classes and their superclass
-                    var bases = utils.getAt(this, 'constructor._meta.bases', []),//save get, return base::at[path] or empty array
-                        _clsClass = cls.prototype.declaredClass;    //cache
-
-                    //save space
-                    return _.findWhere(bases, function (_base) {
-
-                        return _base == cls    //direct cmp
-                        || utils.getAt(_base, 'superclass.declaredClass') === _clsClass   //mostly here
-                        || utils.getAt(_base, 'prototype.declaredClass') === _clsClass;    //sometimes
-
-                    });
-
-                }
-
-            } catch (e) {
-                //may crash, no idea why!
-                console.log('ReloadMixin :: this.isInstanceOf_ crashed ' + e);
-            }
-
-            return false;
-
-        },
-        /**
-         * @TODO: use flag guarded mixin
-         *
-         * @param target
-         * @param source
-         */
-        mergeFunctions: function (target, source) {
-            for (var i in source) {
-                var o = source[i];
-                if (i === 'constructor' || i === 'inherited') {
-                    continue;
-                }
-                if (_.isFunction(source[i])) {
-                    target[i] = null;//be nice
-                    target[i] = source[i];//override
-                }
-                //support missing properties
-                if (_.isArray(source[i])) {
-                    if (target[i] == null) {
-                        target[i] = source[i];
-                    }
-                }
-            }
-        },
-        /**
-         * Event callback for xide/types/EVENTS/ON_MODULE_RELOADED when a module has been reloaded.
-         * @member
-         * @param evt
-         */
-        onModuleReloaded: function (evt) {
-            //console.log('on module reloaded');
-            var newModule = evt.newModule;
-            if (!newModule || !newModule.prototype || evt._processed) {
-                return;
-            }
-            var moduleProto = newModule.prototype,
-                moduleClass = moduleProto.declaredClass,
-                matchedByClass = false,
-                thisClass = this.declaredClass,
-                thiz=this;
-
-            if(!moduleClass){
-                return;
-            }
-            if (moduleClass && thisClass) {
-                //determine by dotted normalized declaredClass
-                matchedByClass = utils.replaceAll('/', '.', thisClass) === utils.replaceAll('/', '.', moduleClass);
-            }
-            if (matchedByClass) {
-                thiz.mergeFunctions(thiz, moduleProto);
-                if (thiz.onReloaded) {
-                    evt._processed = true;
-                    thiz.onReloaded(newModule);
-                }
-            } else if (evt.module && utils.replaceAll('//', '/', evt.module) === thisClass) {//not sure this needed left
-                //dcl module!
-                thiz.mergeFunctions(thiz, moduleProto);
-            }
-        },
-        /**
-         * Public entry; call that in your sub-class to init this functionality!
-         */
-        initReload: function () {
-            this.subscribe(types.EVENTS.ON_MODULE_RELOADED);
-        }
-    };
-
-    //package via declare
-    var _class = declare(null,Impl);
-
-    //static access to Impl.
-    _class.Impl = Impl;
-
-    _class.dcl = dcl(EventedMixin.dcl,Impl);
-
-    return _class;
-
-});
 /** @module xide/model/Component **/
 define('xide/model/Component',[
-    "dojo/_base/declare",
+    "dcl/dcl",
     "dojo/Deferred",
     "dojo/has",
     "require",
     "xide/model/Base",
     "xide/types",
-    "xide/mixins/EventedMixin",
-    "xide/mixins/ReloadMixin"
-], function (declare, Deferred, has, require, Base, types, EventedMixin, ReloadMixin) {
+    "xide/mixins/EventedMixin"
+], function (dcl, Deferred, has, require, Base, types, EventedMixin) {
     /**
      * COMPONENT_FLAGS is a number of flags being used for the component's instance creation. Use an object instead of
      * an integer, never know how big this becomes and messing with 64bit integers doesn't worth the effort.
@@ -3891,15 +3734,12 @@ define('xide/model/Component',[
     };
 
     /**
-     *
-     *
      * @class xide/model/Component
-     *
-     * @augments xide/mixins/EventedMixin
-     * @augments xide/mixins/ReloadMixin
-     * @extends xide/model/Base
+     * @extends module:xide/mixins/EventedMixin
+     * @extends module:xide/model/Base
      */
-    return declare("xide/model/Component", [Base, EventedMixin, ReloadMixin], {
+    return dcl([Base.dcl, EventedMixin.dcl], {
+        declaredClass:"xide/model/Component",
         /**
          * Flag indicating that all dependencies are fully loaded
          * @type {boolean}
@@ -3968,7 +3808,7 @@ define('xide/model/Component',[
                 thiz._loaded = true;
                 if (hasName) {
                     has.add(hasName, function () {
-                        return true
+                        return true;
                     });
                 }
                 _defered.resolve();
@@ -3989,15 +3829,15 @@ define('xide/model/Component',[
 
 
 define('xfile/component',[
-    "dojo/_base/declare",
+    "dcl/dcl",
     "xide/model/Component"
-], function (declare,Component) {
+], function (dcl,Component) {
 
     /**
      * @class xfile.component
      * @inheritDoc
      */
-    return declare("xfile.component",Component, {
+    return dcl(Component, {
         /**
          * @inheritDoc
          */
@@ -39755,6 +39595,162 @@ define('xfile/views/GridLight',[
     GridClass.DEFAULT_RENDERERS = renderers;
     GridClass.DEFAULT_MULTI_RENDERER = multiRenderer;
     return GridClass;
+
+});
+/** @module xide/mixins/ReloadMixin **/
+define('xide/mixins/ReloadMixin',[
+    "xdojo/declare",
+    "dcl/dcl",
+    'xide/types',
+    'xide/utils',
+    'xide/mixins/EventedMixin'
+], function (declare,dcl,types, utils,EventedMixin) {
+
+    /**
+     * Mixin which adds functions for module reloading to the consumer. All functions
+     * of the reloaded module will be overridden with the re-loaded module's version.
+     * Recommended: turn off web-cache and use turn on 'cacheBust' in your Dojo-Config.
+     *
+     *
+     *  <b>Usage</b> :
+     *  1. call initReload manually (subscribes to types.EVENTS.ON_MODULE_RELOADED which is triggered by module:xide/manager/Context )
+     *  2. that's it actually.
+     *  3. optionally add a function 'onReloaded' to your sub class and refresh yourself, ie: re-create widgets or simply test
+     *  a piece of code
+     *
+     *
+     * @mixin module:xide/mixins/ReloadMixin
+     * @requires module:xide/mixins/EventedMixin
+     */
+    var Impl = {
+        /**
+         *
+         * Not used yet, but at @TODO: some flags to describe the hot-replace for reloaded modules
+         *
+         */
+        _mergeFunctions: true,
+        _mergeMissingVariables: true,
+        /**
+         * Cross instanceOf equal check, tries:
+         *
+         *  1. native
+         *  2. Dojo::isInstanceOf
+         *  3. baseClasses
+         *
+         * @param cls {Object}
+         * @returns {boolean}
+         */
+        isInstanceOf_: function (cls) {
+
+            try {
+
+                //Try native and then Dojo declare's _Stateful::isInstanceOf
+                if (!!this instanceof cls
+                    || (this.isInstanceOf && this.isInstanceOf(cls))) {
+
+                    return true;
+
+                }else{
+
+                    //manual lookup, browse all base classes and their superclass
+                    var bases = utils.getAt(this, 'constructor._meta.bases', []),//save get, return base::at[path] or empty array
+                        _clsClass = cls.prototype.declaredClass;    //cache
+
+                    //save space
+                    return _.findWhere(bases, function (_base) {
+
+                        return _base == cls    //direct cmp
+                        || utils.getAt(_base, 'superclass.declaredClass') === _clsClass   //mostly here
+                        || utils.getAt(_base, 'prototype.declaredClass') === _clsClass;    //sometimes
+
+                    });
+
+                }
+
+            } catch (e) {
+                //may crash, no idea why!
+                console.log('ReloadMixin :: this.isInstanceOf_ crashed ' + e);
+            }
+
+            return false;
+
+        },
+        /**
+         * @TODO: use flag guarded mixin
+         *
+         * @param target
+         * @param source
+         */
+        mergeFunctions: function (target, source) {
+            for (var i in source) {
+                var o = source[i];
+                if (i === 'constructor' || i === 'inherited') {
+                    continue;
+                }
+                if (_.isFunction(source[i])) {
+                    target[i] = null;//be nice
+                    target[i] = source[i];//override
+                }
+                //support missing properties
+                if (_.isArray(source[i])) {
+                    if (target[i] == null) {
+                        target[i] = source[i];
+                    }
+                }
+            }
+        },
+        /**
+         * Event callback for xide/types/EVENTS/ON_MODULE_RELOADED when a module has been reloaded.
+         * @member
+         * @param evt
+         */
+        onModuleReloaded: function (evt) {
+            //console.log('on module reloaded');
+            var newModule = evt.newModule;
+            if (!newModule || !newModule.prototype || evt._processed) {
+                return;
+            }
+            var moduleProto = newModule.prototype,
+                moduleClass = moduleProto.declaredClass,
+                matchedByClass = false,
+                thisClass = this.declaredClass,
+                thiz=this;
+
+            if(!moduleClass){
+                return;
+            }
+            if (moduleClass && thisClass) {
+                //determine by dotted normalized declaredClass
+                matchedByClass = utils.replaceAll('/', '.', thisClass) === utils.replaceAll('/', '.', moduleClass);
+            }
+            if (matchedByClass) {
+                thiz.mergeFunctions(thiz, moduleProto);
+                if (thiz.onReloaded) {
+                    evt._processed = true;
+                    thiz.onReloaded(newModule);
+                }
+            } else if (evt.module && utils.replaceAll('//', '/', evt.module) === thisClass) {//not sure this needed left
+                //dcl module!
+                thiz.mergeFunctions(thiz, moduleProto);
+            }
+        },
+        /**
+         * Public entry; call that in your sub-class to init this functionality!
+         */
+        initReload: function () {
+            this.subscribe(types.EVENTS.ON_MODULE_RELOADED);
+        }
+    };
+
+    //package via declare
+    var _class = declare(null,Impl);
+
+    //static access to Impl.
+    _class.Impl = Impl;
+
+    _class.dcl = dcl(EventedMixin.dcl,Impl);
+
+    return _class;
 
 });
 define('xide/rpc/AdapterRegistry',["dojo/_base/kernel", "dojo/_base/lang"], function (dojo, lang) {

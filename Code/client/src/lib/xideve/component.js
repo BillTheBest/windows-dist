@@ -1,18 +1,17 @@
 define([
-    "dojo/_base/declare",
+    "dcl/dcl",
     "xide/model/Component",
     "xide/utils",
     "dojo/has",
     "require",
     "xideve/deliteTemplate"
-], function (declare,Component,utils,has,require,deliteTemplate) {
+], function (dcl,Component,utils,has,require,deliteTemplate) {
 
     /**
      * @class xideve.component
      * @extends module:xide/model/Component
      */
-    return declare('xideve/component',[Component], {
-
+    return dcl(Component, {
         cmdOffset:'',
         userBaseUrl:'',
         //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,7 +75,6 @@ define([
             }.bind(this));
         },
         registerEditors:function(){
-
             var VisualEditor = utils.getObject('xideve/views/VisualEditor'),
                 WidgetManager = utils.getObject('xideve/manager/WidgetManager'),
                 ContextManager = utils.getObject('xideve/manager/ContextManager'),
@@ -86,9 +84,6 @@ define([
             VisualEditor.component = this;
             WidgetManager.component = this;
             ContextManager.component = this;
-
-
-
             /**
              * Register editors
              */
@@ -196,9 +191,7 @@ define([
          * @callback
          */
         onReady:function(){
-
             this.registerEditors();
-
         }
 
     });
