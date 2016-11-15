@@ -10099,7 +10099,6 @@ define('xide/mixins/ActionMixin',[
     "xdojo/declare",
     "xide/utils"
 ], function (dcl,declare,utils) {
-
     var Implementation = {
         store:null,
         getActionStore:function(){
@@ -10109,9 +10108,7 @@ define('xide/mixins/ActionMixin',[
             return this.store = store;
         },
         _publishActionWidget:function(widget,action,parent,visibility){
-
             var thiz = this;
-
             action._emit(thiz.visibility + '_WIDGET_CREATED',{
                 parent:parent,
                 widget:widget,
@@ -10180,8 +10177,7 @@ define('xide/mixins/ActionMixin',[
             visibility = visibility || this.visibility;
 
             var store = _store || this.getActionStore(),
-                actions = store.getAll(),
-                _actions = store ? store.query() : [];
+                actions = store.data;
 
             if(!store){
                 return;
@@ -13311,11 +13307,11 @@ define('xide/widgets/_MenuMixin4',[
         },
         removeCustomActions: function () {
             var oldStore = this.store;
-            var oldActions = oldStore.query({
+            var oldActions = oldStore._find({
                     custom: true
-                }),
-                menuData = this.menuData;
+                });
 
+            var menuData = this.menuData;
             _.each(oldActions, function (action) {
                 oldStore.removeSync(action.command);
                 var oldMenuItem = _.find(menuData, {
@@ -13723,19 +13719,15 @@ define('xide/widgets/_MenuMixin4',[
             var result = [];
             var stores = this.actionStores,
                 visibility = this.visibility;
-            query = query || this.actionFilter;
 
+            query = query || this.actionFilter;
             _.each(stores, function (store) {
-                if (store) {//tmpFix
-                    result = result.concat(store.query(query));
-                }
+                store && (result = result.concat(store.query(query)));
             });
             result = result.filter(function (action) {
                 var actionVisibility = action.getVisibility != null ? action.getVisibility(visibility) : {};
                 return !(action.show === false || actionVisibility === false || actionVisibility.show === false);
-
             });
-
             return result;
         },
         toActions: function (commands, store) {
@@ -15742,15 +15734,12 @@ define('xide/widgets/ContextMenu',[
                 console.warn('removeCustomActions : have no store');
                 return;
             }
-            var oldActions = oldStore.query({
-                    custom:true
-                }),
-                menuData=this.menuData;
-
+            var oldActions = oldStore._find({
+                custom:true
+            });
+            var menuData=this.menuData;
             _.each(oldActions,function(action){
-
                 oldStore.removeSync(action.command);
-
                 var oldMenuItem = _.find(menuData,{
                     command:action.command
                 });
@@ -19203,11 +19192,31 @@ define('xide/data/_Base',[
     'dstore/QueryResults',
     'xide/mixins/EventedMixin',
     'xide/encoding/MD5',
-    'xdojo/has'
-], function (declare, Memory, Tree, QueryResults,EventedMixin,MD5,has) {
+    'xdojo/has',
+    'xide/lodash',
+    'dojo/when',
+    'dojo/Deferred'
+], function (declare, Memory, Tree, QueryResults,EventedMixin,MD5,has,lodash,when,Deferred) {
     return declare("xide/data/_Base",EventedMixin, {
         __all:null,
         allowCache:true,
+        _find:function (query) {
+            var result = lodash.filter(this.data,query);
+            if(lodash.isArray(result)){
+                return result;
+            }else if(lodash.isObject(result)){
+                return [result];
+            }
+            return [];
+        },
+        _query:function(query){
+            var dfd = new Deferred();
+            var collection = this.filter(query);
+            when(collection.fetch(), function (data) {
+                dfd.resolve(data);
+            });
+            return dfd;
+        },
         constructor: function () {
             var store = this;
             if (store._getQuerierFactory('filter') || store._getQuerierFactory('sort')) {
@@ -19271,6 +19280,17 @@ define('xide/data/_Base',[
         },
         _queryCache:null,
         query: function (query, options,allowCache) {
+
+            //no query, return all
+
+            if(lodash.isEmpty(query)){
+                return this.data;
+            }else if(!_.some(query,function (value) { return value == null})){
+                //no empty props in query, return lodash.filter
+                return this._find(query);
+            }
+
+
             var hash = query ? MD5(JSON.stringify(query),1) : null;
             if(!has('xcf-ui') && hash && !has('host-node') && allowCache!==false){
                 !this._queryCache && (this._queryCache={});
@@ -19379,30 +19399,9 @@ define('xide/data/_Base',[
 define('xide/data/Memory',[
     "dojo/_base/declare",
 	'dstore/Memory',
-    'xide/data/_Base',
-    'dojo/when',
-    'dojo/Deferred',
-    'xide/lodash'
-], function (declare, Memory,_Base,when,Deferred,lodash) {
-    return declare('xide.data.Memory',[Memory, _Base], {
-        _find:function (query) {
-            var result = lodash.find(this.data,query);
-            if(lodash.isArray(result)){
-                return result;
-            }else if(lodash.isObject(result)){
-                return [result];
-            }
-            return [];
-        },
-        _query:function(query){
-            var dfd = new Deferred();
-            var collection = this.filter(query);
-            when(collection.fetch(), function (data) {
-                dfd.resolve(data);
-            });
-            return dfd;
-        }
-    });
+    'xide/data/_Base'
+], function (declare, Memory,_Base) {
+    return declare('xide.data.Memory',[Memory, _Base], {});
 });
 
 /** @module xide/data/TreeMemory **/
@@ -23219,11 +23218,10 @@ define('xide/editor/Registry',[
     };
 
     editorMixin.unregisterEditor = function (name) {
-        var _store = editorMixin.getStore(),
-            editors = _store.query({
-                name:name
-            });
-
+        var _store = editorMixin.getStore();
+        var editors = _store._find({
+            name:name
+        });
         function unregister(editor){
             _store.removeSync(editor.name);
             _.each(editors,function(_editor){
@@ -23237,22 +23235,17 @@ define('xide/editor/Registry',[
 
     editorMixin.onRegisterEditor = function (eventData) {
         var _store = editorMixin.getStore();
-        var allEditors = _store.query({
+        var allEditors = _store._find({
             name:eventData.name
         });
-
        if(allEditors.length>0){
-
            debug && console.warn('Editor already registered',eventData);
            _.each(allEditors,function(editor){
                _store.removeSync(editor.name);
                editorMixin.unregisterEditor(editor.name);
            });
         }
-
-
         _store.putSync(eventData);
-
         if (!editorMixin._hasEditor(eventData.name,eventData.extensions)) {
             editors.push(eventData);
         }
@@ -23294,7 +23287,7 @@ define('xide/editor/Registry',[
         }
 
         var store = editorMixin.getStore();
-        var _defaultEditor = store.query({
+        var _defaultEditor = store._find({
             defaultEditor:true
         });
 
