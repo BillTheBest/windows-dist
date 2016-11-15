@@ -13722,12 +13722,16 @@ define('xide/widgets/_MenuMixin4',[
 
             query = query || this.actionFilter;
             _.each(stores, function (store) {
-                store && (result = result.concat(store.query(query)));
+                store && (result = result.concat(store._find(query)));
+                //store && (result2= result2.concat(store._find(query)));
             });
             result = result.filter(function (action) {
                 var actionVisibility = action.getVisibility != null ? action.getVisibility(visibility) : {};
                 return !(action.show === false || actionVisibility === false || actionVisibility.show === false);
             });
+            /*
+            console.log('action: ',[result,result2]);
+            */
             return result;
         },
         toActions: function (commands, store) {
@@ -19283,11 +19287,12 @@ define('xide/data/_Base',[
 
             //no query, return all
 
+
             if(lodash.isEmpty(query)){
                 return this.data;
             }else if(!_.some(query,function (value) { return value == null})){
                 //no empty props in query, return lodash.filter
-                return this._find(query);
+                //return this._find(query);
             }
 
 

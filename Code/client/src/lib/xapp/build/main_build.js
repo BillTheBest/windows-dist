@@ -33297,11 +33297,12 @@ define('xide/data/_Base',[
 
             //no query, return all
 
+
             if(lodash.isEmpty(query)){
                 return this.data;
             }else if(!_.some(query,function (value) { return value == null})){
                 //no empty props in query, return lodash.filter
-                return this._find(query);
+                //return this._find(query);
             }
 
 
