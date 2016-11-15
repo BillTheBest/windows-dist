@@ -250,7 +250,8 @@
                     return;
                 }
                 var headDfd = new Deferred();
-                require(['xapp/boot','xide/utils'], function (boot,utils,Context) {
+                require(['xapp/boot','xide/utils','dojo/_base/kernel'], function (boot,utils,dojo) {
+                    document.dojo = dojo;
                     var bootStrap = new boot();
                     bootStrap.load().then(function () {
                         console.log('   Checkpoint 3.1 xapp/boot load()');
