@@ -48930,7 +48930,6 @@ define('xcf/manager/DeviceManager_DeviceServer',[
          * @param stop
          */
         sendDeviceCommand: function (driverInstance, data, src, id, print, wait, stop, pause,command) {
-            console.log('send device command ');
             this.checkDeviceServerConnection();
             var options = driverInstance.getDeviceInfo();
             utils.mixin({
@@ -48963,7 +48962,6 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             if (device._userStopped) {
                 return;
             }
-
             if (device && (device.state === types.DEVICE_STATE.DISABLED ||
                     device.state === types.DEVICE_STATE.DISCONNECTED ||
                     device.state === types.DEVICE_STATE.CONNECTING
@@ -48973,8 +48971,6 @@ define('xcf/manager/DeviceManager_DeviceServer',[
             }
 
             var message = utils.stringFromDecString(dataOut.command);
-
-
             if (device.isDebug()) {
                 this.publish(types.EVENTS.ON_STATUS_MESSAGE, {
                     text: "Did send message : " + '<span class="text-warnin">' + message.substr(0, 30) + '</span>' + " to " + '<span class="text-info">' + options.host + ":" + options.port + "@" + options.protocol + '</span>'
@@ -73684,7 +73680,7 @@ define('xide/utils/ObjectUtils',[
                 _function.apply(who,args);
             }
         }
-        return _place;
+        return _place();
     };
 
 

@@ -10834,7 +10834,7 @@ define('xide/utils/ObjectUtils',[
                 _function.apply(who,args);
             }
         }
-        return _place;
+        return _place();
     };
 
 
@@ -14397,7 +14397,9 @@ define('xide/widgets/ActionToolbar4',[
         },
         resize:function(){
             this._height = this.$navBar.height();
-            this.$navigation.css('height',this._height);
+            if(this._height>0) {
+                this.$navigation.css('height', this._height);
+            }
         },
         destroy:function(){
             utils.destroy(this.$navBar[0]);
@@ -14881,9 +14883,14 @@ define('xide/widgets/ActionToolbar4',[
             }
             this.__on(root,'mouseenter', '.dropdown-submenu', mouseEnterHandler.bind(this));
         },
-        resize:function(){
+        resize:function() {
             this._height = this.$navBar.height();
-            this.$navigation.css('height',this._height);
+            if (this._height > 0){
+                this.$navBar.css('width',this.$navigation.width());
+                this.$navigationRoot.css('width',this.$navigation.width());
+                this.$navigation.css('height', this._height);
+                this.$navigationRoot.css('height', this._height);
+            }
         },
         destroy:function(){
             utils.destroy(this.$navBar[0]);
@@ -34762,7 +34769,6 @@ define('xdocker/Docker2',[
                     var h = self.$container.height();
                     var w = self.$container.width();
                     if(h<110 || w<110){
-
                         return;
                     }
                 }

@@ -251,20 +251,26 @@
                 }
                 var headDfd = new Deferred();
                 require(['xapp/boot','xide/utils','dojo/_base/kernel'], function (boot,utils,dojo) {
-                    document.dojo = dojo;
-                    var bootStrap = new boot();
-                    bootStrap.load().then(function () {
-                        console.log('   Checkpoint 3.1 xapp/boot load()');
-                        utils.mixin(settings,xideveSettings);
-                        bootStrap.start(settings,Context).then(function (ctx) {
-                            console.log('   Checkpoint 5.2 xapp/boot start',xideveSettings);
-                            startx(headDfd, bootStrap, ctx, xideveSettings);
-                        },function(e){
-                            console.error('error starting xapp/boot/start ' + e,e);
+                    try {
+                        document.dojo = dojo;
+
+                        var bootStrap = new boot();
+                        bootStrap.load().then(function () {
+                            console.log('   Checkpoint 3.1 xapp/boot load()');
+                            utils.mixin(settings, xideveSettings);
+                            bootStrap.start(settings).then(function (ctx) {
+                                console.log('   Checkpoint 5.2 xapp/boot start', xideveSettings);
+                                startx(headDfd, bootStrap, ctx, xideveSettings);
+                            }, function (e) {
+                                console.error('error starting xapp/boot/start ' + e, e);
+                            });
+                        }, function (e) {
+                            console.error('error starting xapp/boot/load ' + e, e);
                         });
-                    },function(e){
-                        console.error('error starting xapp/boot/load ' + e,e);
-                    });
+                    }catch(e){
+                        debugger;
+                    }
+
                 });
                 return headDfd;
             }
