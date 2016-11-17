@@ -40,7 +40,8 @@ var dojoConfig ={
 		    'plugins':false,
 		    'php':true,
 		    'FileConsole':true,
-		    'deferredInstrumentation':false
+		    'deferredInstrumentation':false,
+		    'x-markdown':true
         },
         tlmSiblingOfDojo: 0,
         parseOnLoad: false,

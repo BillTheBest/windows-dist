@@ -3497,11 +3497,17 @@ define('xide/mixins/EventedMixin',[
 
                     _listener = listeners[i];
                     who = _listener.owner|| this;
-                    args && args[0] && (args[0].owner =args[0] ? args[0].owner || who : null);
+
+                    args && args[0] && (args[0].owner = args[0] ? args[0].owner || who : null);
 
                     _listener.handler && (temp = _listener.handler.apply(who, args));
-                    if (temp !== undefined)
+                    if (temp !== undefined) {
                         returnValue = temp;
+                    }
+
+                    args && args[0] && args[0].owner && (args[0].owner = null);
+
+
                 }
             }
 
@@ -9558,7 +9564,10 @@ define('xide/_base/_Widget',[
             // do the property replacement
             return string.substitute(tmpl, this, function(value, key){
                 if(key.charAt(0) == '!'){ value = lang.getObject(key.substr(1), false, _this); }
-                if(typeof value == "undefined"){ throw new Error(className+" template:"+key); } // a debugging aide
+                if(typeof value == "undefined"){
+                    var error = new Error(className+" template:"+key)
+                    logError(error);
+                } // a debugging aide
                 if(value == null){ return ""; }
 
                 // Substitution keys beginning with ! will skip the transform step,
@@ -10874,6 +10883,19 @@ define('xide/utils/ObjectUtils',[
         return result;
     };
     /**
+     * Safe require.toUrl
+     * @param mid {string}
+     */
+    utils.toUrl = function(mid){
+        var _require = require;
+        //make sure cache bust is off otherwise it appends ?time
+        _require({
+            cacheBust: null,
+            waitSeconds: 5
+        });
+        return _require.toUrl(mid);
+    }
+    /**
      * Returns a module by module path
      * @param mixed {String|Object}
      * @param _default {Object} default object
@@ -10891,7 +10913,6 @@ define('xide/utils/ObjectUtils',[
             //not a loaded module yet
             try {
                 if (!result) {
-
                     var deferred = new Deferred();
                     //try loader
                     result = _re([
@@ -36043,8 +36064,7 @@ define('xfile/FileActions',[
                 */
             }
 
-            result.push(this.createAction('Open In New Tab', 'File/OpenInNewTab', 'fa-share', ['alt enter'], 'Home', 'Open', 'item',
-                null, null, {quick:true}, null, function () {
+            result.push(this.createAction('Open In New Tab', 'File/OpenInNewTab', 'fa-share', ['alt enter'], 'Home', 'Open', 'item', null, null, {quick:true}, null, function () {
                     var item = thiz.getSelectedItem();
                     if (item && item.isDir) {
                         return false;
@@ -36582,17 +36602,11 @@ define('xfile/FileActions',[
             });
 
             parent ? _prev.buildRenderingEmbedded() : _prev.buildRendering();
-
             _prev.init();
-
             _prev.exec();
-
             this._preview = _prev;
-
             this._preview.handler = this;
-
             self._on('selectionChanged', function (e) {
-
                 var _item = self.getSelectedItem();
                 if (_item) {
 
@@ -36616,11 +36630,8 @@ define('xfile/FileActions',[
 
         },
         deleteSelection: function (selection) {
-
             selection = selection || this.getSelection();
-
             var dfd = new Deferred(),
-
                 _next = this.getNext(selection[0], null, true),
                 _prev = this.getPrevious(selection[0], null, true),
 
@@ -36636,7 +36647,7 @@ define('xfile/FileActions',[
                 title: title,
                 type: types.DIALOG_TYPE.DANGER,
                 onBeforeOk: function () {
-                    //thiz.deselectAll();
+
                 },
                 getOkDfd: function () {
                     var thiz = this;
@@ -36667,9 +36678,7 @@ define('xfile/FileActions',[
                     });
                 }
             });
-
             dlg.show();
-
             return dfd;
         },
         /**
@@ -36699,9 +36708,7 @@ define('xfile/FileActions',[
                 }
             }
 
-
             if (item) {
-
                 //current folder:
                 var _parent = item._S.getParent(item);
                 if (_parent) {
@@ -36747,13 +36754,9 @@ define('xfile/FileActions',[
                     }
                 }
             }
-
             return dfd;
-
         },
         reload: function (item) {
-
-
             var dfd = new Deferred(),
                 selection = this.getSelection();
 
@@ -37205,7 +37208,6 @@ define('xfile/FileActions',[
                         };
                     }
                     function getEditorActions(item){
-
                         var editors = Registry.getEditors(item) || [],
                             result = [];
 
@@ -37221,7 +37223,8 @@ define('xfile/FileActions',[
                                     addPermission: true,
                                     tab: 'Home',
                                     editor:editor,
-                                    custom:true
+                                    custom:true,
+                                    quick:true
                                 }, null, null, permissions, container, thiz
                             );
                             _wireEditor(editor, editorAction);
@@ -37265,26 +37268,23 @@ define('xfile/FileActions',[
                     {
                         addPermission: true,
                         tab: 'Home',
-                        onCreate: function (action) {}
+                        quick:true
                     }, null, DefaultActions.shouldDisableDefaultFileOnly, permissions, container, thiz
                 );
 
                 result.push(openInAction);
-
                 var e = thiz.createAction('Default Editor', ACTION.OPEN_IN + '/Default Editor', 'fa-code', null, 'Home', 'Open', 'item', null,
                     function () {
                     },
                     {
                         addPermission: true,
                         tab: 'Home',
-                        forceSubs: true
+                        forceSubs: true,
+                        quick:true
 
                     }, null, null, permissions, container, thiz
                 );
-
-
                 result.push(e);
-
                 return result;
             }
     };
@@ -41991,7 +41991,12 @@ define('xide/manager/RPCService',[
     'xide/mixins/EventedMixin',
     'xide/encoding/SHA1'
 ], function (declare,dojo,lang, Service, JsonRPC, has, Deferred,utils,types,EventedMixin,SHA1) {
-
+    /**
+     * Provides tools to deal with 'persistence' (open files, editors, ..etc to be restored). It also acts as interface.
+     * @class module:xide/manager/RPCService
+     * @extends module:xide/mixins/EventedMixin
+     *
+     **/
     return declare("xide.manager.RPCService", [Service,EventedMixin], {
         extraArgs: null,
         signatureField: 'sig',
@@ -42004,12 +42009,9 @@ define('xide/manager/RPCService',[
             checkErrors: true
         },
         onError: function (err) {
-
             if (err) {
                 if (err.code === 1) {
-
                     if (err.message && _.isArray(err.message)) {
-
                         this.publish(types.EVENTS.ERROR, {message: err.message.join('<br/>')});
                         return;
                     }
@@ -42017,7 +42019,6 @@ define('xide/manager/RPCService',[
                     this.publish(types.EVENTS.STATUS, 'Ok');
                 }
             }
-
             var struct = {
                 error: err
             };
@@ -42025,17 +42026,10 @@ define('xide/manager/RPCService',[
         },
         prepareCall: function () {
             var params = {};
-
-
-
             if (this.config && this.config.RPC_PARAMS) {
-
                 params = utils.mixin(params, this.config.RPC_PARAMS.rpcFixedParams);
-
                 this.extraArgs = params;
-
                 if (this.config.RPC_PARAMS.rpcUserField) {
-
                     params[this.config.RPC_PARAMS.rpcUserField] = this.config.RPC_PARAMS.rpcUserValue;
 
                     this.signatureField = this.config.RPC_PARAMS.rpcSignatureField;
@@ -42044,11 +42038,8 @@ define('xide/manager/RPCService',[
             }
         },
         runDeferred: function (serviceClassIn, method, args, options) {
-
             var deferred = new Deferred();
-
             options = options || this.defaultOptions;
-
 
             //check this method exists
             if (!this.checkCall(serviceClassIn, method, options.omit)) {
@@ -42649,7 +42640,7 @@ define('xide/manager/ServerActionBase',[
                 //check for error messages (non-fatal) and abort
                 if (options.checkErrors) {
                     if (error.code == 1) {
-                        thiz.onError(error,serviceClass + '::' + method);
+                        options.displayError && thiz.onError(error,serviceClass + '::' + method);
                         deferred.reject(error);
                         return;
                     }
@@ -42657,7 +42648,7 @@ define('xide/manager/ServerActionBase',[
                     if (error.code == 1 && options.displayError) {
                         thiz.onError(error,serviceClass + '::' + method);
                     }
-                    if (error && error.code != 0) {
+                    if (error && error.code !== 0) {
                         resolve(res,error);
                         return;
                     }
@@ -42673,6 +42664,7 @@ define('xide/manager/ServerActionBase',[
             }, function (err) {
                 thiz.onError(err);
             });
+
             if(options.returnProm){
                 return promise;
             }
@@ -43481,10 +43473,11 @@ define('xfile/data/Store',[
              * @param path {string} a unique path, ie: ./ | . | ./myFolder | ./myFolder/and_deeper. If the item isn't
              * fully loaded yet, it just returns the item, if you enable 'load' and does the full load.
              * @param load {boolean} load the item if not already
+             * @param options {object|null} request options
              *
              * @returns {Object|Deferred|null}
              */
-            getItem: function (path, load) {
+            getItem: function (path, load,options) {
                 if (load == false) {
                     return this._getItem(path);
 
@@ -43522,7 +43515,7 @@ define('xfile/data/Store',[
                                             break;
                                         }
                                     }
-                                    thiz._loadPath(partsToLoad[i].path).then(function (items) {
+                                    thiz._loadPath(partsToLoad[i].path,false,options).then(function (items) {
                                         partsToLoad[i].loaded = true;
                                         _loadNext();
                                     }, function (err) {
@@ -43666,29 +43659,39 @@ define('xfile/data/Store',[
              * Here to load an item forcefully (reload/refresh)
              * @param path
              * @param force
+             * @param options {object|null}
              * @returns {*}
              * @private
              */
-            _loadPath: function (path, force) {
+            _loadPath: function (path,force,options) {
                 var thiz = this;
-                return this._request(path).then(function (items) {
-                    var _item = thiz._getItem(path, true);
-                    if (_item) {
-                        if (force) {
-                            if (!_.isEmpty(_item.children)) {
-                                thiz.removeItems(_item.children);
+                var result = this._request(path,options);
+                result.then(function (items) {
+                        var _item = thiz._getItem(path, true);
+                        if (_item) {
+                            if (force) {
+                                if (!_.isEmpty(_item.children)) {
+                                    thiz.removeItems(_item.children);
+                                }
+                            }
+                            _item._EX = true;
+                            thiz.addItems(items, force);
+                            _item.children = items;
+                            return items;
+                        } else {
+                            if(options && options.onError) {
+                                options.onError('Error Requesting path on server : '+path);
+                            }else{
+                                throw new Error('cant get item at ' + path);
                             }
                         }
-                        _item._EX = true;
-                        thiz.addItems(items, force);
-                        _item.children = items;
-                        return items;
-                    } else {
-                        throw new Error('cant get item at ' + path);
-                    }
-                }.bind(this), function (err) {
-                    console.error('error in load');
-                });
+                    }.bind(this),
+                    function (err) {
+                        console.error('error in load');
+                    });
+
+                return result;
+
             },
             /**
              * Creates an object, throws an error if the object already exists.
@@ -43784,11 +43787,6 @@ define('xfile/data/Store',[
             },
             open: function (item) {
                 var thiz = this;
-                function update() {
-                    thiz.emit('update', {
-                        target: item
-                    });
-                }
                 if (!this._isLoaded(item)) {
                     item.isLoading = true;
                     return thiz._request(item.path).then(function (items) {
@@ -43815,7 +43813,11 @@ define('xfile/data/Store',[
                 var item = this.getSync(data.parent);
                 if (item) {
                     if (!this.isItemLoaded(item)) {
+                        item.isLoading = true;
                         this._state.filterDef = this._loadPath(item.path);
+                        this._state.filterDef.then(function(){
+                            item.isLoading = false;
+                        })
                     } else {
                         /*
                         if(item.children) {
@@ -43832,7 +43834,7 @@ define('xfile/data/Store',[
                 this._state.filter = data;
                 return this.inherited(arguments);
             },
-            _request: function (path) {
+            _request: function (path,options) {
                 var collection = this;
                 return this.runDeferred(null, 'ls', {
                         path: path,
@@ -43840,17 +43842,16 @@ define('xfile/data/Store',[
                         options: this.options,
                         recursive:this.recursive
                     },
-                    {
-                        checkErrors: false,
-                        displayError: true
-
-                    }).then(function (response) {
+                    utils.mixin({checkErrors: false,displayError: true},options)).then(function (response) {
                     var results = collection._normalize(response);
                     collection._parse(results);
                     // support items in the results
                     results = results.children || results;
                     return results;
                 }, function (e) {
+                    if(options && options.displayError===false){
+                        return;
+                    }
                     logError(e,'error in FileStore : ' + this.mount + ' :' + e);
                 });
             },
@@ -43970,9 +43971,10 @@ define('xfile/factory/Store',[
      * @param config
      * @param optionsMixin
      * @param ctx
+     * @param args
      * @returns {*}
      */
-    factory.createFileStore = function (mount,options,config,optionsMixin,ctx){
+    factory.createFileStore = function (mount,options,config,optionsMixin,ctx,args){
         var storeClass = Store;
         options = options || {
             fields:
@@ -43987,7 +43989,7 @@ define('xfile/factory/Store',[
         };
 
         utils.mixin(options,optionsMixin);
-        var store = new storeClass({
+        var store = new storeClass(utils.mixin({
             data:[],
             ctx:ctx,
             config:config,
@@ -43996,7 +43998,7 @@ define('xfile/factory/Store',[
             serviceClass:config.FILES_STORE_SERVICE_CLASS,
             mount:mount,
             options:options
-        });
+        },args));
         store._state = {
             initiated:false,
             filter:null,
@@ -44005,7 +44007,6 @@ define('xfile/factory/Store',[
         store.reset();
         store.setData([]);
         store.init();
-
         ctx && ctx.getFileManager().addStore(store);
         return store;
     };
