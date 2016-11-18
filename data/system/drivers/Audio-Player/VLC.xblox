@@ -20,7 +20,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": "/home/mc007/Music/Sasha/HeyNow.mp3",
       "icon": "fa-play"
     },
     {
@@ -43,7 +43,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": "0.757",
       "icon": "fa-play"
     },
     {
@@ -66,7 +66,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": "playing",
       "icon": "fa-play"
     },
     {
@@ -237,8 +237,7 @@
         "3e4c9cde-e98b-28b9-43ad-0b0092df4c7e",
         "30728ebe-9c2e-a067-0856-d0b2b332c18f",
         "944178af-f6b0-ebd9-7490-f50eeafabf98"
-      ],
-      "description": "No Description"
+      ]
     },
     {
       "_containsChildrenIds": [],
@@ -357,8 +356,7 @@
       "enabled": true,
       "shareTitle": "",
       "order": 0,
-      "type": "added",
-      "description": "No Description"
+      "type": "added"
     },
     {
       "_containsChildrenIds": [],
@@ -400,7 +398,7 @@
       "_containsChildrenIds": [],
       "variable": "e76f0b30-4443-47ae-0cef-2c4c9e4acffd",
       "variableId": "e76f0b30-4443-47ae-0cef-2c4c9e4acffd",
-      "value": "\"none\"",
+      "value": "none",
       "parentId": "5b621daa-788b-4d6e-9f78-b4c2eddf64f8",
       "id": "9f17ddb6-ed12-f19b-d90b-1482b70e1978",
       "declaredClass": "xblox.model.variables.VariableAssignmentBlock",
@@ -525,7 +523,7 @@
       "cmd": "off",
       "save": false,
       "target": "None",
-      "value": "/home/mc007/Music/Sasha//+(*.mp3|*.wav|*.m4a|*.wma)",
+      "value": "/home/mc007/Music/Sasha/HeyNow.mp3",
       "register": true,
       "readOnly": false,
       "isVariable": true,
@@ -566,7 +564,7 @@
       "cmd": "off",
       "save": false,
       "target": "None",
-      "value": 100,
+      "value": 105,
       "register": true,
       "readOnly": false,
       "isVariable": true,
@@ -635,7 +633,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": "off",
       "icon": "fa-play"
     },
     {
@@ -666,7 +664,7 @@
       "cmd": "off",
       "save": false,
       "target": "None",
-      "value": false,
+      "value": "0:08:32",
       "register": true,
       "readOnly": false,
       "isVariable": true,
@@ -717,7 +715,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": 2,
       "icon": "fa-play"
     },
     {
@@ -771,7 +769,7 @@
       "cmd": "off",
       "save": false,
       "target": "None",
-      "value": false,
+      "value": "0:06:28",
       "register": true,
       "readOnly": false,
       "isVariable": true,
@@ -822,7 +820,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": "HeyNow.mp3",
       "icon": "fa-play"
     },
     {
@@ -940,7 +938,7 @@
       "order": 0,
       "type": "added",
       "flags": 4096,
-      "value": -1,
+      "value": "off",
       "icon": "fa-play"
     },
     {
@@ -1549,7 +1547,31 @@
       "enabled": true,
       "shareTitle": "",
       "order": 0,
-      "type": "added"
+      "type": "added",
+      "description": "No Description"
+    },
+    {
+      "_containsChildrenIds": [],
+      "id": "731e589e-a67f-b96c-4bf0-99d9a7264331",
+      "name": "value",
+      "value": "",
+      "type": "added",
+      "group": "processVariables",
+      "gui": false,
+      "cmd": false,
+      "declaredClass": "xcf.model.Variable",
+      "save": false,
+      "target": "None",
+      "register": true,
+      "readOnly": false,
+      "isVariable": true,
+      "flags": 4096,
+      "outlet": 0,
+      "enabled": true,
+      "shareTitle": "",
+      "description": "No Description",
+      "order": 0,
+      "icon": "fa-play"
     }
   ],
   "variables": null

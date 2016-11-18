@@ -50764,11 +50764,13 @@ define('xblox/model/Block',[
                 clearTimeout(this._loop);
                 this._loop = null;
             }
-            delete this.override;
+            delete this.override;this.override=null;
+            delete this._lastResult;this.override = null;
             this.override = {};
         },
         stop:function(){
             this.reset();
+            this.getItems && _.invoke(this.getItems(),'stop');
         }
 
     });
@@ -55573,7 +55575,7 @@ define('xblox/model/variables/VariableAssignmentBlock',[
 
                 }else{
 
-                    if(_args && _args.length==1){
+                    if(_args && _args.length==1 && value==null){
                         _value = _args[0];
                     }
 
@@ -58063,11 +58065,12 @@ define('xcf/model/Command',[
          * @param msg.cmd {string} the command string being sent
          */
         onCommandStopped: function (msg) {
+            this.reset();
             var scope = this.getScope();
             var result = {};
             var params = msg.params;
             if (params && params.id) {
-                msg.lastResponse && this.storeResult(msg.lastResponse);
+                //msg.lastResponse && this.storeResult(msg.lastResponse);
                 this._emit('stopped', {
                     msg: msg,
                     result: this._lastResult,
@@ -58178,12 +58181,15 @@ define('xcf/model/Command',[
             return id;
         },
         reset: function () {
+            delete this._runningDfd;
             this._lastSettings = {};
-            if (this._loop) {
+            if(this._loop){
                 clearTimeout(this._loop);
                 this._loop = null;
             }
-            delete this._runningDfd;
+            delete this.override;this.override=null;
+            delete this._lastResult;this.override = null;
+            this.override = {};
         },
         _solving: null,
         addDeferred: function (id) {
